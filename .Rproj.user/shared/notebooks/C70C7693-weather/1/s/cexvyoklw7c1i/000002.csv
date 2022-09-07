@@ -1,0 +1,4 @@
+"0","setwd(""C:/Users/Rafael Cabral/Desktop/KAUST/PhD/Papers/Efficient STAN implementation"")"
+"2","The working directory was changed to C:/Users/Rafael Cabral/Desktop/KAUST/PhD/Papers/Efficient STAN implementation inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks."
+"0","fit_NIG   <- readRDS(""files/fits/fit_temp_NIG1000.rds"")"
+"0","knitr::kable(head(fit_NIG$summary(),9), ""simple"", row.names = NA, digits=2)"

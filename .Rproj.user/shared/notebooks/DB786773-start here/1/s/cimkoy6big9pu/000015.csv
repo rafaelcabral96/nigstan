@@ -1,0 +1,6 @@
+"0","#For Spde you just read the PC prior object ""model = spde"", and modify spde function to also save pcprior settings
+#Computing ELBO
+INLA::inla.extract.prior()
+"
+"2","Error: 'inla.extract.prior' is not an exported object from 'namespace:INLA'
+"

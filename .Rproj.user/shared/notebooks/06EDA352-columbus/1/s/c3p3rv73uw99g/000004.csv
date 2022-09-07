@@ -1,0 +1,19 @@
+"0","```r
+if (requireNamespace(\"spdep\", quietly = TRUE)) {
+  library(spdep)
+  col.gal.nb <- read.gal(system.file(\"weights/columbus.gal\", package=\"spData\"))
+}
+
+N       <- 49
+node1   <- rep(1:49,unlist(lapply(col.gal.nb,length)))
+node2   <- unlist(col.gal.nb)
+y       <- data$CRIME
+hv      <- data$HOVAL
+inc     <- data$INC
+
+select <- node2>node1
+node1 <- node1[select]
+node2 <- node2[select]
+
+N_edges <- length(node1)
+```"

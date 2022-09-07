@@ -1,0 +1,7 @@
+fit1 <- cmdstanr_example("logistic", method = "sample", save_warmup = TRUE)
+csv_files <- fit1$output_files()
+print(csv_files)
+
+
+
+

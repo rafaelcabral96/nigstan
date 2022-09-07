@@ -1,0 +1,54 @@
+"1","
+Expected number of effective parameters(stdev): 78.77(13.88)
+Number of equivalent replicates : 1.27 
+
+Deviance Information Criterion (DIC) ...............: -97.48
+Deviance Information Criterion (DIC, saturated) ....: 52.95
+Effective number of parameters .....................: 18.96
+
+Watanabe-Akaike information criterion (WAIC) ...: -27.71
+Effective number of parameters .................: 69.23
+
+Marginal log-Likelihood:  -306.80 
+Posterior marginals for the linear predictor and
+ the fitted values are computed
+"
+"0","```r
+inla1.dic   <- result1$dic$dic
+inla1.waic  <- result1$waic$waic
+inla1.neffp <- result1$neffp
+inla1.mlik  <- result1$mlik
+
+inla1.dic
+```"
+"1","[1] -97.47615
+"
+"0","```r
+inla1.waic
+```"
+"1","[1] -27.7123
+"
+"0","```r
+inla1.neffp
+```"
+"1","                                       [,1]
+Expectected  number of parameters 78.767805
+Stdev of the number of parameters 13.879957
+Number of equivalent replicates    1.269554
+"
+"0","```r
+inla1.mlik 
+```"
+"1","                                           [,1]
+log marginal-likelihood (integration) -306.3468
+log marginal-likelihood (Gaussian)    -306.8038
+"
+"0","```r
+#posterior mean
+plot(x,y) +
+  lines(x, result1$summary.random$x$mean) +
+  lines(x, result1$summary.random$x$`0.975quant`, col='orange') + 
+  lines(x, result1$summary.random$x$`0.025quant`, col='orange')
+```"
+"1","integer(0)
+"

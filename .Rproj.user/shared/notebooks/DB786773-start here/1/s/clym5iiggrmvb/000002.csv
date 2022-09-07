@@ -1,0 +1,12 @@
+"0","```r
+data.inla <- list(y = y, x = 1:N, xx = 1:N)
+formula1 <- y ~ -1 + f(x,   model = \"rw1\")# + f(xx, model = \"iid\") 
+
+prec.prior <- list(prec = list(prior = \"loggamma\", param = c(1, 0.5)))
+fit     <- inla(formula1, 
+                data = data.inla,
+                control.family = list(hyper = prec.prior),
+                control.compute = list(config = TRUE))
+
+fit$summary.hyperpar #12 10
+```"

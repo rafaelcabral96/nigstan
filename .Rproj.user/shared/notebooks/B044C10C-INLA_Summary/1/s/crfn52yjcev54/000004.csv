@@ -1,0 +1,6 @@
+"0","```r
+
+
+#V/h
+plot(inla.tmarginal(function(x) exp(x)/0.01, fit$internal.marginals.hyperpar[[3]]), type='l', main = \"index 20\")
+```"

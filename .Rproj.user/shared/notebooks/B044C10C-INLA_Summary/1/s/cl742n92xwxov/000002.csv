@@ -1,0 +1,25 @@
+"0","```r
+inla2.dic
+```"
+"1","[1] -119.5672
+"
+"0","```r
+inla2.waic
+```"
+"1","[1] -110.4727
+"
+"0","```r
+inla2.neffp
+```"
+"1","                                       [,1]
+Expectected  number of parameters 83.287009
+Stdev of the number of parameters  5.066474
+Number of equivalent replicates    1.200667
+"
+"0","```r
+inla2.mlik 
+```"
+"1","                                           [,1]
+log marginal-likelihood (integration) -78.98211
+log marginal-likelihood (Gaussian)    -74.70545
+"

@@ -1,0 +1,125 @@
+"0","```r
+#setwd(\"C:/Users/Rafael Cabral/Desktop/KAUST/PhD/PhD Notes/Files/STAN\")
+
+map <- nc.sp
+proj4string(map) <- CRS(\"+proj=utm\")
+
+map <- spTransform(map,
+                   CRS(\"+proj=longlat +datum=WGS84 +no_defs\"))
+
+data    <- slovenia
+data$ID <- 1:N
+
+d <- data.frame(ID = 1:N, O, E, SEC)
+d$SIR <- d$O / d$E
+rownames(d) <- paste(\"ID\",1:N,sep=\"\")
+sapply(slot(map, \"polygons\"), function(x){slot(x, \"ID\")})
+library(sp)
+map <- SpatialPolygonsDataFrame(map, d)
+
+
+
+V  <- fit[,strtrim(colnames(fit),2)==\"V[\"]
+map$VM   <- colMeans(V)
+map$VL   <- apply(V, 2, function(x) quantile(x,0.05))
+map$VH   <- apply(V, 2, function(x) quantile(x,0.95))
+
+etaM <- colMeans(fit[,strtrim(colnames(fit),3)==\"eta\"])
+etasd <-  apply(fit[,strtrim(colnames(fit),3)==\"eta\"],2,sd)
+
+library(leaflet)
+
+
+labels <- sprintf(\"<strong> %s </strong> <br/>
+  Observed: %s <br/> Expected: %s <br/>
+  SEC: %s <br/> SIR: %s <br/> V: %s (%s, %s)\",
+  map$ID, map$O, round(map$E, 2), round(map$SEC, 2),
+  round(map$SIR, 2), round(map$VM, 2),
+  round(map$VL, 2), round(map$VH, 2)
+) %>% lapply(htmltools::HTML)
+
+pal <- colorNumeric(palette = \"YlOrRd\", domain = c(0.57,24.7))
+lRR <- leaflet(map) %>%
+  addPolygons(
+    color = \"grey\", weight = 1, fillColor = ~ pal(VM),
+    fillOpacity = 0.5,
+    highlightOptions = highlightOptions(weight = 4),
+    label = labels,
+    labelOptions = labelOptions(
+      style =
+        list(
+          \"font-weight\" = \"normal\",
+          padding = \"3px 8px\"
+        ),
+      textsize = \"15px\", direction = \"auto\"
+    )
+  ) %>%
+  addLegend_decreasing(
+    pal = pal, values = ~VM, opacity = 0.5, title = \"\",
+    position = \"bottomright\", decreasing = TRUE
+  )
+
+pal <- colorNumeric(palette = \"YlOrRd\", domain = map$SIR)
+l2 <- leaflet(map) %>%
+  addPolygons(
+    color = \"grey\", weight = 1, fillColor = ~ pal(SIR),
+    fillOpacity = 0.5,
+    highlightOptions = highlightOptions(weight = 4),
+    label = labels,
+    labelOptions = labelOptions(
+      style =
+        list(
+          \"font-weight\" = \"normal\",
+          padding = \"3px 8px\"
+        ),
+      textsize = \"15px\", direction = \"auto\"
+    )
+  ) %>%
+  addLegend_decreasing(
+    pal = pal, values = ~SIR, opacity = 0.5, title = \"\",
+    position = \"bottomright\", decreasing = TRUE
+  )
+
+pal <- colorNumeric(palette = c(\"blue\",\"white\",\"red\"), domain = etaM)
+leta <- leaflet(map) %>%
+  addPolygons(
+    color = \"grey\", weight = 1, fillColor = ~ pal(etaM),
+    fillOpacity = 0.5,
+    highlightOptions = highlightOptions(weight = 4),
+    label = labels,
+    labelOptions = labelOptions(
+      style =
+        list(
+          \"font-weight\" = \"normal\",
+          padding = \"3px 8px\"
+        ),
+      textsize = \"15px\", direction = \"auto\"
+    )
+  ) %>%
+  addLegend_decreasing(
+    pal = pal, values = ~etaM, opacity = 0.5, title = \"\", position = \"bottomright\", decreasing = TRUE)
+
+pal <- colorNumeric(palette = \"YlOrRd\", domain = etasd)
+letasd <- leaflet(map) %>%
+  addPolygons(
+    color = \"grey\", weight = 1, fillColor = ~ pal(etasd),
+    fillOpacity = 0.5,
+    highlightOptions = highlightOptions(weight = 4),
+    label = labels,
+    labelOptions = labelOptions(
+      style =
+        list(
+          \"font-weight\" = \"normal\",
+          padding = \"3px 8px\"
+        ),
+      textsize = \"15px\", direction = \"auto\"
+    )
+  ) %>%
+  addLegend_decreasing(
+    pal = pal, values = ~etasd, opacity = 0.5, title = \"\", position = \"bottomright\", decreasing = TRUE)
+  
+lRR
+l2
+leta
+letasd
+```"

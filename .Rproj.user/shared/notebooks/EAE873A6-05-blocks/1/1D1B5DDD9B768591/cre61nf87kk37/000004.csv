@@ -1,0 +1,7 @@
+"0","#Ohio Crime data
+library(spdep)
+"
+"2","package ‘spdep’ was built under R version 4.0.5"
+"2","Loading required package: sf
+"
+"2","package ‘sf’ was built under R version 4.0.5"

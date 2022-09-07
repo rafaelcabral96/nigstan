@@ -1,0 +1,1031 @@
+{
+    "sources": [
+        {
+            "author": [
+                {
+                    "family": "Bolin",
+                    "given": "David"
+                },
+                {
+                    "family": "Cabral",
+                    "given": "Rafael"
+                },
+                {
+                    "family": "Rue",
+                    "given": "Håvard"
+                }
+            ],
+            "id": "PCprior",
+            "issued": {
+                "date-parts": [
+                    [
+                        2022
+                    ]
+                ]
+            },
+            "title": "Penalizing complexity of non-gaussian random fields",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Simpson",
+                    "given": "Daniel"
+                },
+                {
+                    "family": "Rue",
+                    "given": "Håvard"
+                },
+                {
+                    "family": "Riebler",
+                    "given": "Andrea"
+                },
+                {
+                    "family": "Martins",
+                    "given": "Thiago G"
+                },
+                {
+                    "family": "Sørbye",
+                    "given": "Sigrunn H"
+                }
+            ],
+            "container-title": "Statistical science",
+            "id": "simpson2017penalising",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "page": "1-28",
+            "publisher": "JSTOR",
+            "title": "Penalising model component complexity: A principled, practical approach to constructing priors",
+            "title-short": "Penalising model component complexity",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Wallin",
+                    "given": "Jonas"
+                },
+                {
+                    "family": "Bolin",
+                    "given": "David"
+                }
+            ],
+            "container-title": "Scandinavian Journal of Statistics",
+            "id": "wallin2015geostatistical",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015
+                    ]
+                ]
+            },
+            "page": "872-890",
+            "publisher": "Wiley Online Library",
+            "title": "Geostatistical modelling using non-gaussian matérn fields",
+            "type": "article-journal",
+            "volume": "42"
+        },
+        {
+            "author": [
+                {
+                    "family": "Bolin",
+                    "given": "David"
+                }
+            ],
+            "container-title": "Scandinavian Journal of Statistics",
+            "id": "bolin2014spatial",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "page": "557-579",
+            "publisher": "Wiley Online Library",
+            "title": "Spatial matérn fields driven by non-gaussian noise",
+            "type": "article-journal",
+            "volume": "41"
+        },
+        {
+            "author": [
+                {
+                    "family": "Rue",
+                    "given": "Håvard"
+                },
+                {
+                    "family": "Held",
+                    "given": "Leonhard"
+                }
+            ],
+            "id": "rue2005gaussian",
+            "issued": {
+                "date-parts": [
+                    [
+                        2005
+                    ]
+                ]
+            },
+            "publisher": "CRC press",
+            "title": "Gaussian markov random fields: Theory and applications",
+            "title-short": "Gaussian markov random fields",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Betancourt",
+                    "given": "Michael"
+                },
+                {
+                    "family": "Girolami",
+                    "given": "Mark"
+                }
+            ],
+            "container-title": "Current trends in Bayesian methodology with applications",
+            "id": "betancourt2015hamiltonian",
+            "issue": "30",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015
+                    ]
+                ]
+            },
+            "page": "2-4",
+            "publisher": "CRC Press Boca Raton, FL",
+            "title": "Hamiltonian monte carlo for hierarchical models",
+            "type": "article-journal",
+            "volume": "79"
+        },
+        {
+            "author": [
+                {
+                    "family": "Margossian",
+                    "given": "Charles"
+                },
+                {
+                    "family": "Vehtari",
+                    "given": "Aki"
+                },
+                {
+                    "family": "Simpson",
+                    "given": "Daniel"
+                },
+                {
+                    "family": "Agrawal",
+                    "given": "Raj"
+                }
+            ],
+            "id": "StanLaplace",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020,
+                        8
+                    ]
+                ]
+            },
+            "page": "",
+            "title": "Approximate bayesian inference for latent gaussian models in stan",
+            "type": "paper-conference"
+        },
+        {
+            "author": [
+                {
+                    "family": "Betancourt",
+                    "given": "Michael"
+                }
+            ],
+            "id": "bet2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "publisher": "https://github.com/betanalpha/knitr_case_studies/tree/master/gaussian_processes",
+            "title": "Robust gaussian processes in stan.",
+            "type": ""
+        },
+        {
+            "author": [
+                {
+                    "family": "Morris",
+                    "given": "Mitzi"
+                }
+            ],
+            "id": "Mitzi",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019
+                    ]
+                ]
+            },
+            "publisher": "https://mc-stan.org/users/documentation/case-studies/icar_stan.html",
+            "title": "Spatial models in stan: Intrinsic auto-regressive models for areal data.",
+            "title-short": "Spatial models in stan",
+            "type": ""
+        },
+        {
+            "author": [
+                {
+                    "family": "Betancourt",
+                    "given": "Michael"
+                }
+            ],
+            "id": "bet2018",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "publisher": "https://github.com/betanalpha/knitr_case_studies/tree/master/fitting_the_cauchy",
+            "title": "Fitting the cauchy.",
+            "type": ""
+        },
+        {
+            "URL": "http://mc-stan.org/",
+            "author": [
+                {
+                    "family": "Team",
+                    "given": "Stan Development"
+                }
+            ],
+            "id": "stan",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "title": "Stan modeling language users guide and reference manual, 2.28",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Ken-Iti",
+                    "given": "Sato"
+                }
+            ],
+            "id": "ken1999levy",
+            "issued": {
+                "date-parts": [
+                    [
+                        1999
+                    ]
+                ]
+            },
+            "publisher": "Cambridge university press",
+            "title": "Lévy processes and infinitely divisible distributions",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Barndorff-Nielsen",
+                    "given": "Ole E"
+                },
+                {
+                    "family": "Mikosch",
+                    "given": "Thomas"
+                },
+                {
+                    "family": "Resnick",
+                    "given": "Sidney I"
+                }
+            ],
+            "id": "barndorff2012levy",
+            "issued": {
+                "date-parts": [
+                    [
+                        2012
+                    ]
+                ]
+            },
+            "publisher": "Springer Science & Business Media",
+            "title": "Lévy processes: Theory and applications",
+            "title-short": "Lévy processes",
+            "type": "book"
+        },
+        {
+            "DOI": "doi.org/10.1111/rssc.12405",
+            "URL": "rss.onlinelibrary.wiley.com/doi/abs/10.1111/rssc.12405",
+            "author": [
+                {
+                    "family": "Asar",
+                    "given": "Özgür"
+                },
+                {
+                    "family": "Bolin",
+                    "given": "David"
+                },
+                {
+                    "family": "Diggle",
+                    "given": "Peter J."
+                },
+                {
+                    "family": "Wallin",
+                    "given": "Jonas"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series C (Applied Statistics)",
+            "id": "DavidLinear",
+            "issue": "5",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "keyword": "Heavy-tailedness, Latent effects, Longitudinal data, Multivariate analysis, Non-normal distributions, Skewness, Stochastic approximation",
+            "page": "1015-1065",
+            "title": "Linear mixed effects models for non-gaussian continuous repeated measurement data",
+            "type": "article-journal",
+            "volume": "69"
+        },
+        {
+            "author": [
+                {
+                    "family": "Lindgren",
+                    "given": "Finn"
+                },
+                {
+                    "family": "Rue",
+                    "given": "Håvard"
+                },
+                {
+                    "family": "Lindström",
+                    "given": "Johan"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series B (Statistical Methodology)",
+            "id": "lindgren2011explicit",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "page": "423-498",
+            "publisher": "Wiley Online Library",
+            "title": "An explicit link between gaussian fields and gaussian markov random fields: The stochastic partial differential equation approach",
+            "title-short": "An explicit link between gaussian fields and gaussian markov random fields",
+            "type": "article-journal",
+            "volume": "73"
+        },
+        {
+            "author": [
+                {
+                    "family": "Bolin",
+                    "given": "David"
+                },
+                {
+                    "family": "Wallin",
+                    "given": "Jonas"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series B (Statistical Methodology)",
+            "id": "bolin2020multivariate",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "page": "215-239",
+            "publisher": "Wiley Online Library",
+            "title": "Multivariate type g matérn stochastic partial differential equation random fields",
+            "type": "article-journal",
+            "volume": "82"
+        },
+        {
+            "author": [
+                {
+                    "family": "Fuglstad",
+                    "given": "Geir-Arne"
+                },
+                {
+                    "family": "Simpson",
+                    "given": "Daniel"
+                },
+                {
+                    "family": "Lindgren",
+                    "given": "Finn"
+                },
+                {
+                    "family": "Rue",
+                    "given": "Håvard"
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "fuglstad2019constructing",
+            "issue": "525",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019
+                    ]
+                ]
+            },
+            "page": "445-452",
+            "publisher": "Taylor & Francis",
+            "title": "Constructing priors that penalize the complexity of gaussian random fields",
+            "type": "article-journal",
+            "volume": "114"
+        },
+        {
+            "author": [
+                {
+                    "family": "Vehtari",
+                    "given": "Aki"
+                },
+                {
+                    "family": "Gelman",
+                    "given": "Andrew"
+                },
+                {
+                    "family": "Gabry",
+                    "given": "Jonah"
+                }
+            ],
+            "container-title": "Statistics and computing",
+            "id": "vehtari2017practical",
+            "issue": "5",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "page": "1413-1432",
+            "publisher": "Springer",
+            "title": "Practical bayesian model evaluation using leave-one-out cross-validation and WAIC",
+            "type": "article-journal",
+            "volume": "27"
+        },
+        {
+            "author": [
+                {
+                    "family": "Dhull",
+                    "given": "Monika Singh"
+                },
+                {
+                    "family": "Kumar",
+                    "given": "Arun"
+                }
+            ],
+            "container-title": "arXiv preprint arXiv:2105.14502",
+            "id": "dhull2021normal",
+            "issued": {
+                "date-parts": [
+                    [
+                        2021
+                    ]
+                ]
+            },
+            "title": "Normal inverse gaussian autoregressive model using EM algorithm",
+            "type": "article-journal"
+        },
+        {
+            "DOI": "https://doi.org/10.1111/jtsa.12242",
+            "author": [
+                {
+                    "family": "Sørbye",
+                    "given": "Sigrunn Holbek"
+                },
+                {
+                    "family": "Rue",
+                    "given": "Håvard"
+                }
+            ],
+            "container-title": "Journal of Time Series Analysis",
+            "id": "PCAR",
+            "issue": "6",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "keyword": "AR(p), latent Gaussian models, prior selection, R-INLA, robustness.JEL. C11; C18; C22; C88",
+            "page": "923-935",
+            "title": "Penalised complexity priors for stationary autoregressive processes",
+            "type": "article-journal",
+            "volume": "38"
+        },
+        {
+            "DOI": "10.1002/9781118445112.stat08208",
+            "ISBN": "9781118445112",
+            "author": [
+                {
+                    "family": "Hooten",
+                    "given": "Mevin"
+                },
+                {
+                    "family": "Ver Hoef",
+                    "given": "Jay"
+                },
+                {
+                    "family": "Hanks",
+                    "given": "Ephraim"
+                }
+            ],
+            "id": "SAR",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019,
+                        11
+                    ]
+                ]
+            },
+            "page": "1-10",
+            "title": "Simultaneous autoregressive (SAR) model",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Riebler",
+                    "given": "Andrea"
+                },
+                {
+                    "family": "Sørbye",
+                    "given": "Sigrunn H"
+                },
+                {
+                    "family": "Simpson",
+                    "given": "Daniel"
+                },
+                {
+                    "family": "Rue",
+                    "given": "Håvard"
+                }
+            ],
+            "container-title": "Statistical methods in medical research",
+            "id": "riebler2016intuitive",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016
+                    ]
+                ]
+            },
+            "page": "1145-1165",
+            "publisher": "Sage Publications Sage UK: London, England",
+            "title": "An intuitive bayesian spatial model for disease mapping that accounts for scaling",
+            "type": "article-journal",
+            "volume": "25"
+        },
+        {
+            "author": [
+                {
+                    "family": "Ver Hoef",
+                    "given": "Jay M"
+                },
+                {
+                    "family": "Hanks",
+                    "given": "Ephraim M"
+                },
+                {
+                    "family": "Hooten",
+                    "given": "Mevin B"
+                }
+            ],
+            "container-title": "Spatial statistics",
+            "id": "ver2018relationship",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "page": "68-85",
+            "publisher": "Elsevier",
+            "title": "On the relationship between conditional (CAR) and simultaneous (SAR) autoregressive models",
+            "type": "article-journal",
+            "volume": "25"
+        },
+        {
+            "author": [
+                {
+                    "family": "Rue",
+                    "given": "Håvard"
+                },
+                {
+                    "family": "Held",
+                    "given": "Leonhard"
+                }
+            ],
+            "id": "GMRF",
+            "issued": {
+                "date-parts": [
+                    [
+                        2005
+                    ]
+                ]
+            },
+            "publisher": "CRC press",
+            "title": "Gaussian markov random fields: Theory and applications",
+            "title-short": "Gaussian markov random fields",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Matérn",
+                    "given": "Bertil"
+                }
+            ],
+            "id": "matern",
+            "issued": {
+                "date-parts": [
+                    [
+                        1960
+                    ]
+                ]
+            },
+            "note": "Meddelanden Fran Statens Skogsforskningsinstitut, Band 49, Nr. 5",
+            "page": "144",
+            "publisher": "Statens Skogsforskningsinstitut, Stockholm",
+            "title": "Spatial variation: Stochastic models and their application to some problems in forest surveys and other sampling investigations",
+            "title-short": "Spatial variation",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Cabral",
+                    "given": "Rafael"
+                },
+                {
+                    "family": "Bolin",
+                    "given": "David"
+                },
+                {
+                    "family": "Rue",
+                    "given": "Håvard"
+                }
+            ],
+            "container-title": "arXiv preprint arXiv:2203.05510",
+            "id": "cabral2022controlling",
+            "issued": {
+                "date-parts": [
+                    [
+                        2022
+                    ]
+                ]
+            },
+            "title": "Controlling the flexibility of non-gaussian processes through shrinkage priors",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Walder",
+                    "given": "Adam"
+                },
+                {
+                    "family": "Hanks",
+                    "given": "Ephraim M"
+                }
+            ],
+            "container-title": "Computational Statistics & Data Analysis",
+            "id": "walder2020bayesian",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "page": "106861",
+            "publisher": "Elsevier",
+            "title": "Bayesian analysis of spatial generalized linear mixed models with laplace moving average random fields",
+            "type": "article-journal",
+            "volume": "144"
+        },
+        {
+            "author": [
+                {
+                    "family": "Rue",
+                    "given": "Håvard"
+                },
+                {
+                    "family": "Martino",
+                    "given": "Sara"
+                },
+                {
+                    "family": "Chopin",
+                    "given": "Nicolas"
+                }
+            ],
+            "container-title": "Journal of the royal statistical society: Series b (statistical methodology)",
+            "id": "rue2009approximate",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        2009
+                    ]
+                ]
+            },
+            "page": "319-392",
+            "publisher": "Wiley Online Library",
+            "title": "Approximate bayesian inference for latent gaussian models by using integrated nested laplace approximations",
+            "type": "article-journal",
+            "volume": "71"
+        },
+        {
+            "URL": "https://www.R-project.org/",
+            "author": [
+                {
+                    "literal": "R Core Team"
+                }
+            ],
+            "id": "R-base",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "publisher": "R Foundation for Statistical Computing",
+            "publisher-place": "Vienna, Austria",
+            "title": "R: A language and environment for statistical computing",
+            "title-short": "R",
+            "type": "book"
+        },
+        {
+            "URL": "https://CRAN.R-project.org/package=bookdown",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                }
+            ],
+            "id": "R-bookdown",
+            "issued": {
+                "date-parts": [
+                    [
+                        2021
+                    ]
+                ]
+            },
+            "note": "R package version 0.24",
+            "title": "Bookdown: Authoring books and technical documents with r markdown",
+            "title-short": "Bookdown",
+            "type": "book"
+        },
+        {
+            "URL": "https://yihui.org/knitr/",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                }
+            ],
+            "id": "R-knitr",
+            "issued": {
+                "date-parts": [
+                    [
+                        2021
+                    ]
+                ]
+            },
+            "note": "R package version 1.36",
+            "title": "Knitr: A general-purpose package for dynamic report generation in r",
+            "title-short": "Knitr",
+            "type": "book"
+        },
+        {
+            "URL": "https://CRAN.R-project.org/package=rmarkdown",
+            "author": [
+                {
+                    "family": "Allaire",
+                    "given": "JJ"
+                },
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                },
+                {
+                    "family": "McPherson",
+                    "given": "Jonathan"
+                },
+                {
+                    "family": "Luraschi",
+                    "given": "Javier"
+                },
+                {
+                    "family": "Ushey",
+                    "given": "Kevin"
+                },
+                {
+                    "family": "Atkins",
+                    "given": "Aron"
+                },
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                },
+                {
+                    "family": "Cheng",
+                    "given": "Joe"
+                },
+                {
+                    "family": "Chang",
+                    "given": "Winston"
+                },
+                {
+                    "family": "Iannone",
+                    "given": "Richard"
+                }
+            ],
+            "id": "R-rmarkdown",
+            "issued": {
+                "date-parts": [
+                    [
+                        2021
+                    ]
+                ]
+            },
+            "note": "R package version 2.11",
+            "title": "Rmarkdown: Dynamic documents for r",
+            "title-short": "Rmarkdown",
+            "type": "book"
+        },
+        {
+            "URL": "https://bookdown.org/yihui/bookdown",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                }
+            ],
+            "id": "bookdown2016",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016
+                    ]
+                ]
+            },
+            "note": "ISBN 978-1138700109",
+            "publisher": "Chapman; Hall/CRC",
+            "publisher-place": "Boca Raton, Florida",
+            "title": "Bookdown: Authoring books and technical documents with R markdown",
+            "title-short": "Bookdown",
+            "type": "book"
+        },
+        {
+            "URL": "https://yihui.org/knitr/",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                }
+            ],
+            "edition": "2nd",
+            "id": "knitr2015",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015
+                    ]
+                ]
+            },
+            "note": "ISBN 978-1498716963",
+            "publisher": "Chapman; Hall/CRC",
+            "publisher-place": "Boca Raton, Florida",
+            "title": "Dynamic documents with R and knitr",
+            "type": "book"
+        },
+        {
+            "URL": "http://www.crcpress.com/product/isbn/9781466561595",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                }
+            ],
+            "container-title": "Implementing reproducible computational research",
+            "editor": [
+                {
+                    "family": "Stodden",
+                    "given": "Victoria"
+                },
+                {
+                    "family": "Leisch",
+                    "given": "Friedrich"
+                },
+                {
+                    "family": "Peng",
+                    "given": "Roger D."
+                }
+            ],
+            "id": "knitr2014",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "note": "ISBN 978-1466561595",
+            "publisher": "Chapman; Hall/CRC",
+            "title": "Knitr: A comprehensive tool for reproducible research in R",
+            "title-short": "Knitr",
+            "type": "chapter"
+        },
+        {
+            "URL": "https://bookdown.org/yihui/rmarkdown",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                },
+                {
+                    "family": "Allaire",
+                    "given": "J. J."
+                },
+                {
+                    "family": "Grolemund",
+                    "given": "Garrett"
+                }
+            ],
+            "id": "rmarkdown2018",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "note": "ISBN 9781138359338",
+            "publisher": "Chapman; Hall/CRC",
+            "publisher-place": "Boca Raton, Florida",
+            "title": "R markdown: The definitive guide",
+            "title-short": "R markdown",
+            "type": "book"
+        },
+        {
+            "URL": "https://bookdown.org/yihui/rmarkdown-cookbook",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                },
+                {
+                    "family": "Dervieux",
+                    "given": "Christophe"
+                },
+                {
+                    "family": "Riederer",
+                    "given": "Emily"
+                }
+            ],
+            "id": "rmarkdown2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "note": "ISBN 9780367563837",
+            "publisher": "Chapman; Hall/CRC",
+            "publisher-place": "Boca Raton, Florida",
+            "title": "R markdown cookbook",
+            "type": "book"
+        }
+    ],
+    "project_biblios": [
+        "book.bib",
+        "packages.bib"
+    ]
+}

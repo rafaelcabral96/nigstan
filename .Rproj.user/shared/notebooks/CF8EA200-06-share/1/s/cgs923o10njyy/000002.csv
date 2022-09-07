@@ -1,0 +1,48 @@
+"0","library(readr)"
+"2","package ‘readr’ was built under R version 4.0.5"
+"0","library(INLA)"
+"2","package ‘INLA’ was built under R version 4.0.4"
+"2","Loading required package: Matrix
+"
+"2","package ‘Matrix’ was built under R version 4.0.5"
+"2","Loading required package: foreach
+"
+"2","Loading required package: parallel
+"
+"2","Loading required package: sp
+"
+"2","package ‘sp’ was built under R version 4.0.5"
+"2","This is INLA_21.02.23 built 2021-02-22 21:11:05 UTC.
+ - See www.r-inla.org/contact-us for how to get help.
+ - Save 379.7Mb of storage running 'inla.prune()'
+"
+"0","library(leaflet)"
+"2","package ‘leaflet’ was built under R version 4.0.5"
+"2","Registered S3 method overwritten by 'htmlwidgets':
+  method           from         
+  print.htmlwidget tools:rstudio
+"
+"0","library(cmdstanr)"
+"2","package ‘cmdstanr’ was built under R version 4.0.5"
+"2","This is cmdstanr version 0.4.0
+"
+"2","- Online documentation and vignettes at mc-stan.org/cmdstanr
+"
+"2","- CmdStan path set to: C:/Users/Rafael Cabral/Documents/.cmdstanr/cmdstan-2.28.0
+"
+"2","- Use set_cmdstan_path() to change the path
+"
+"2","This is posterior version 1.1.0
+"
+"2","
+Attaching package: ‘posterior’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    mad, sd, var
+
+"
+"0","source(""../files/utils.R"")"
+"0",""
+"0","options(mc.cores = parallel::detectCores())"

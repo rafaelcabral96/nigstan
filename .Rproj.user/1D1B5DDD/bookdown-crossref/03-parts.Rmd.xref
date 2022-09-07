@@ -1,0 +1,11 @@
+h1:implementing-latent-models-driven-by-nig-noise-in-stan Implementing latent models driven by NIG noise in Stan
+h2:framework Framework
+h2:implementation Implementation
+h2:additional-functions Additional functions
+h3:nig-observations NIG observations
+h3:sparse-matrix-computations Sparse matrix computations
+h2:notes Notes
+h3:determinant Determinant
+h3:non-centered-parameterization Non-centered parameterization
+h3:heavy-tailed-distributions-and-stan Heavy-tailed distributions and Stan
+

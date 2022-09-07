@@ -1,0 +1,1 @@
+"0","weatherdata <- as.data.frame(read_csv(""../files/data/weatherdata.csv"", col_names = TRUE))"

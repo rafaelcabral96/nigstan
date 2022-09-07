@@ -1,0 +1,13 @@
+"0","a <- -3"
+"0","b <- 3"
+"0","inter_points <- 2500"
+"0","kappa_log <- seq(a,b,,inter_points)"
+"0","det_log <-c()"
+"0","for(kappa in exp(kappa_log)){"
+"0","  D       <- kappa^2*diag(h)+G"
+"0","  det_log <- c(det_log, determinant(D,logarithm = TRUE)$modulus[1])"
+"0","}"
+"0","plot(kappa_log, det_log,type='l',  xlab = 'log(κ)', ylab = 'log(|D|)')"
+"2","Error in xy.coords(x, y, xlabel, ylabel, log) : 
+  'x' and 'y' lengths differ
+"

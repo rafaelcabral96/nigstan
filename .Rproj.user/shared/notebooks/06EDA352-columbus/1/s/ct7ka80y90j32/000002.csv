@@ -1,0 +1,4 @@
+"0","```r
+jumps <- y[node2] - y[node1]
+hist(jumps)
+```"

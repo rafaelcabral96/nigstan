@@ -1,0 +1,53 @@
+"0","```r
+RW1.inla.fit <- function(y,x,V){
+  
+  data.inla <- list(y = y, x = x, x2 = c(0,cumsum(V)))
+  
+  formula1 <- y ~  1 + x +  f(x2, model = \"rw1\", constr = TRUE)
+
+  #do inla fit conditioned on V
+  result1 <- inla(formula1, 
+                  data = data.inla,
+                  control.compute = list(config = TRUE))
+  
+  D  <- RW1.matrix(length(x))
+
+  logdet <- determinant(t(D)%*% Diagonal(n-1, 1/V) %*% D)$modulus
+  result1$mlik <- result1$mlik + logdet / 2
+  
+  return(result1)
+}
+
+
+#nitial values for V and nu
+n=100
+h <- rep(1/n,n-1)
+D  <- RW1.matrix(length(x))
+theta.nu <- 5
+
+nu <- 0.01
+V <- rgig(n = n-1, lambda = -1/2, psi = 1/nu, chi = h^2/nu)
+V <- h
+
+for(i in 1:10){
+  #fir in INLA
+  fit <- RW1.inla.fit(y,x,V)
+  
+  x.post <- fit$summary.random$x[,2]
+  x.post.sd <- fit$summary.random$x[,3]
+  tau.x <- fit$summary.hyperpar$mean[2]
+  
+  p.new <- -1
+  a.new <- 1/nu
+  b.new <- tau.x*(D%*%x.post)^2 + nu^(-1)*h^2
+  V <- mean.GIG(p.new, a.new, b.new[,1])
+  #for(i in 1:(n-1)){
+  #    V[i] <- rgig(lambda = p.new, psi = a.new, chi = b.new[i,1])
+  #}
+  plot(V/h)
+  
+  #nu <- mode.GIG(-(n-1)/2+1, 2*theta.nu, sum( (V-h)^2/V ))
+  #nu <- rgig(n = 1, lambda = -(n-1)/2+1, psi = 2*theta.nu, chi = sum( (V-h)^2/V ))
+  #print(nu)
+}
+```"

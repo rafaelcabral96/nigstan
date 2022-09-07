@@ -1,0 +1,12 @@
+"0","```r
+summary(fit[,c(\"beta0\", \"beta1\", \"beta2\",\"vari\",\"nu\",\"vari_eta\",\"kappa_squared\")])
+
+```"
+"1","     beta0           beta1              beta2              vari             nu           vari_eta     kappa_squared     
+ Min.   :51.18   Min.   :-0.37895   Min.   :-1.8231   Min.   :3.174   Min.   :1.207   Min.   :35.77   Min.   :0.002494  
+ 1st Qu.:58.10   1st Qu.:-0.21072   1st Qu.:-1.3230   1st Qu.:5.298   1st Qu.:2.609   1st Qu.:57.59   1st Qu.:0.073882  
+ Median :59.29   Median :-0.17462   Median :-1.2117   Median :5.814   Median :3.006   Median :62.21   Median :0.119772  
+ Mean   :59.31   Mean   :-0.17844   Mean   :-1.2048   Mean   :5.820   Mean   :3.047   Mean   :62.31   Mean   :0.133311  
+ 3rd Qu.:60.52   3rd Qu.:-0.14297   3rd Qu.:-1.0942   3rd Qu.:6.350   3rd Qu.:3.443   3rd Qu.:66.93   3rd Qu.:0.177726  
+ Max.   :67.35   Max.   :-0.01807   Max.   :-0.4927   Max.   :8.689   Max.   :6.084   Max.   :93.38   Max.   :0.656082  
+"

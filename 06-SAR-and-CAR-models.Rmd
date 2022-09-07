@@ -1,0 +1,626 @@
+# SAR and CAR models
+
+
+In this section, we model aerial data, which is data that occurs on a lattice or an irregular grid with a countable set of locations or nodes. The two most common models for aerial data are conditional autoregressive (CAR) and simultaneous autoregressive (SAR) models, both known for having sparse precision matrices. For a review of these models see @SAR, @riebler2016intuitive, and for the relationship between them see @ver2018relationship.
+
+## SAR models
+
+Here we consider a SAR model built from the following relationship:
+
+$$
+\mathbf{x} = \mathbf{B}\mathbf{x} + \sigma\mathbf{Z},
+$$
+where each element of the random vector $\mathbf{x}$ corresponds to a node in the lattice and $\mathbf{Z}$ is a vector of i.i.d. standard Gaussian noise. The matrix $\mathbf{B}$ causes simultaneous autoregressions of each random variable on its neighbors, where two regions are considered to be neighbors if they share a common border. Hence, SAR models are typically added as spatially structured random effects in hierarchical models in many fields such as disease mapping, ecology, and econometrics. The diagonal elements of $\mathbf{B}$ are 0 so that each node does not depend on itself. For simplicity, we assume $\mathbf{B}=\rho\mathbf{W}$, where $\mathbf{W}$ is a row standardized adjacency matrix and $-1<\rho<1$ so that the resulting precision matrix is valid. We find that this parameterization is more interpretable and there is an analog with an AR(1) process. In an AR(1) process, the value of the process at a given time point is $\rho$ multiplied by the value of the process at the previous time point plus Gaussian noise. In our SAR model, the value of a node is given by $\rho$ multiplied by the average of the values of the neighbors plus Gaussian noise.
+
+We end up with the system $\mathbf{D}_{SAR}\mathbf{x} = \sigma\mathbf{Z}$, where $\mathbf{D}_{SAR}=\mathbf{I}-\rho\mathbf{W}$. The equivalent model driven by NIG noise is then $\mathbf{D}_{SAR}\mathbf{x} = \sigma\mathbf{\Lambda}$, where $\mathbf{\Lambda}$ is i.i.d. standardized NIG noise with parameters $\eta^\star$ and $\zeta^\star$.
+
+In this application, we will use the prior $\rho \sim \mathcal{Unif}(0,1)$, where we restrict the model so that it only accounts for positive spatial dependence.  <!---The PC prior for $\sigma$ is an exponential distribution with some rate parameter $\theta$., but the marginal variance of $\mathbf{x}$ depends on $\rho$, so the scaling of the prior is done conditionally on $\rho$. The marginal variance is different for every node, so we compute the average variance, which is the trace of the covariance matrix $\mathbf{\Sigma}$ divided by $n$. The covariance matrix is:
+
+$$
+\mathbf{\Sigma}=\sigma^2 (\mathbf{I}-\rho\mathbf{W})^{-1}(\mathbf{I}-\rho\mathbf{W})^{-1}
+$$
+From the spectral decomposition of the adjacency matrix $\mathbf{W}=\Gamma \mathbf{V}\Gamma^T$ we get:
+
+$$
+\mathbf{\Sigma} = \sigma^2\Gamma (I-\rho\mathbf{V})^{-2}\Gamma^T
+$$
+and so the trace is 
+$$
+\text{trace}(\mathbf{\Sigma}) = \sigma^2 \sum_{i=1}^n (1-\rho v_i)^{-2}
+$$
+We use a generalized standard deviation $\sigma_G(\rho) = \sigma g(\rho)$ where $g(\rho)$ is defined as:
+
+$$
+g(\rho)= \sqrt{\frac{1}{n}\sum_{i=1}^n (1-\rho v_i)^{-2}}
+$$
+We now scale the prior of $\sigma$ based on the probability statement $P(\sigma_G(\rho)>U)=\alpha$, which leads to:
+
+$$
+\theta(\rho) = -\frac{\log(\alpha)}{U }g(\rho)
+$$
+-->
+
+### Libraries
+
+```{r message=FALSE, warning=FALSE}
+library(spdep)                # Columbus dataset
+library(INLA)
+library(sp)                   # Create Spatial polygons object for plotting
+library(rgdal)                # Read polygon data
+library(leaflet)              # Interactive widgets
+library(leaflet.extras)       # Fullscreen control for Leaflet widget
+library(cmdstanr)             # CmdStan R interface
+library(posterior)            # Process the output of cmdstanr sampling
+library(bayesplot)            # Pair and trace plots
+library(ggplot2)              # More plots
+library(GIGrvg)               # Evaluate density of a GIG distribution
+source("../files/utils.R")    # Several utility functions
+
+options(mc.cores = parallel::detectCores())
+```
+
+## Columbus dataset and model
+
+The dataset consists of crime rates in thousands ($y_i$) in 49 counties of Columbus, Ohio, and can be found in the `spdep` R package. We will fit the following model:
+$$
+\mathbf{y}_{i}= \beta_0 + \beta_1 \text{HV}_i + \beta_2 \text{HI}_i +  \sigma_{\mathbf{x}}\mathbf{x}_i,
+$$
+where $\text{HV}_i$ and $\text{HI}_i$ are the average household value and household income for county $i$, $\mathbf{x}$ is a spatial effects SAR model, and $\boldsymbol{\epsilon}$ are Gaussian heterogeneous effects.
+
+```{r message=FALSE, warning=FALSE}
+data(columbus)
+data <- columbus[,c("CRIME","HOVAL","INC")]                              # data
+N    <- nrow(data)                                                       # number of counties
+map  <- readOGR(system.file("shapes/columbus.shp", package="spData")[1]) # shape file containing the polygons
+```
+
+In the next Leaflet widget, we show the crime rates and the two covariates.
+
+```{r echo=FALSE}
+rownames(data) <- 1:N-1
+
+#Leaflet expects data to be specified in latitude and longitude using the WGS84 coordinate projection, so we transform mesh_map to this projection as follows
+proj4string(map) <- CRS("+proj=longlat +datum=WGS84")
+map  <- spTransform(map,CRS("+proj=longlat +datum=WGS84 +no_defs"))
+map <- SpatialPolygonsDataFrame(map, data)
+
+pal_crime <- colorNumeric(palette = "YlOrRd", domain = map$CRIME)
+pal_hoval <- colorNumeric(palette = "YlOrRd", domain = map$HOVAL)
+pal_inc   <- colorNumeric(palette = "YlOrRd", domain = map$INC)
+leaflet(map) %>%
+  addPolygons( color = "grey", weight = 1, fillColor = ~ pal_crime(CRIME), fillOpacity = 0.6, group = "Crime")   %>%
+  addPolygons( color = "grey", weight = 1, fillColor = ~ pal_hoval(HOVAL), fillOpacity = 0.6, group = "House Value")   %>%
+  addPolygons( color = "grey", weight = 1, fillColor = ~ pal_inc(INC),     fillOpacity = 0.6, group = "Income")  %>%
+  addLegend_decreasing(pal = pal_crime, values = ~CRIME,title = "Crime (in thousands)",
+                       position = "bottomright", decreasing = TRUE, group = "Crime")  %>%
+  addLegend_decreasing(pal = pal_hoval, values = ~HOVAL,title = "Average Household Value",
+                       position = "bottomright", decreasing = TRUE, group = "House Value")  %>%
+  addLegend_decreasing(pal = pal_inc, values = ~INC,  title = "Average Household Income",
+                       position = "bottomright", decreasing = TRUE, group = "Income") %>%
+  addLayersControl(overlayGroups = c("Crime", "House Value","Income"),
+                   options = layersControlOptions(collapsed = FALSE))  %>%
+  hideGroup("House Value")  %>%
+  hideGroup("Income") %>%
+  addFullscreenControl()
+```
+
+We obtain next the adjacency matrix $\mathbf{W}$.
+
+```{r}
+nb_q <- poly2nb(map)                                   # Construct neighbours list from polygon list
+nb_W <- nb2listw(nb_q, style="B", zero.policy=TRUE)    # Spatial weights for neighbours lists
+W    <- as.matrix(as(nb_W, "sparseMatrix"))            # Adjacency matrix W
+W    <- diag(1/rowSums(W))%*%W                         # Row standardize adjacency matrix  
+v    <- eigen(W)$values                                # Eigenvalues of adjacency matrix
+```
+
+The data list passed to Stan is the following:
+
+```{r}
+B <- cbind(rep(1,N),data[,c(2,3)])                      #Design matrix
+
+dat1 <- list(N              = N,
+             N_covariates   = 3,
+             y              = data$CRIME,
+             B              = B,
+             W              = W,
+             v              = eigen(W)$values,          #Eigenvalues of W  
+             thetaetas      = 5,
+             thetazetas     = 4)
+```
+
+### Gaussian fit
+
+Note that the Gaussian log-likelihood for $\mathbf{x}$ where $\mathbf{D}\mathbf{x}=\mathbf{Z}$ and $Z_i \overset{i.i.d.}{\sim} N(0,1)$ is given by:
+
+$$\log\pi(\mathbf{x}) \propto\log |\mathbf{D}| - 0.5\sum_{i=1}^n [\mathbf{D}\mathbf{w}]_i^2.$$
+
+We declare the spatial effects $\mathbf{x}$ in the transformed parameters and then use the previous log density in the model block. The determinant of $\mathbf{D}$ is $\sum_i \log(1-\rho v_i)$, where the $v_i$'s are the eigenvalues of $\mathbf{W}$.
+
+```{}
+transformed parameters{
+  vector[N] X = (y - B*beta)/sigma;                   // Spatial effects
+}
+
+model{
+  matrix[N,N] D = add_diag(-rho*W, 1);                // D = I - rho W;
+  target += -0.5*dot_self(D*X);   
+  target += sum(log(1-rho*v));                        // Log determinant of D
+  
+  ...
+}
+```
+
+
+```{r, eval = FALSE}
+model_stan_Gauss <- cmdstan_model('../files/stan/GaussSAR2.stan')
+fit_Gauss <- model_stan_Gauss$sample(data = dat1, 
+                                     chains = 4, 
+                                     iter_warmup   = 1000, 
+                                     iter_sampling = 1000)
+
+fit_Gauss$save_object("../files/fits/fit_columbus_Gauss2.rds")
+fit_Gauss$cmdstan_diagnose() #No warnings
+``` 
+
+Let us look at the summary:
+
+```{r}
+fit_Gauss <- readRDS("../files/fits/fit_columbus_Gauss2.rds")
+knitr::kable(head(fit_Gauss$summary(),6), "simple", row.names = NA, digits=2)
+``` 
+
+
+### NIG fit
+
+The SAR model driven with NIG noise can be declared in Stan by just changing one line of code of the Gaussian Stan model. We set the last argument of `modelNIG` to 0 so that the determinant is not computed twice. 
+
+```{}
+model{
+  matrix[N,N] D = add_diag(-rho*W, 1);
+  X ~ modelNIG(D, etas, zetas, h, 0);
+  target += sum(log(1-rho*v));                            // Log determinant of D
+ 
+  ...
+}
+```
+
+```{r, eval = FALSE}
+model_stan_NIG <- cmdstan_model('../files/stan/NIGSAR2.stan')
+fit_NIG <- model_stan_NIG$sample(data = dat1, 
+                                 chains = 4, 
+                                 iter_warmup = 1000, 
+                                 iter_sampling = 1000,
+                                 max_treedepth = 20,
+                                 adapt_delta = 0.999)
+
+fit_NIG$save_object("../files/fits/fit_columbus_NIG2.rds")
+fit_NIG$cmdstan_diagnose() #4 out of 4000 iterations diverged
+``` 
+
+The posterior distributions for the regression coefficients were similar, and the posterior distributions of $\eta^\star$ and $\zeta^\star$ suggest some heavy-tailedness although no asymmetry.
+
+```{r}
+fit_NIG <- readRDS("../files/fits/fit_columbus_NIG2.rds")
+knitr::kable(head(fit_NIG$summary(),8), "simple", row.names = NA, digits=2)
+``` 
+
+
+The posterior draws for $\mathbf{V}$ can be generated based on eq. \@ref(eq:V) and from the posterior draws of $\mathbf{x}$, $\eta^\star$, $\zeta^\star$ and $\rho$ as done next. We utilized the function `VposteriorSAR` located at `../files/utils.R`. High values for $V_i$ indicate that region $i$ has a spike in the spatial effects, that were not captured by the covariates, and are usually too large to be modeled by a Gaussian distribution. 
+
+```{r}
+X     <- as.matrix(as_draws_df(fit_NIG$draws("X")))[,1:N]
+etas  <- as.matrix(as_draws_df(fit_NIG$draws("etas")))[,1]
+zetas <- as.matrix(as_draws_df(fit_NIG$draws("zetas")))[,1]
+rho   <- as.matrix(as_draws_df(fit_NIG$draws("rho")))[,1]
+h     <- rep(1,N)
+
+V_post <- VposteriorSAR(X, rho, W, etas, zetas, h)
+```
+
+In the next leaflet widget, we show the posterior mean and standard deviation of the spatial effects as well as the posterior mean of $\mathbf{V}$.
+
+```{r echo=FALSE}
+sigma      <- as.matrix(as_draws_df(fit_NIG$draws("sigma")))[,1]
+sigmaX     <- sigma*as.matrix(as_draws_df(fit_NIG$draws("X")))[,1:N]
+V          <- colMeans(V_post)
+
+data$xmean <- colMeans(sigmaX)
+data$xsd   <- apply(sigmaX,2,sd)
+data$V     <- V
+
+rownames(data) <- 1:N-1
+map <- SpatialPolygonsDataFrame(map, data)
+pal_xmean <- colorNumeric(palette = c("blue","white","red"), domain = map$xmean)
+pal_xsd   <- colorNumeric(palette = "YlOrRd", domain = map$xsd)
+pal_V     <- colorNumeric(palette = "YlOrRd", domain = map$V)
+
+leaflet(map) %>%
+  addPolygons( color = "grey", weight = 1, fillColor = ~ pal_xmean(xmean), fillOpacity = 0.6, group = "X mean")   %>%
+  addPolygons( color = "grey", weight = 1, fillColor = ~ pal_xsd(xsd)    , fillOpacity = 0.6, group = "X sd"  )   %>%
+  addPolygons( color = "grey", weight = 1, fillColor = ~ pal_V(V)        , fillOpacity = 0.6, group = "V mean")   %>%
+  addLegend_decreasing(pal = pal_xmean, values = ~xmean,title = "Mean of spatial effects",
+                       position = "bottomright", decreasing = TRUE, group = "X mean")  %>%
+  addLegend_decreasing(pal = pal_xsd, values = ~xsd, title = "SD of Spatial effects",
+                       position = "bottomright", decreasing = TRUE, group = "X sd")  %>%
+  addLegend_decreasing(pal = pal_V, values = ~V, title = "mean of V",
+                       position = "bottomright", decreasing = TRUE, group = "V mean")  %>%
+  addLayersControl(overlayGroups = c("X mean", "X sd","V mean"),
+                   options = layersControlOptions(collapsed = FALSE))  %>%
+  hideGroup(c("X sd","V mean"))  %>%
+  addFullscreenControl()
+```
+
+
+## CAR models
+
+ICAR stands for the intrinsic conditional autoregressive process. The word "conditional" on ICAR is because the distribution of each node is defined conditionally on the values of the neighboring nodes:
+
+$$
+x_i|\mathbf{x_{-i}} \sim \mathcal{N}\left(\frac{1}{n_i}\sum_{j:j\sim i}x_j,\frac{\sigma^2}{n_i}\right),
+$$
+
+where $\mathbf{x_{-i}}$ is a vector containing all $z_j$ except $j \neq i$, $j \sim i$ denotes the set of all unordered pairs of neighbors and $n_i$ is the number of neighbors of node $i$. The previous conditional structure leads to a GMRF with a precision matrix with a rank deficiency of 1, given by:
+
+$$
+Q_{i j}=\left\{\begin{array}{ll}
+-1, & i \text { is neighboring } j \\
+n_i, & i=j \\
+0, & \text { else. }
+\end{array}\right.
+$$
+In @GMRF this model was constructed based on the assumption of 'independent' increments:
+$$
+x_i-x_j \sim \mathcal{N}(0, \sigma^2),
+$$
+where independent is written in brackets due to (hidden) linear constraints imposed by the more complicated geometry. The log probability density of $\mathbf{x}$ for $\sigma=1$ is given by:
+
+$$
+\log\pi(\mathbf{x}) \propto -\frac{1}{2}\sum_{i \sim j}(x_i-x_j)^2
+$$
+For the NIG model extension, we assume that the 'independent' increments follow the more flexible NIG distribution.
+
+### Dataset and model
+
+We will model the Scotland Lip cancer dataset using the previous ICAR model for the spatial effects.  The Gaussian model implementation was taken from @Mitzi who studied several parameterizations of this model and their implementation on Stan. Here we consider only the BYM2 parameterization (see @riebler2016intuitive). The observed number of cancer cases at location $i$ is given by:
+
+$$y_i \sim \text{Poisson}(E_i \ RR_i)$$
+$$\log RR_i = \psi_i = x\beta + \sigma(\sqrt{1-\rho}\theta + \sqrt{\rho}\phi), $$
+where:
+
+- $E_i$ is the expected count
+- $RR_i$ is the relative risk at area $i$
+- $x$ is the design matrix
+- $\beta$ are the regression coefficients
+- $\sigma$ is the overall standard deviation
+- $\phi$ is an ICAR spatial component
+- $\theta$ are Gaussian heterogeneous effects
+- $\rho\in[0,1]$ measures how much of the variability comes from the ICAR component
+
+For an explanation of the Stan implementation see @Mitzi. In this application, $x$ only includes one covariate that indicates the proportion of the population engaged in agriculture, fishing, or forestry (AFF).
+
+<!--We can represent these 'independent' increments through the system $\mathbf{D}_{CAR}\mathbf{x} = \mathbf{\Lambda}$, where each row of $\mathbf{D}_{CAR}$ contains one neighboring relationship. The matrix $\mathbf{D}_{CAR}$ is generally rectangular and it is not straightforward how to define the joint density of $\mathbf{x}$ in this case. Instead, we will replace the quadratic penalty on $x_i-x_j$ induced by the log-density of a Gaussian distribution, with the equivalent penalty induced by the log-density of a NIG distribution.--->
+
+```{r}
+source("../files/data/scotland_data.R")
+
+y = data$y;
+E = data$E;
+K = 1;
+x = 0.1 * data$x;
+
+nbs = mungeCARdata4stan(data$adj, data$num);
+N = nbs$N;
+node1 = nbs$node1;
+node2 = nbs$node2;
+N_edges = nbs$N_edges;
+
+#Build the adjacency matrix using INLA library functions
+adj.matrix = sparseMatrix(i=nbs$node1,j=nbs$node2,x=1,symmetric=TRUE)
+#The ICAR precision matrix (note! This is singular)
+Q=  Diagonal(nbs$N, rowSums(adj.matrix)) - adj.matrix
+#Add a small jitter to the diagonal for numerical stability (optional but recommended)
+Q_pert = Q + Diagonal(nbs$N) * max(diag(Q)) * sqrt(.Machine$double.eps)
+
+# Compute the diagonal elements of the covariance matrix subject to the 
+# constraint that the entries of the ICAR sum to zero.
+#See the inla.qinv function help for further details.
+Q_inv = inla.qinv(Q_pert, constr=list(A = matrix(1,1,nbs$N),e=0))
+
+#Compute the geometric mean of the variances, which are on the diagonal of Q.inv
+scaling_factor = exp(mean(log(diag(Q_inv))))
+```
+
+```{r}
+dat1 <- list(N = N,
+             N_edges = N_edges,
+             node1 = node1,
+             node2 = node2,
+             y = y, 
+             K = 1,
+             x = as.matrix(x=x), 
+             E = E,
+             scaling_factor = scaling_factor,
+             theta_etas = 10,
+             theta_zetas = 5)
+```
+
+
+```{r, eval = FALSE}
+model_stan_Gauss <- cmdstan_model('../files/stan/GaussPoissonCAR2.stan')
+fit_Gauss <- model_stan_Gauss$sample(data = dat1, 
+                                     chains = 4, 
+                                     iter_warmup = 5000, 
+                                     iter_sampling = 1000)
+
+fit_Gauss$save_object("../files/fits/fit_scotland_Gauss2.rds")
+fit_Gauss$cmdstan_diagnose()
+``` 
+
+```{r}
+fit_Gauss <- readRDS("../files/fits/fit_scotland_Gauss2.rds")
+knitr::kable(head(fit_Gauss$summary(),5), "simple", row.names = NA, digits=2)
+``` 
+
+### NIG fit
+
+For the NIG implementation we replace the Gaussian log-likelihood for the increments:
+
+```{}
+target += -0.5 * dot_self(phi[node1] - phi[node2]);
+```
+
+by the NIG log-likelihood:
+
+```{}
+for(i in 1:N_edges){
+  ll[i] =   nig_lpdf( phi[node1[i]] - phi[node2[i]] | 0, 1, etas, zetas, 1);}
+target += sum(ll);
+```
+
+
+```{r eval=FALSE}
+model_stan_NIG <- cmdstan_model('../files/stan/NIGPoissonCAR2.stan')
+fit_NIG <- model_stan_NIG$sample(data = dat1, 
+                                   chains = 4, 
+                                   iter_warmup = 5000, 
+                                   iter_sampling = 1000)
+
+fit_NIG$save_object("../files/fits/fit_scotland_NIG2.rds")
+fit_NIG$cmdstan_diagnose() #No warnings
+``` 
+
+We compare now the posterior summaries of the NIG model with the Gaussian model. We observe a higher posterior mean for $\rho$ which indicates that more of the variability comes from the spatially structured effects and less from the spatially unstructured effects, and suggests that the more flexible model for the spatial structure effects could better capture the neighboring relationships in the lattice. The posterior distribution of $\beta$ stills indicates a positive relationship between the covariate AFF (proportion of the population engaged in agriculture, fishing, or forestry) and lip cancer risk, but the posterior mean dropped from 0.36 to 0.26.
+
+```{r}
+fit_NIG <- readRDS("../files/fits/fit_scotland_NIG2.rds")
+knitr::kable(head(fit_NIG$summary(),5), "simple", row.names = NA, digits=2)
+``` 
+
+```{r}
+mcmc_pairs(fit_NIG$draws(c("sigma", "rho", "betas[1]", "etas","zetas")),
+           diag_fun="dens", off_diag_fun="hex")
+
+mcmc_trace(fit_NIG$draws(c("sigma", "rho", "betas[1]", "etas","zetas")), 
+           facet_args = list(ncol = 2, strip.position = "left"))
+```
+
+### Comparizon
+
+We compared both models using the leave-one-out cross-validation estimates with the Pareto smoothed importance sampling (PSIS) algorithm in Stan. The `looic` estimate prefers the NIG model, however, this estimate may not be reliable since some Pareto $k$ diagnostic values are too high.   
+
+```{r warning=FALSE}
+loo1 <- fit_Gauss$loo(save_psis = TRUE)
+loo2 <- fit_NIG$loo(save_psis = TRUE)
+
+loo1[[1]]
+loo2[[1]]
+```
+
+The Pareto $k$ diagnostic values are shown next, which are used to assess the reliability of the estimates. The estimates of the tail shape $k$ are high for several locations and cross the value 1 at locations 15 (NE.fife) and 22 (Aberdeen) for the Gaussian model suggesting that the variance of the raw importance ratios is infinite. High estimates of the tail shape parameter $k$ indicate that the full posterior is not a good importance sampling approximation to the leave-one-out posterior. Thus, the observations are surprising according to the model. This is more likely to happen in a non-robust model with highly influential observations. The mode robust NIG model may reduce the sensitivity with regards to influential observation and it has smaller tail shapes.
+
+
+```{r}
+plot(loo1, label_points = TRUE, main = "Gaussian")
+loo1$psis_object
+
+plot(loo2, label_points = TRUE, main = "NIG")
+loo2$psis_object
+```
+
+
+We generate posterior samples from V next, using eq. eq. \@ref(eq:V):
+
+```{r warning=FALSE}
+X     <- as.data.frame(as_draws_df(fit_NIG$draws("eta"))[,1:N])
+etas  <- as_draws_df(fit_NIG$draws("etas"))$etas
+zetas   <- as_draws_df(fit_NIG$draws("zetas"))$zetas
+
+V <- VposteriorCAR(X, node1, node2, etas, zetas)
+V <- colMeans(V)
+```
+
+### NIG model - Relative risk
+
+In the following Leaflet widget, we plot the mean of the relative risk, and the probability that the relative risk in a given area is larger than 3 $P(RR>3)$. We plot also the posterior mean of $V_i$ for each edge on the graph.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(SpatialEpi)
+library(rgeos)
+
+data(scotland)
+map <- scotland$spatial.polygon
+
+RR  <- as_draws_df(fit_Gauss$draws("RR"))[,1:N]
+exc <- apply(RR, 2, function(x) mean(x>3))
+
+codes <- rgdal::make_EPSG()
+codes[which(codes$code == "27700"), ]
+proj4string(map) <- "+proj=tmerc +lat_0=49 +lon_0=-2
++k=0.9996012717 +x_0=400000 +y_0=-100000 +datum=OSGB36
++units=km +no_defs"
+map <- spTransform(map, CRS("+proj=longlat +datum=WGS84 +no_defs"))
+
+d <- scotland$data[,c("county.names", "cases", "expected", "AFF")]
+names(d) <- c("county", "Y", "E", "AFF")
+d$SIR <- d$Y / d$E
+d$RR   <- unname(colMeans(RR))
+d$LL   <- apply(RR, 2, function(x) quantile(x,0.05))
+d$UL   <- apply(RR, 2, function(x) quantile(x,0.95))
+d$exc  <- exc
+sapply(slot(map, "polygons"), function(x){slot(x, "ID")})
+rownames(d) <- d$county
+map <- SpatialPolygonsDataFrame(map, d, match.ID = TRUE)
+
+centr <- as.data.frame(gCentroid(map, byid = TRUE)) #centroids of each region
+
+mydf <- data.frame(Observation = c("A", "B"),   #Line coordinates
+                   InitialLat = centr[node1,2],
+                   InitialLong = centr[node1,1],
+                   NewLat = centr[node2,2],
+                   NewLong = centr[node2,1],
+                   stringsAsFactors = FALSE)
+
+labels <- sprintf("<strong> %s </strong> <br/>
+  Observed: %s <br/> Expected: %s <br/>
+  AFF: %s <br/> SIR: %s <br/> RR: %s (%s, %s)  <br/> P(RR>2): %s",
+  map$county, y, round(E, 2),
+  x, round(map$SIR, 2), round(map$RR, 2),
+  round(map$LL, 2), round(map$UL, 2),  round(map$exc, 2)) %>% lapply(htmltools::HTML)
+
+pal    <- colorNumeric(palette = "YlOrRd", domain = map$RR)
+palexc <- colorNumeric(palette = "YlOrRd", domain = map$exc)
+palV    <- colorNumeric(palette = "YlOrRd", domain = V)
+ll <- leaflet(map) %>%
+      addTiles(group = "OpenStreetMap") %>%
+      addProviderTiles(providers$Esri.WorldImagery, group = "Sattelite") %>% 
+      addPolygons(
+        color = "grey", weight = 1, fillColor = ~ pal(RR),
+        fillOpacity = 0.5,
+        highlightOptions = highlightOptions(weight = 4),
+        label = labels,
+        labelOptions = labelOptions(
+          style =list("font-weight" = "normal",padding = "3px 8px"),
+          textsize = "15px", direction = "auto"), group = "RR") %>%
+      addLegend_decreasing(
+        pal = pal, values = ~RR, opacity = 0.5, title = "Relative risk mean",
+        position = "bottomright", decreasing = TRUE, group = "RR") %>%
+      addPolygons(
+        color = "grey", weight = 1, fillColor = ~ palexc(exc),
+        fillOpacity = 0.5,
+        highlightOptions = highlightOptions(weight = 4),
+        label = labels,
+        labelOptions = labelOptions(
+          style =list("font-weight" = "normal",padding = "3px 8px"),
+          textsize = "15px", direction = "auto"), group = "Exceedance") %>%
+      addLegend_decreasing(
+        pal = palexc, values = ~exc, opacity = 0.5, decreasing = TRUE,
+        title = "P(RR>2)", position = "bottomright", group = "Exceedance") %>%
+      addPolygons(data = map, color = "grey", opacity =0.9, weight = 1,
+              highlightOptions = highlightOptions(weight = 4),
+              label = labels, group = "V mean",
+              labelOptions = labelOptions(
+              style =list("font-weight" = "normal",padding = "3px 8px"),
+              textsize = "15px", direction = "auto")) %>%
+      addLegend_decreasing(
+        pal = palV, values = V, opacity = 0.5, decreasing = TRUE,
+        title = "V mean", position = "bottomright", group = "V mean")  %>%
+      addLayersControl(overlayGroups = c("RR", "Exceedance","V mean"),
+                       baseGroups = c("OpenStreetMap", "Sattelite"),
+                       options = layersControlOptions(collapsed = FALSE))  %>%
+      hideGroup(c("Exceedance","V mean"))  %>%
+      addFullscreenControl()
+
+for(i in 1:nrow(mydf)){
+    ll <- addPolylines(ll, lat = as.numeric(mydf[i, c(2, 4)]), 
+                           lng = as.numeric(mydf[i, c(3, 5)]), 
+                           color = palV(V[i]), opacity = 1, 
+                           weight = 3, group = "V mean")
+}
+ll
+
+```
+
+### Relative risk - Gaussian model
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+data(scotland)
+map <- scotland$spatial.polygon
+
+RR  <- as_draws_df(fit_NIG$draws("RR"))[,1:N]
+exc <- apply(RR, 2, function(x) mean(x>3))
+
+codes <- rgdal::make_EPSG()
+codes[which(codes$code == "27700"), ]
+proj4string(map) <- "+proj=tmerc +lat_0=49 +lon_0=-2
++k=0.9996012717 +x_0=400000 +y_0=-100000 +datum=OSGB36
++units=km +no_defs"
+map <- spTransform(map, CRS("+proj=longlat +datum=WGS84 +no_defs"))
+
+d <- scotland$data[,c("county.names", "cases", "expected", "AFF")]
+names(d) <- c("county", "Y", "E", "AFF")
+d$SIR <- d$Y / d$E
+d$RR   <- unname(colMeans(RR))
+d$LL   <- apply(RR, 2, function(x) quantile(x,0.05))
+d$UL   <- apply(RR, 2, function(x) quantile(x,0.95))
+d$exc  <- exc
+sapply(slot(map, "polygons"), function(x){slot(x, "ID")})
+rownames(d) <- d$county
+map <- SpatialPolygonsDataFrame(map, d, match.ID = TRUE)
+
+centr <- as.data.frame(gCentroid(map, byid = TRUE)) #centroids of each region
+
+mydf <- data.frame(Observation = c("A", "B"),   #Line coordinates
+                   InitialLat = centr[node1,2],
+                   InitialLong = centr[node1,1],
+                   NewLat = centr[node2,2],
+                   NewLong = centr[node2,1],
+                   stringsAsFactors = FALSE)
+
+labels <- sprintf("<strong> %s </strong> <br/>
+  Observed: %s <br/> Expected: %s <br/>
+  AFF: %s <br/> SIR: %s <br/> RR: %s (%s, %s)  <br/> P(RR>2): %s",
+  map$county, y, round(E, 2),
+  x, round(map$SIR, 2), round(map$RR, 2),
+  round(map$LL, 2), round(map$UL, 2),  round(map$exc, 2)) %>% lapply(htmltools::HTML)
+
+pal    <- colorNumeric(palette = "YlOrRd", domain = map$RR)
+palexc <- colorNumeric(palette = "YlOrRd", domain = map$exc)
+palV    <- colorNumeric(palette = "YlOrRd", domain = V)
+ll <- leaflet(map) %>%
+      addTiles(group = "OpenStreetMap") %>%
+      addProviderTiles(providers$Esri.WorldImagery, group = "Sattelite") %>% 
+      addPolygons(
+        color = "grey", weight = 1, fillColor = ~ pal(RR),
+        fillOpacity = 0.5,
+        highlightOptions = highlightOptions(weight = 4),
+        label = labels,
+        labelOptions = labelOptions(
+          style =list("font-weight" = "normal",padding = "3px 8px"),
+          textsize = "15px", direction = "auto"), group = "RR") %>%
+      addLegend_decreasing(
+        pal = pal, values = ~RR, opacity = 0.5, title = "Relative risk mean",
+        position = "bottomright", decreasing = TRUE, group = "RR") %>%
+      addPolygons(
+        color = "grey", weight = 1, fillColor = ~ palexc(exc),
+        fillOpacity = 0.5,
+        highlightOptions = highlightOptions(weight = 4),
+        label = labels,
+        labelOptions = labelOptions(
+          style =list("font-weight" = "normal",padding = "3px 8px"),
+          textsize = "15px", direction = "auto"), group = "Exceedance") %>%
+      addLegend_decreasing(
+        pal = palexc, values = ~exc, opacity = 0.5, decreasing = TRUE,
+        title = "P(RR>2)", position = "bottomright", group = "Exceedance") %>%
+      addLayersControl(overlayGroups = c("RR", "Exceedance"),
+                       baseGroups = c("OpenStreetMap", "Sattelite"),
+                       options = layersControlOptions(collapsed = FALSE))  %>%
+      hideGroup(c("Exceedance"))  %>%
+      addFullscreenControl()
+
+ll
+
+```
+
+
+

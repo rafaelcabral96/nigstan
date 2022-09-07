@@ -1,0 +1,87 @@
+"0","```r
+##----------------------------------
+## Auxiliary functions
+##----------------------------------
+
+#generalized determinant of matrix x
+det.mp <- function(x) {
+     sigma <- zapsmall(svd(x)$d)   # The singular values of x
+     #prod(sigma[sigma != 0])       # Product of the nonzero singular values
+     sum(log(sigma[sigma != 0]))
+}
+
+#posterior mode of pi(eta|V,theta_eta)
+eta.est <- function(n, V, h, theta_eta){
+  return((-n/2 + sqrt(n^2/4 + 2*theta_eta*sum((V-h)^2/V)))/(2*theta_eta))
+}
+
+#density of GIG distribution
+dGIG <- function(x, p, a, b){
+  return(((a/b)^(p/2)/(2*besselK(sqrt(a*b),p)))*x^(p-1)*exp(-(a*x+b/x)/2))
+}
+
+#density of GIG distribution
+rGIG <- function(n.sample, p, a, b){
+  return(rgig(n = n.sample, lambda = p, psi = a, chi = b))
+}
+
+#first moment of GIG distribution
+GIGM1 <- function(p,a,b){
+  return( sqrt(b/a)*besselK(sqrt(a*b),p+1)/besselK(sqrt(a*b),p) )
+}
+
+#moment of order -1 of GIG distribution
+GIGMm1 <- function(p,a,b){
+  return( sqrt(a/b)*besselK(sqrt(a*b),p+1)/besselK(sqrt(a*b),p) - 2*p/b)
+}
+
+#first moment of GIG distribution
+GIGmode <- function(p,a,b){
+  return( ((p-1)+sqrt((p-1)^2+a*b))/a )
+}
+
+
+#Computes E_{q(V)}[V^(1)] for method \"VI2\" numerically
+VI2EVm1 <- function(d, h, theta){
+  n <- length(d)
+  
+  result <- foreach(i = 1:n, .combine = \"c\") %dopar% {
+    f   <- function(V) V^(-2)*exp(-0.5*(2*sqrt(2*theta)*sqrt((V-h[i])^2/V)+d[i]/V))
+    fm1 <- function(V) V^(-3)*exp(-0.5*(2*sqrt(2*theta)*sqrt((V-h[i])^2/V)+d[i]/V))
+    integrate(fm1,0,Inf)$value/integrate(f,0,Inf)$value
+  }
+  return(result)
+}
+
+#log density of pi(Vi|theta)
+logpriorVi <- function(V, h, theta_eta){
+  return( (1/2)*(-((2*sqrt(2)*sqrt(theta_eta)*abs(h - V))/sqrt(V)) + 2*log(h) + log(theta_eta/2) - 3*log(V)) )
+}
+
+#log density of pi(V|theta)
+logpriorV <- function(V, h, theta_eta){
+  return( sum( (1/2)*(-((2*sqrt(2)*sqrt(theta_eta)*abs(h - V))/sqrt(V)) + 2*log(h) + log(theta_eta/2) - 3*log(V)) ) )
+}
+
+#log density of q(V) in algorithm \"VI2\"
+logsurrogateV  <- function(V,d,h,theta){
+  dens <- 0
+  for(j in 1:length(V)){
+    f        <- function(V) V^(-2)*exp(-0.5*(2*sqrt(2*theta)*sqrt((V-h[j])^2/V)+d[j]/V))
+    int      <- integrate(f,0,Inf)$value
+    dens     <- dens + f(V[j])/int
+  }
+
+  return(log(dens))
+}
+
+#convert marginal scale and practical correlation range samples to kappa and sigma samples
+maternconvert2 <- function(sigmam, range, alpha, d){
+  v         <- alpha - d/2
+  kappa     <- sqrt(8*v)/range
+  sigma     <- sigmam*kappa^(v)*sqrt((gamma(v+d/2)/(gamma(v))*(4*pi)^(d/2)))
+  
+  return(list(kappa = kappa, sigma = sigma))
+}
+
+```"

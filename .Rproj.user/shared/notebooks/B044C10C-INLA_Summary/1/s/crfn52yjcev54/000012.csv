@@ -1,0 +1,4 @@
+"0","```r
+#should have heavy tails but it does not...
+plot(fit$marginals.random$idx$index.20)
+```"

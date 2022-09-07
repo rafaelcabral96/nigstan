@@ -1,0 +1,62 @@
+"0","```r
+rw1.jumps.stan.full =
+\"
+data {
+  int<lower=1> N;
+  int<lower=0> m;
+  vector[N] y;
+  vector[N-m] h;
+  matrix[N-m,N] D;
+
+  real<lower=0> nu; 
+}
+
+parameters {
+  real<lower=0> tauy;
+  real<lower=0> taux;
+  
+  vector<lower=0>[N-m] V ;
+  vector[N] x;
+
+}
+
+
+model {
+
+  //data layer
+  y ~ normal(inv(sqrt(taux))*x, inv(sqrt(tauy)));
+  
+  //latent layer
+  target +=  -0.5*sum(log(V)) -0.5*sum(square(D*x) ./ V);
+
+
+  // priors layer
+  tauy  ~ gamma(1, 0.00005);
+  taux  ~ gamma(1, 0.00005);
+
+  for(i in 1:(N-m)){
+    V[i] ~ gamma(h[i]/nu , 1/nu);
+  }
+
+}
+
+
+generated quantities {
+  vector[N] log_lik;
+  real<lower=0> mse = mean(square(y-x));
+
+  for (n in 1:N){
+    log_lik[n] = normal_lpdf(y[n] | inv(sqrt(taux))*x[n], inv(sqrt(tauy)));}
+    
+}
+
+\"
+
+model = stan_model(model_code=rw1.jumps.stan.full)
+fit.stan = sampling(object=model, 
+               data=list(y=y, N=100, m=1,h=diff(x),D=as.matrix(RW1.matrix(100)),nu=0.005),
+               iter=10000,
+               chains = 1)
+
+saveRDS(fit.stan, \"stan.full.rds\")
+```"

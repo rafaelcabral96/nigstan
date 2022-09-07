@@ -1,0 +1,11 @@
+"0","```r
+fit.stan <- readRDS(\"stan.rds\")
+
+
+ll <- extract_log_lik(fit.stan)
+fit3 <- waic(ll)$waic
+
+```"
+"1","
+100 (100.0%) p_waic estimates greater than 0.4. We recommend trying loo instead.Accessing waic using '$' is deprecated and will be removed in a future release. Please extract the waic estimate from the 'estimates' component instead.
+"

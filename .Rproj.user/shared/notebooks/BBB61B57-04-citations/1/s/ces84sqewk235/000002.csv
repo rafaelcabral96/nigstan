@@ -1,0 +1,65 @@
+"0","library(SpatialEpi)"
+"2","package ‘SpatialEpi’ was built under R version 4.0.5"
+"2","Loading required package: sp
+"
+"2","package ‘sp’ was built under R version 4.0.5"
+"0","library(sp)"
+"0","library(leaflet)"
+"2","package ‘leaflet’ was built under R version 4.0.5"
+"2","Registered S3 method overwritten by 'htmlwidgets':
+  method           from         
+  print.htmlwidget tools:rstudio
+"
+"0","library(cmdstanr)"
+"2","package ‘cmdstanr’ was built under R version 4.0.5"
+"2","This is cmdstanr version 0.4.0
+"
+"2","- Online documentation and vignettes at mc-stan.org/cmdstanr
+"
+"2","- CmdStan path set to: C:/Users/Rafael Cabral/Documents/.cmdstanr/cmdstan-2.28.0
+"
+"2","- Use set_cmdstan_path() to change the path
+"
+"2","
+A newer version of CmdStan is available. See ?install_cmdstan() to install it.
+To disable this check set option or environment variable CMDSTANR_NO_VER_CHECK=TRUE.
+"
+"0","library(posterior)"
+"2","package ‘posterior’ was built under R version 4.0.5"
+"2","This is posterior version 1.1.0
+"
+"2","
+Attaching package: ‘posterior’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    mad, sd, var
+
+"
+"0","library(bayesplot)"
+"2","package ‘bayesplot’ was built under R version 4.0.5"
+"2","This is bayesplot version 1.8.1
+"
+"2","- Online documentation and vignettes at mc-stan.org/bayesplot
+"
+"2","- bayesplot theme set to bayesplot::theme_default()
+"
+"2","   * Does _not_ affect other ggplot2 plots
+"
+"2","   * See ?bayesplot_theme_set for details on theme setting
+"
+"2","
+Attaching package: ‘bayesplot’
+
+"
+"2","The following object is masked from ‘package:posterior’:
+
+    rhat
+
+"
+"0","source(""../files/utils.R"")"
+"0","source(""../files/data/scotland_data.R"")"
+"0",""
+"0",""
+"0","options(mc.cores = parallel::detectCores())"

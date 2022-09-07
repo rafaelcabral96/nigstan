@@ -1,0 +1,45 @@
+"1","
+Expected number of effective parameters(stdev): 83.29(5.07)
+Number of equivalent replicates : 1.20 
+
+Deviance Information Criterion (DIC) ...............: -119.57
+Deviance Information Criterion (DIC, saturated) ....: 143.61
+Effective number of parameters .....................: 63.91
+
+Watanabe-Akaike information criterion (WAIC) ...: -110.47
+Effective number of parameters .................: 54.11
+
+Marginal log-Likelihood:  -74.70 
+Posterior marginals for the linear predictor and
+ the fitted values are computed
+"
+"0","```r
+inla2.dic   <- fit$dic$dic
+inla2.waic  <- fit$waic$waic
+inla2.neffp <- fit$neffp
+inla2.mlik  <- fit$mlik
+
+inla2.dic
+```"
+"1","[1] -119.5672
+"
+"0","```r
+inla2.waic
+```"
+"1","[1] -110.4727
+"
+"0","```r
+inla2.neffp
+```"
+"1","                                       [,1]
+Expectected  number of parameters 83.287009
+Stdev of the number of parameters  5.066474
+Number of equivalent replicates    1.200667
+"
+"0","```r
+inla2.mlik 
+```"
+"1","                                           [,1]
+log marginal-likelihood (integration) -78.98211
+log marginal-likelihood (Gaussian)    -74.70545
+"

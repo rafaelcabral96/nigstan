@@ -1,0 +1,2 @@
+"0","mcmc_pairs(fit_Gauss$draws(c(""sigmae"", ""sigma"", ""kappa"")),"
+"0","           diag_fun=""dens"", off_diag_fun=""hex"")"

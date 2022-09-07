@@ -1,0 +1,2 @@
+"0","fit_NIG   <- readRDS(""../files/fits/fit_temp_NIG.rds"")"
+"0","knitr::kable(head(fit_NIG$summary(),9), ""simple"", row.names = NA, digits=2)"

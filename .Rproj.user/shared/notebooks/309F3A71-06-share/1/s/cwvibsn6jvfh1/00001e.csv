@@ -1,0 +1,5 @@
+"0","leaflet(weatherdata)
+"
+"2","Error in tempfile(pattern = ""_rs_html_"", tmpdir = outputFolder, fileext = "".html"") : 
+  temporary name too long
+"

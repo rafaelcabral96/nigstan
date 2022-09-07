@@ -1,0 +1,72 @@
+"0","```r
+  #Find mode of pdf
+  mode <- optimize(pdf, interval = c(supp.min,supp.max), maximum = T)$maximum
+
+```"
+"1","Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+Warning in optimize(pdf, interval = c(supp.min, supp.max), maximum = T) :
+  NA/Inf replaced by maximum positive value
+"

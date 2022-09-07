@@ -1,0 +1,29 @@
+"0","```r
+stanfit = stan(\"columbus.stan\", 
+                    data=list(N=N,
+                              N_edges=N_edges,
+                              node1=node1,
+                              node2=node2,
+                              y=y,
+                              hv=hv,
+                              inc=inc,
+                              theta_nu = 5,
+                              theta_sigma = 0.5),
+                    warmup=10000, 
+                    iter=15000,
+                    chains=1)
+```"
+"1","'C:/rtools40/usr/mingw_/bin/g++' not foundError in open.connection(con, open = mode) : 
+  Could not resolve host: github.com
+hash mismatch so recompiling; make sure Stan code ends with a blank line
+"
+"1","
+SAMPLING FOR MODEL 'columbus' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.001 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:     1 / 15000 [  0%]  (Warmup)
+"

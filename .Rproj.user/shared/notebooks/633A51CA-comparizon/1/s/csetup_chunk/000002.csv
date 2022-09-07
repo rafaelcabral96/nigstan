@@ -1,0 +1,148 @@
+"0","knitr::opts_chunk$set(echo = TRUE)"
+"0","library(rstan)"
+"2","Loading required package: StanHeaders
+"
+"2","Loading required package: ggplot2
+"
+"2","package ‘ggplot2’ was built under R version 4.0.5"
+"2","rstan (Version 2.21.2, GitRev: 2e1f913d3ca3)
+"
+"2","For execution on a local, multicore CPU with excess RAM we recommend calling
+options(mc.cores = parallel::detectCores()).
+To avoid recompilation of unchanged Stan programs, we recommend calling
+rstan_options(auto_write = TRUE)
+"
+"2","Do not specify '-march=native' in 'LOCAL_CPPFLAGS' or a Makevars file
+"
+"2","
+Attaching package: ‘rstan’
+
+"
+"2","The following objects are masked from ‘package:posterior’:
+
+    ess_bulk, ess_tail
+
+"
+"0","options(mc.cores = parallel::detectCores())"
+"0","rstan_options(auto_write = TRUE)"
+"0","source('C:/Users/Rafael Cabral/Desktop/KAUST/PhD/PhD Notes/auxi.R', encoding = 'UTF-8')"
+"2","Loading required package: coda
+"
+"2","
+Attaching package: ‘coda’
+
+"
+"2","The following object is masked from ‘package:rstan’:
+
+    traceplot
+
+"
+"2","Linked to JAGS 4.3.0
+"
+"2","Loaded modules: basemod,bugs
+"
+"2","
+Attaching package: ‘runjags’
+
+"
+"2","The following object is masked from ‘package:rstan’:
+
+    extract
+
+"
+"2","Loading required package: dplyr
+"
+"2","package ‘dplyr’ was built under R version 4.0.5"
+"2","
+Attaching package: ‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"2","Loading required package: tidyr
+"
+"2","package ‘tidyr’ was built under R version 4.0.5"
+"2","
+Attaching package: ‘tidyr’
+
+"
+"2","The following object is masked from ‘package:runjags’:
+
+    extract
+
+"
+"2","The following object is masked from ‘package:rstan’:
+
+    extract
+
+"
+"2","The following objects are masked from ‘package:Matrix’:
+
+    expand, pack, unpack
+
+"
+"2","Registered S3 method overwritten by 'GGally':
+  method from   
+  +.gg   ggplot2
+"
+"2","Registered S3 method overwritten by 'mcmcr':
+  method               from 
+  as.mcmc.list.mcarray rjags
+"
+"2","
+Attaching package: ‘mcmcr’
+
+"
+"2","The following object is masked from ‘package:bayesplot’:
+
+    rhat
+
+"
+"2","The following objects are masked from ‘package:posterior’:
+
+    nchains, rhat, split_chains
+
+"
+"2","package ‘MASS’ was built under R version 4.0.5"
+"2","
+Attaching package: ‘MASS’
+
+"
+"2","The following object is masked _by_ ‘.GlobalEnv’:
+
+    coop
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    select
+
+"
+"2","package ‘GeneralizedHyperbolic’ was built under R version 4.0.4"
+"2","
+Attaching package: ‘reshape2’
+
+"
+"2","The following object is masked from ‘package:tidyr’:
+
+    smiths
+
+"
+"2","
+Attaching package: ‘gridExtra’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    combine
+
+"
+"0","library(cmdstanr)"

@@ -1,0 +1,18 @@
+h1:theoretical-background Theoretical background
+h2:nig-distribution NIG distribution
+h2:new-parameterization New parameterization
+h3:variance-and-mean-correction Variance and mean correction
+fig:NIGplot PDF of NIG distribution in log scale
+h3:Tailcorrection Tail correction
+h2:framework-for-extending-gaussian-models Framework for extending Gaussian models
+h3:ilustration-with-the-rw1-process Ilustration with the RW1 process
+fig:RW1sample Sample of mixing vector $\\mathbf{V}$, noise vector $\\mathbf{\\Lambda}$ and RW1 vector $\\mathbf{x}$
+h3:models-defined-via-mathbfdmathbfx-mathbfz Models defined via 
+h3:generic-framework Generic framework
+h3:sample-paths Sample paths
+fig:compareSPDE Sample paths of a Matérn model in 2D with $\\alpha=2$
+h2:penalized-complexity-priors Penalized complexity priors
+h2:useful-properties-of-the-vector-mathbfx Useful properties of the vector 
+h3:joint-pdf-of-mathbfx Joint PDF of 
+h3:mixing-distribution-vector-mathbfv Mixing distribution vector 
+

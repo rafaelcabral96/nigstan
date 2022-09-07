@@ -1,0 +1,5 @@
+"0","```r
+D <- RW1.matrix(N)
+h <- rep(1,N-1)
+theta_eta = 10
+```"

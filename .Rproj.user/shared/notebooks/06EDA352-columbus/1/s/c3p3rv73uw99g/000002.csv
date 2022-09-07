@@ -1,0 +1,40 @@
+"0","```r
+#Ohio Crime data
+library(spdep)
+```"
+"1","Loading required package: spData
+To access larger datasets in this package, install the spDataLarge package with: `install.packages('spDataLarge',
+repos='https://nowosad.github.io/drat/', type='source')`
+Loading required package: sf
+package ‘sf’ was built under R version 4.0.5Linking to GEOS 3.9.0, GDAL 3.2.1, PROJ 7.2.1
+"
+"0","```r
+data(columbus)
+
+data <- columbus[,c(\"CRIME\",\"HOVAL\",\"INC\")]
+
+if (requireNamespace(\"rgdal\", quietly = TRUE)) {
+  library(rgdal)
+  columbus <- readOGR(system.file(\"shapes/columbus.shp\", package=\"spData\")[1])
+  plot(columbus)
+}
+```"
+"1","package ‘rgdal’ was built under R version 4.0.5rgdal: version: 1.5-23, (SVN revision 1121)
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 3.2.1, released 2020/12/29
+Path to GDAL shared files: C:/R/library/rgdal/gdal
+GDAL binary built with GEOS: TRUE 
+Loaded PROJ runtime: Rel. 7.2.1, January 1st, 2021, [PJ_VERSION: 721]
+Path to PROJ shared files: C:/R/library/rgdal/proj
+PROJ CDN enabled: FALSE
+Linking to sp version:1.4-5
+To mute warnings of possible GDAL/OSR exportToProj4() degradation,
+use options(\"rgdal_show_exportToProj4_warnings\"=\"none\") before loading rgdal.
+Overwritten PROJ_LIB was C:/R/library/rgdal/proj
+"
+"1","OGR data source with driver: ESRI Shapefile 
+Source: \"C:\R\library\spData\shapes\columbus.shp\", layer: \"columbus\"
+with 49 features
+It has 20 fields
+Integer64 fields read as strings:  COLUMBUS_ COLUMBUS_I POLYID 
+"

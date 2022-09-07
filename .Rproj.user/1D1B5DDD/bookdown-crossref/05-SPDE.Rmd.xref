@@ -1,0 +1,15 @@
+h1:spatial-matérn-model Spatial Matérn model
+h2:introduction Introduction
+h2:implementation Implementation
+h2:libraries-and-data Libraries and data
+h2:discretization-mesh Discretization mesh
+h2:data-plot Data plot
+h2:priors Priors
+h2:stan-fit-with-a-gaussian-model Stan fit with a Gaussian model
+h2:stan-fit-with-a-nig-driving-noise Stan fit with a NIG driving noise
+h2:leave-one-out-cross-validation Leave-one-out cross validation
+h2:prediction Prediction
+h4:nig-prediction NIG prediction
+h4:gaussian-prediction Gaussian prediction
+h3:posterior-distribution-of-mathbfvoslashmathbfh Posterior distribution of 
+

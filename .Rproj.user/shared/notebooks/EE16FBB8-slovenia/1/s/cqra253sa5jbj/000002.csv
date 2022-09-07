@@ -1,0 +1,5 @@
+"0","```r
+OE <- log(O/E) #observed/expected
+jumps <- OE[node2] - OE[node1]
+hist(jumps)
+```"

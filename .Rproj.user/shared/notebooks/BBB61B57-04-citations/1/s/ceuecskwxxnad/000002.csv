@@ -1,0 +1,5 @@
+"0","fit_Gauss <- readRDS(""fit_scotland_Gauss.rds"")"
+"0","fit_NIG   <- readRDS(""fit_scotland_NIG.rds"")"
+"0",""
+"0","mcmc_pairs(fit_Gauss$draws(c(""beta[1]"", ""beta[2]"", ""sigma"")),"
+"0","           diag_fun=""dens"", off_diag_fun=""hex"")"

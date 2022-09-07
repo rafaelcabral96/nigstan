@@ -1,0 +1,8 @@
+"0","```r
+
+# D*x should be normally distributed (using mean estimates)
+D  <- RW1.matrix(length(x))
+Dx <- D %*% result1$summary.random$x[,2]
+sigma <- 1/sqrt(result1$summary.hyperpar$mean[2])
+plot(Dx/(sqrt(0.01)*sigma))
+```"

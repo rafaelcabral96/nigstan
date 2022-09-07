@@ -1,0 +1,7 @@
+"0","X     <- as.matrix(as_draws_df(fit_NIG$draws(""X"")))[,1:N]"
+"0","etas  <- as.matrix(as_draws_df(fit_NIG$draws(""etas"")))[,1]"
+"0","mus   <- as.matrix(as_draws_df(fit_NIG$draws(""mus"")))[,1]"
+"0","h     <- rep(1,N_edges)"
+"0",""
+"0","V_post <- Vposterior(X, 0, D, etas, mus, h)"
+"0","plot(colMeans(V_post))"

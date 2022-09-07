@@ -1,0 +1,210 @@
+"0","```r
+##-----------------------------
+## Essential functions
+##-----------------------------
+
+#This is wrong. E_g(x,theta)[log pi g(x,theta)] needs to be computed by monte carlo... there does not seem to be an analitical way to do this. first you need to find pdf of g(x,theta) which is pi(x,theta|y,V) -> joint posterior from Cristian paper
+#Could be done... you already generate samples from q(x,theta), you just need to evaluate using pdf of joint -> talk with H to figure out Q of posterior...
+ELBOVI2 <- function(fit){
+  d         <- fit$d
+  h         <- fit$h
+  theta_eta <- fit$theta_eta
+  
+  ELBO = -0.5*fit$dic$mean.deviance
+  
+  for(i in 1:length(h)){
+    pdfVi <- function(V) ifelse(V>0, V^(-2)*exp(-0.5*d[i]/V-sqrt(2*theta_eta)*sqrt((V-h[i])^2/V)),0)
+    intVi <- integrate(pdfVi,0,Inf)$value
+    qVi   <- function(V) pdfVi(V)/intVi
+    
+    #mean value of log of V wrt q(V)
+    #integrant <- function(V){ 
+    #  val <- qVi(V)*log(V)
+    #  ifelse(is.nan(val), 0, val)}
+    #
+    #ELBO      <- ELBO + 0.5*( log(fit$V[i]) - integrate(integrant,0,Inf, rel.tol = 1e-10)$value )
+
+    #mean value of log pi(V)/ wrt q(V)
+    integrant <- function(V){
+                val <- qVi(V)*(logpriorVi(V, h[i], theta_eta)-log(qVi(V))) #this can be so small that is returns NAN
+                ifelse(is.nan(val), 0, val)}
+    
+    ELBO      <- ELBO + integrate(integrant,0,Inf, rel.tol = 1e-10)$value
+  }
+  return(ELBO)
+}
+
+
+#Compute discrepency d by sampling
+compute.d.sampling <- function(fit, D.config){
+  
+  n.sampling  <- D.config$n.sampling
+  selection   <- D.config$selection
+  Dfunc       <- D.config$Dfunc
+  
+  samples <- inla.posterior.sample(n = n.sampling, fit, selection = selection,
+                                  intern = FALSE, use.improved.mean = TRUE, skew.corr = TRUE,
+                                  add.names = TRUE, seed = 0L, num.threads = 0,
+                                  verbose = FALSE)
+  
+      
+  Lambda <- foreach(i = 1:n.sampling, .combine = 'rbind', .packages = \"Matrix\") %dopar% {
+    hyperpar  <- samples[[i]]$hyperpar
+    postx     <- c(samples[[i]]$latent)
+    (Dfunc(hyperpar)%*%postx)[,1]} 
+  
+  return(colMeans(Lambda^2))
+}
+
+#input is hyperpermater vector in internal scale
+#from.theta <- function(fit, theta){
+#  theta    <- numeric(fit$nhyper)
+#  for(i in 1:length(theta)){
+#    theta[i] <- fit$misc$from.theta[[i]](configi$theta[i])
+#  }
+#  return(theta)
+#}
+
+#To do, not working I need covariance matrix for each hyperparamter combination... where do I find precision matrix of each hyperparameter combination?
+#Works for AR1, so maybe it just fails for intrisinc models...
+#Compute discrepancy d through configs (check with H)
+#Important apply skewness correction here
+compute.d.configs <- function(fit, D.config){
+  
+  indexname   <- D.config$indexname
+  Dfunc       <- D.config$Dfunc
+  h           <- D.config$h
+ 
+  nconfigs <- length(fit$misc$configs$config)
+  ll       <- numeric(nconfigs)                 #ll for each weight
+  dconfigs <- matrix(NA, nrow = nconfigs, ncol = length(h))
+  
+  #matrix Q has high dimension predictor + x + coefficients, etc. you need to pick relevant postion
+  field.pos = which(fit$misc$configs$contents$tag == indexname)
+  matrix.divisions = cumsum(fit$misc$configs$contents$length)
+  matrix.start = matrix.divisions[field.pos-1]+1
+  matrix.end   = matrix.divisions[field.pos]
+  
+  dmatrix   <- matrix(NA, nrow = nconfigs, ncol = length(h))
+  for(i in 1:nconfigs){
+    configi <- fit$misc$configs$config[[i]]
+    m       <- configi$improved.mean[matrix.start:matrix.end]
+    #Sigma   <- chol2inv(configi$Qinv[matrix.start:matrix.end, matrix.start:matrix.end]) #this is not the precision matrix of the conditional posterior
+    Sigma    <- configi$Qinv[matrix.start:matrix.end, matrix.start:matrix.end] #not Sigma this is diagonal
+    Di       <- Dfunc(configi$theta)     #Attention configi$theta is in internal scale
+    dmatrix[i,] <- ((Di%*%m)^2)[,1] +  diag(Di%*%Sigma%*%t(Di)) 
+    ll[i]   <- configi$log.posterior
+  }
+  weights = exp(ll)/sum(exp(ll))
+  d <- rep(0, length(h))
+  for(i in 1:nconfigs){
+    d <- d + dmatrix[i,]*weights[i]
+  }
+  return(d)
+  
+}
+
+#model name, N, and TRUE FALSE list which indicates where are the relevant hyperparametres
+#to do: make these truly sparce dgclass of whatever
+Dfuncsel <- function(model, N, D.config = NULL){
+  hyperparsel = D.func$hyperparsel
+  if(model == \"rw1\"){ #model with other boundary conditions not implemented
+    D     <- RW1.matrix(N)
+    Dfunc <- function(theta){ 
+      prec <- exp(theta[hyperparsel]) 
+      return(sqrt(prec)*D)
+    }
+  }
+  
+  else if(model == \"rw2\"){ # this is it in discrete case, for continuous case look at H paper
+    D     <- RW2.matrix(N)
+    Dfunc <- function(theta){ 
+      prec <- exp(theta[hyperparsel]) 
+      return(sqrt(prec)*D)
+    }
+  }
+  
+  else if(model == \"ar1\"){
+    Dfunc <- function(theta){ 
+      theta <- theta[hyperparsel]
+      kappa <- exp(theta[1L])
+      rho   =  2*exp(theta[2L])/(1 + exp(theta[2L])) - 1
+      taux  =  kappa/(1-rho^2)
+      
+      D <- bandSparse(N, N,
+                  (-1):1, 
+                  list(rep(-rho, N-1), 
+                       rep(1, N), 
+                       rep(0, N-1)))
+      D[1,1] = sqrt(1-rho^2)
+    
+      return(sqrt(taux)*D)
+    }
+  }
+  
+  else if(model == \"ar\"){
+   #priors are too complicated - you need to find a way to copy+paste priors in fit to rgeneric definition 
+  }
+  
+  else if(model == \"spde\"){
+    alpha  <- D.config$alpha
+    dim    <- D.config$dim
+    v      <- alpha - dim/2
+    C      <- Diagonal(N, D.config$h)
+    G      <- D.config$G
+    Dfunc  <- function(theta){
+      theta  <- theta[hyperparsel]
+      range  <- exp(theta[1L])
+      sigmam <- exp(theta[2L]) 
+      kappa     <- sqrt(8*v)/range
+      sigma     <- sigmam*kappa^(v)*sqrt((gamma(v+dim/2)/(gamma(v))*(4*pi)^(dim/2)))
+      return((1/sigma)*(kappa^2*C + G))
+    } 
+  }
+  
+  else if(model == \"iid\"){  #case when scale already present is not implemented
+     D = Diagonal(N, 1)
+     Dfunc <- function(theta){  
+       prec <- exp(theta[hyperparsel]) 
+       return(sqrt(prec)*D)
+    }
+  }
+  
+  else if(model == \"besag\"){ 
+    #no sum do 0 constraint but you can add soft one - careful you are allowing V of the last iteration to be large, fix last V=1 and set h to be very low...
+    
+    #name1 <- sub(\"^.*graph\\s*(.+?)\\s*\\).*$\", \"\\1\", term_string)
+    #name2 <- sub(\"^.*graph\\s*(.+?)\\s*\\,.*$\", \"\\1\", term_string)
+    #if(nchar(name1)>nchar(name2)){ 
+    #  name = substring(name2,3)
+    #}else{ name = substring(name1,3)}
+    #tryCatch({graph.file <- get(name)},error = function(e){stop(\"Error catching graph file\")})
+    #if(class(graph_file) != \"inla.graph\") stop(\"Graph object is not inla.graph object\")
+     
+    #graph.file <- fit$graph
+      
+    W <- inla.graph2matrix(D.config$graph)
+    ncol <- D.config$graph$n
+    nrow <-  sum(W[lower.tri(W,diag=FALSE)])
+    D <- matrix(0, nrow = nrow, ncol = ncol)
+    row = 1
+    for(j in 1:ncol){
+      neig <- which(as.logical((W[j,]>0)))
+      for(i in 1:length(neig)){
+        if(neig[i]>j){
+          D[row,j] <- -1
+          D[row,neig[i]] <- 1
+          row = row + 1
+        }
+      }
+    }
+    D <- Matrix(D, sparse = TRUE)
+    #D <- rbind(D, rep(1, ncol(D)))
+
+    Dfunc <- function(theta){  
+       prec <- exp(theta[hyperparsel]) 
+       return(sqrt(prec)*D) }
+    return(Dfunc)
+  }
+}
+```"

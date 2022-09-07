@@ -1,0 +1,66 @@
+"0","```r
+nb_q <- poly2nb(columbus)
+nb_B <- nb2listw(nb_q, style=\"B\", zero.policy=TRUE)
+B <- as(nb_B, \"CsparseMatrix\")
+library(igraph)
+g1 <- graph.adjacency(B, mode=\"undirected\")
+B1 <- get.adjacency(g1)
+A  <- unname(as.matrix(diag(unname(rowSums(B1))) - B1))
+
+# You are using different distribution for V (with mean 1) -> He is using another one so you should expect different results
+
+stanfit = stan(\"columbus2.stan\", 
+                    data=list(N=N,
+                              I=as.matrix(Diagonal(N)),
+                              A=A,
+                              y=y,
+                              hv=hv,
+                              inc=inc,
+                              theta_nu = 5),
+                    warmup=10000, 
+                    iter=40000,
+                    chains=1)
+```"
+"1","'C:/rtools40/usr/mingw_/bin/g++' not foundhash mismatch so recompiling; make sure Stan code ends with a blank line
+"
+"1","
+SAMPLING FOR MODEL 'columbus2' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.001 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:     1 / 40000 [  0%]  (Warmup)
+Chain 1: Iteration:  4000 / 40000 [ 10%]  (Warmup)
+Chain 1: Iteration:  8000 / 40000 [ 20%]  (Warmup)
+Chain 1: Iteration: 10001 / 40000 [ 25%]  (Sampling)
+Chain 1: Iteration: 14000 / 40000 [ 35%]  (Sampling)
+Chain 1: Iteration: 18000 / 40000 [ 45%]  (Sampling)
+Chain 1: Iteration: 22000 / 40000 [ 55%]  (Sampling)
+Chain 1: Iteration: 26000 / 40000 [ 65%]  (Sampling)
+Chain 1: Iteration: 30000 / 40000 [ 75%]  (Sampling)
+Chain 1: Iteration: 34000 / 40000 [ 85%]  (Sampling)
+Chain 1: Iteration: 38000 / 40000 [ 95%]  (Sampling)
+Chain 1: Iteration: 40000 / 40000 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 1007.96 seconds (Warm-up)
+Chain 1:                9789.67 seconds (Sampling)
+Chain 1:                10797.6 seconds (Total)
+Chain 1: 
+"
+"1","There were 1008 divergent transitions after warmup. See
+http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+to find out why this is a problem and how to eliminate them.There were 28962 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceededExamine the pairs() plot to diagnose sampling problems
+"
+"0","```r
+fit   <- as.data.frame(stanfit)
+setwd(\"C:/Users/Rafael Cabral/Desktop/KAUST/PhD/PhD Notes/Files/STAN\")
+```"
+"1","The working directory was changed to C:/Users/Rafael Cabral/Desktop/KAUST/PhD/PhD Notes/Files/STAN inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks.
+"
+"0","```r
+saveRDS(fit, \"crimefit.rds\")
+saveRDS(stanfit, \"crimestanfit.rds\")
+```"

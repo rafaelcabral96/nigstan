@@ -1,0 +1,14 @@
+"0","library(posterior)
+"
+"2","package ‘posterior’ was built under R version 4.0.5"
+"2","This is posterior version 1.1.0
+"
+"2","
+Attaching package: ‘posterior’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    mad, sd, var
+
+"

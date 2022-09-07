@@ -1,0 +1,53 @@
+"0","#Non-Gaussian"
+"0","fits <- VINIG(fit, selection = list(x=1:N), iter = 5, theta_eta = 10, cores = 4, d.sampling = TRUE)"
+"2","Warning in inla.model.properties.generic(inla.trim.family(model), mm[names(mm) ==  :"
+"2","
+ "
+"2"," Model 'rgeneric' in section 'latent' is marked as 'experimental'; changes may appear at any time.
+  Use this model with extra care!!! Further warnings are disabled.
+"
+"1","
+0Oo----------- Iteration 1 -----------oO0
+"
+"1","
+"
+"1","0Oo----------- Iteration 2 -----------oO0
+"
+"1","Rate of change of V's for x : 0.394174780476235
+"
+"1","
+"
+"1","0Oo----------- Iteration 3 -----------oO0
+"
+"1","Rate of change of V's for x : 0.395967858991144
+"
+"1","
+"
+"1","0Oo----------- Iteration 4 -----------oO0
+"
+"1","Rate of change of V's for x : 0.288962100823018
+"
+"2","Error in inla.inlaprogram.has.crashed() : 
+  The inla-program exited with an error. Unless you interupted it yourself, please rerun with verbose=TRUE and check the output carefully.
+  If this does not help, please contact the developers at <help@r-inla.org>.
+"
+"1","
+ *** inla.core.safe: "
+"1"," "
+"1","inla.program has crashed: rerun to get better initial values. try=1/2"
+"1"," "
+"1","
+"
+"1","
+ *** inla.core.safe: "
+"1"," "
+"1","rerun with improved initial values"
+"1"," "
+"1","
+"
+"1","
+"
+"1","0Oo----------- Iteration 5 -----------oO0
+"
+"1","Rate of change of V's for x : 0.188345268946408
+"

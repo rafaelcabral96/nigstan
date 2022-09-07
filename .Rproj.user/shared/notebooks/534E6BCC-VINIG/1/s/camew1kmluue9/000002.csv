@@ -1,0 +1,7 @@
+"0","```r
+library(INLA)
+source('C:/Users/Rafael Cabral/Desktop/KAUST/PhD/PhD Notes/auxi.R', encoding = 'UTF-8')
+library(foreach)
+library(doSNOW)
+library(readr)
+```"

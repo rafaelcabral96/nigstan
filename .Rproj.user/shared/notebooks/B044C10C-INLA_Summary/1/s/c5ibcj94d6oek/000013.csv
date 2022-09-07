@@ -1,0 +1,13 @@
+"0","```r
+#new proposal for V (full posterior mean given mean of x, sigma_x, sigma_e)
+
+
+#nu <- mode.GIG(-(n-1)/2+1, 2*theta.nu, sum( (V-h)^2/V ))
+#hist(rgig(n = 10000, lambda = -(n-1)/2+1, psi = 2*theta.nu, chi = sum( (V-h)^2/V )))
+#new proposal for nu (full posterior mean given mean of V)
+
+#plot Vs at every iteration
+
+#finish loop
+
+```"

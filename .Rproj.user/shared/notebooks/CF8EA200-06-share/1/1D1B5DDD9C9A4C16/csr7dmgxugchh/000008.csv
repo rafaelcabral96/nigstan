@@ -1,0 +1,13 @@
+"0","fit_Gauss <- readRDS(""fit_Gauss.rds"")"
+"0","fit_NIG   <- readRDS(""fit_NIG.rds"")"
+"0","  "
+"0","bayesplot_grid("
+"0","  mcmc_hist(fit_Gauss$draws(""sigma"")),"
+"0","  mcmc_hist(fit_NIG$draws(""sigma"")),"
+"0","  titles = c(""Scale parameter of Gaussian latent field"", ""Scale parameter of NIG latent field""),"
+"0","  xlim = c(4, 16)"
+"0",")"
+"2","`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+"
+"2","`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+"

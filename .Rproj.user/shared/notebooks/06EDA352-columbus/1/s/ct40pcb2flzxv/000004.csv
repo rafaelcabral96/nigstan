@@ -1,0 +1,11 @@
+"0","```r
+
+quantile(fit$kappa, prob = c(0.05,0.95))
+```"
+"1","       5%       95% 
+0.1736433 0.5332385 
+"
+"0","```r
+eta    <- fit[,strtrim(colnames(fit),4)==\"eta[\"]
+plot.tau.trace(1:N,eta)
+```"

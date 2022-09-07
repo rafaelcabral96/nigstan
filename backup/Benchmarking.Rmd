@@ -1,0 +1,101 @@
+# Simulations
+
+The point of this section is to show that integrating out the mixing distributions $V_i$ of the latent field $\mathbf{x}$ leads to a significant speed up, which is not surprising, since we are reducing the dimension of the parameter space explored in Stan by almost halve.
+A further speep up is obtained when leveraging on sparse matrix computations and within-chain paralellization.
+
+Extreme case high values of ets and mus, take longer
+
+## Libraries
+
+```{r message=FALSE, warning=FALSE}
+library(ggplot2)              # More plots
+library(reshape2)
+library(Matrix)
+library(cmdstanr)             # CmdStan R interface
+library(SuppDists)            # Evaluate density of a InvGauss distribution
+source("../files/utils.R")    # Several utility functions
+
+options(mc.cores = parallel::detectCores())
+```
+
+## Random Walk 1
+```{r }
+n = 2000
+m=1
+sigmay = 0.7
+eta    = 1
+
+set.seed(123)
+V   <- rinvGauss(n,nu=1,lambda = 1/eta)
+L   <- rnorm(n,0,V)
+
+path <- cumsum(L) + rnorm(n, 0, sigmay)    
+
+df <- data.frame(index = 1:n, path)
+
+df_melt = melt(df, id.vars = 'index')
+ggplot(df_melt, aes(x = index, y = value)) + 
+    geom_point(size=1) + 
+    geom_line(size=0.5) + 
+    theme(aspect.ratio = 0.5)
+```
+
+### Conditional Gaussian representation
+```{r}
+D    <- RW1.matrix(n)
+dat1 <- list(N  = n-m,
+             Ny = n,
+             y  = path,
+             h  = rep(1,n-m),
+             meanx = 1,
+             D     = as.matrix(D),
+             sigmay = sigmay,
+             thetaetas = 10,
+             thetamus = 5)
+```
+
+```{r , eval = FALSE}
+model_stan1 <- cmdstan_model('../files/stan/benchmarking/NIGcond.stan')
+
+fit1 <- model_stan1$sample(data = dat1, chains = 1, iter_warmup = 200, iter_sampling = 1000)
+fit1$save_object('../files/stan/benchmarking/fit1.rds')
+```
+
+```{r , eval = FALSE}
+fit11 <- readRDS("../files/stan/benchmarking/fit1.rds")
+knitr::kable(fit11$summary(c("etas")), "simple", row.names = NA, digits=2)
+```
+
+### modelNIG
+```{r, eval = FALSE}
+model_stan2 <- cmdstan_model('../files/stan/benchmarking/modelNIG.stan')
+
+fit2 <- model_stan2$sample(data = dat1, chains = 1, iter_warmup = 200, iter_sampling = 1000)
+fit2$save_object('../files/stan/benchmarking/fit2.rds')
+```
+
+```{r }
+fit2 <- readRDS("../files/stan/benchmarking/fit2.rds")
+knitr::kable(fit2$summary("etas"), "simple", row.names = NA, digits=2)
+```
+
+### modelNIG2
+
+```{r, eval = FALSE}
+model_stan3 <- cmdstan_model('../files/stan/benchmarking/modelNIG2.stan', cpp_options = list(stan_threads = TRUE))
+
+fit3 <- model_stan3$sample(data = dat1, chains = 1, threads_per_chain = 6, iter_warmup = 200, iter_sampling = 1000)
+fit3$save_object('../files/stan/benchmarking/fit3.rds')
+```
+
+```{r }
+fit3 <- readRDS("../files/stan/benchmarking/fit3.rds")
+knitr::kable(fit3$summary("etas"), "simple", row.names = NA, digits=2)
+```
+
+```{r }
+fit11 <- readRDS("../files/stan/benchmarking/fit1.rds")
+fit11$summary("etas")["ess_bulk"]/fit11$time()$total
+fit2$summary("etas")["ess_bulk"]/fit2$time()$total
+fit3$summary("etas")["ess_bulk"]/fit3$time()$total
+```

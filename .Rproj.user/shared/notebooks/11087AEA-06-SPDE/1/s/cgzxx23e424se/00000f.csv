@@ -1,0 +1,3 @@
+"0","fit_NIG   <- readRDS(""../files/fits/fit_temp_NIG.rds"")"
+"0","mcmc_trace(fit_NIG$draws(c(""sigmae"", ""sigma"", ""kappa"",""etas"",""mus"")), "
+"0","           facet_args = list(ncol = 2, strip.position = ""left""))"

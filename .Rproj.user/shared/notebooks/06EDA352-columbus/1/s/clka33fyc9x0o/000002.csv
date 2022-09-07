@@ -1,0 +1,12 @@
+"0","```r
+#data <- columbus[,c(\"CRIME\",\"HOVAL\",\"INC\",\"OPEN\",\"PLUMB\",\"DISCBD\",\"CP\")]
+data <- columbus[,c(\"CRIME\",\"HOVAL\",\"INC\")]
+#problematic neighbourhood
+refx <- columbus@data[columbus@data$NEIG==34,\"X\"]
+refy <- columbus@data[columbus@data$NEIG==34,\"Y\"]
+
+data$dist <- sqrt((columbus$X-refx)^2+(columbus$Y-refy)^2)
+
+y <- data$CRIME
+X <- as.data.frame(data[,-1])
+```"

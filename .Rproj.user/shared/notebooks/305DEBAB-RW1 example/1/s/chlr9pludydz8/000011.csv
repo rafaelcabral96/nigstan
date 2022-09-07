@@ -1,0 +1,5 @@
+"0","#exp(-0.13) #0.87"
+"0","#fit$all.hyper$random[[1]]$hyper$theta2$from.theta(4.26) #0.972"
+"0",""
+"0","#VI2 plots check"
+"0","plot(VINIG.marginal.V(fits, 20, 0, 10), type = 'l')"

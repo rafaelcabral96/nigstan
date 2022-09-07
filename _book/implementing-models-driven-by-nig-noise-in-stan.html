@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Implementing models driven by NIG noise in Stan | A Minimal Book Example</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Implementing models driven by NIG noise in Stan | A Minimal Book Example" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Implementing models driven by NIG noise in Stan | A Minimal Book Example" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  
+
+<meta name="author" content="John Doe" />
+
+
+<meta name="date" content="2021-10-25" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="theoretical-background.html"/>
+<link rel="next" href="footnotes-and-citations.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> url: your book url like <span>https://bookdown.org/yihui/bookdown</span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#usage"><i class="fa fa-check"></i><b>1.1</b> Usage</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#render-book"><i class="fa fa-check"></i><b>1.2</b> Render book</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#preview-book"><i class="fa fa-check"></i><b>1.3</b> Preview book</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="theoretical-background.html"><a href="theoretical-background.html"><i class="fa fa-check"></i><b>3</b> Theoretical background</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="theoretical-background.html"><a href="theoretical-background.html#nig-distribution"><i class="fa fa-check"></i><b>3.1</b> NIG distribution</a></li>
+<li class="chapter" data-level="3.2" data-path="theoretical-background.html"><a href="theoretical-background.html#new-parameterization"><i class="fa fa-check"></i><b>3.2</b> New parameterization</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="theoretical-background.html"><a href="theoretical-background.html#variance-and-mean-correction"><i class="fa fa-check"></i><b>3.2.1</b> Variance and mean correction</a></li>
+<li class="chapter" data-level="3.2.2" data-path="theoretical-background.html"><a href="theoretical-background.html#tail-correction"><i class="fa fa-check"></i><b>3.2.2</b> Tail correction</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="theoretical-background.html"><a href="theoretical-background.html#framework-for-extending-gaussian-models"><i class="fa fa-check"></i><b>3.3</b> Framework for extending Gaussian models</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="theoretical-background.html"><a href="theoretical-background.html#ilustration-with-the-rw1-process"><i class="fa fa-check"></i><b>3.3.1</b> Ilustration with the RW1 process</a></li>
+<li class="chapter" data-level="3.3.2" data-path="theoretical-background.html"><a href="theoretical-background.html#models-defined-via-mathbfdmathbfx-mathbfz"><i class="fa fa-check"></i><b>3.3.2</b> Models defined via <span class="math inline">\(\mathbf{D}\mathbf{x} = \mathbf{Z}\)</span></a></li>
+<li class="chapter" data-level="3.3.3" data-path="theoretical-background.html"><a href="theoretical-background.html#generic-framework"><i class="fa fa-check"></i><b>3.3.3</b> Generic framework</a></li>
+<li class="chapter" data-level="3.3.4" data-path="theoretical-background.html"><a href="theoretical-background.html#sample-paths"><i class="fa fa-check"></i><b>3.3.4</b> Sample paths</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="theoretical-background.html"><a href="theoretical-background.html#penalized-complexity-priors"><i class="fa fa-check"></i><b>3.4</b> Penalized complexity priors</a></li>
+<li class="chapter" data-level="3.5" data-path="theoretical-background.html"><a href="theoretical-background.html#useful-properties-of-the-vector-mathbfx"><i class="fa fa-check"></i><b>3.5</b> Useful properties of the vector <span class="math inline">\(\mathbf{x}\)</span></a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="theoretical-background.html"><a href="theoretical-background.html#joint-pdf-of-mathbfx"><i class="fa fa-check"></i><b>3.5.1</b> Joint PDF of <span class="math inline">\(\mathbf{x}\)</span></a></li>
+<li class="chapter" data-level="3.5.2" data-path="theoretical-background.html"><a href="theoretical-background.html#mixing-distribution-vector-mathbfv"><i class="fa fa-check"></i><b>3.5.2</b> Mixing distribution vector <span class="math inline">\(\mathbf{V}\)</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="implementing-models-driven-by-nig-noise-in-stan.html"><a href="implementing-models-driven-by-nig-noise-in-stan.html"><i class="fa fa-check"></i><b>4</b> Implementing models driven by NIG noise in Stan</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="implementing-models-driven-by-nig-noise-in-stan.html"><a href="implementing-models-driven-by-nig-noise-in-stan.html#framework"><i class="fa fa-check"></i><b>4.1</b> Framework</a></li>
+<li class="chapter" data-level="4.2" data-path="implementing-models-driven-by-nig-noise-in-stan.html"><a href="implementing-models-driven-by-nig-noise-in-stan.html#implementation"><i class="fa fa-check"></i><b>4.2</b> Implementation</a></li>
+<li class="chapter" data-level="4.3" data-path="implementing-models-driven-by-nig-noise-in-stan.html"><a href="implementing-models-driven-by-nig-noise-in-stan.html#notes"><i class="fa fa-check"></i><b>4.3</b> Notes</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="implementing-models-driven-by-nig-noise-in-stan.html"><a href="implementing-models-driven-by-nig-noise-in-stan.html#determinant"><i class="fa fa-check"></i><b>4.3.1</b> Determinant</a></li>
+<li class="chapter" data-level="4.3.2" data-path="implementing-models-driven-by-nig-noise-in-stan.html"><a href="implementing-models-driven-by-nig-noise-in-stan.html#non-centered-parameterization"><i class="fa fa-check"></i><b>4.3.2</b> Non-centered parameterization</a></li>
+<li class="chapter" data-level="4.3.3" data-path="implementing-models-driven-by-nig-noise-in-stan.html"><a href="implementing-models-driven-by-nig-noise-in-stan.html#heavy-tailed-distributions-on-stan"><i class="fa fa-check"></i><b>4.3.3</b> Heavy-tailed distributions on Stan</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html"><i class="fa fa-check"></i><b>5</b> Footnotes and citations</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#footnotes"><i class="fa fa-check"></i><b>5.1</b> Footnotes</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="blocks.html"><a href="blocks.html"><i class="fa fa-check"></i><b>6</b> Blocks</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="blocks.html"><a href="blocks.html#columbus-dataset"><i class="fa fa-check"></i><b>6.1</b> Columbus dataset</a></li>
+<li class="chapter" data-level="6.2" data-path="blocks.html"><a href="blocks.html#slovenia-dataset"><i class="fa fa-check"></i><b>6.2</b> Slovenia dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="spatial-mátern-model.html"><a href="spatial-mátern-model.html"><i class="fa fa-check"></i><b>7</b> Spatial Mátern model</a>
+<ul>
+<li class="chapter" data-level="7.0.1" data-path="spatial-mátern-model.html"><a href="spatial-mátern-model.html#get-vs-say-that-etas-not-very-good-measure"><i class="fa fa-check"></i><b>7.0.1</b> Get V’s Say that etas not very good measure…</a></li>
+<li class="chapter" data-level="7.0.2" data-path="spatial-mátern-model.html"><a href="spatial-mátern-model.html#loo"><i class="fa fa-check"></i><b>7.0.2</b> loo</a></li>
+<li class="chapter" data-level="7.1" data-path="spatial-mátern-model.html"><a href="spatial-mátern-model.html#dimension-1000-use-variational-bayes"><i class="fa fa-check"></i><b>7.1</b> Dimension 1000 use variational bayes</a></li>
+<li class="chapter" data-level="7.2" data-path="spatial-mátern-model.html"><a href="spatial-mátern-model.html#pressure"><i class="fa fa-check"></i><b>7.2</b> Pressure</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="spatial-mátern-model.html"><a href="spatial-mátern-model.html#get-vs-say-that-etas-not-very-good-measure-1"><i class="fa fa-check"></i><b>7.2.1</b> Get V’s Say that etas not very good measure…</a></li>
+<li class="chapter" data-level="7.2.2" data-path="spatial-mátern-model.html"><a href="spatial-mátern-model.html#loo-1"><i class="fa fa-check"></i><b>7.2.2</b> loo</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="spatial-mátern-model.html"><a href="spatial-mátern-model.html#junk-code"><i class="fa fa-check"></i><b>7.3</b> junk code</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Minimal Book Example</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="implementing-models-driven-by-nig-noise-in-stan" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Implementing models driven by NIG noise in Stan</h1>
+<p>Here we review the framework for extending Gaussian models to models driven with NIG noise and show how to declare these models in Stan using the suite of functions that we developed.</p>
+<div id="framework" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Framework</h2>
+<p>Latent Gaussian models are a class of hierarchical models where the latent variable is Gaussian. Their general form is:</p>
+<p><span class="math display">\[
+\mathbf{y}|\mathbf{x} \sim \pi(\mathbf{y}|\mathbf{x},\mathbf{\theta}_y) \\
+ \mathbf{D}(\mathbf{\theta}_\mathbf{x}) \mathbf{x} =  \mathbf{Z}\\
+ \mathbf{\theta}_\mathbf{x} \sim \pi(\mathbf{\theta}_\mathbf{x})
+\]</span>
+where the observations <span class="math inline">\(y_i\)</span> are usually independent given the latent vector <span class="math inline">\(\mathbf{x}\)</span>. In the applications we will work on later <span class="math inline">\(\mathbf{\theta}_y\)</span> contains regression coefficients and the vector <span class="math inline">\(\mathbf{\theta}_\mathbf{x}\)</span> usually includes a scale parameter <span class="math inline">\(\sigma\)</span> and a range parameter <span class="math inline">\(\kappa\)</span>. The vector <span class="math inline">\(\mathbf{Z}\)</span> is comprised of independent Gaussian noise where <span class="math inline">\(Z_i\sim N(0,h_i)\)</span> and the latent vector <span class="math inline">\(\mathbf{x}\)</span> follows a Gaussian distribution with mean <span class="math inline">\(\mathbf{0}\)</span> and precision matrix <span class="math inline">\(\mathbf{D}^{T}\text{diag}(\mathbf{h})^{-1}\mathbf{D}\)</span>. The extension consist in replacing Gaussian noise <span class="math inline">\(\mathbf{Z}\)</span> with non-Gaussian noise <span class="math inline">\(\mathbf{\Lambda}\)</span>, which depends on two flexibility parameters that we need to set priors to. The parameter <span class="math inline">\(\eta^\star\)</span> controls the heaviness of the tails, while <span class="math inline">\(\mu^\star\)</span> controls the asymmetry of the noise.</p>
+<p><span class="math display">\[
+\mathbf{y}|\mathbf{x} \sim \pi(\mathbf{y}|\mathbf{x},\mathbf{\theta}_y) \\
+ \mathbf{D}(\mathbf{\theta}_\mathbf{x}) \mathbf{x} =  \mathbf{\Lambda}(\eta^\star,\mu^\star)\\
+ \mathbf{\theta}_\mathbf{x} \sim \pi(\mathbf{\theta}_\mathbf{x}) \\
+ \eta^\star \sim \text{Exp}(\theta_{\eta^\star})\\
+ \mu^\star \sim \text{Laplace}(\theta_{\mu^\star})
+\]</span>
+We illustrate next how state a latent model driven with NIG noise where the observations are given by <span class="math inline">\(\mathbf{y}|\mathbf{x} \sim Normal(\mathbf{B}\boldsymbol{\beta} + \mathbf{x}, \sigma_\epsilon^2\mathbf{I})\)</span>, where <span class="math inline">\(\mathbf{B}\)</span> is a design matrix and <span class="math inline">\(\boldsymbol{\beta}\)</span> is a set of regression coefficients. We start first with the Gaussian model:</p>
+<pre eval="FALSE"><code>model{
+
+//observation layer---------------------------
+y ~ normal(B*beta + sigma*x, sigmae);
+  
+//latent field layer--------------------------
+x ~ multi_normal_prec(rep_vector(0,N), D&#39;*diag_matrix(1/h)*D)
+
+//prior layer---------------------------------
+...
+
+}</code></pre>
+<p>For the NIG driven model we simply change the declaration of <span class="math inline">\(\mathbf{x}\)</span> as follows and add the log-likelihood of the priors for <span class="math inline">\(\eta^\star\)</span> and <span class="math inline">\(\mu^\star\)</span></p>
+<pre eval="FALSE"><code>model{
+
+//observation layer---------------------------
+y ~ normal(B*beta + sigma*x, sigmae);
+  
+//latent field layer--------------------------
+x ~ modelNIG(D, etas, mus, 1)
+
+//prior layer---------------------------------
+...
+//prior for etas
+target += -thetaetas*etas;
+//prior for mus
+target += -thetamus*fabs(mus);
+
+}</code></pre>
+<p> Normal(,()^{T}()</p>
+</div>
+<div id="implementation" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Implementation</h2>
+</div>
+<div id="notes" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Notes</h2>
+<div id="determinant" class="section level3" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> Determinant</h3>
+<p>log_determinant vs Cholesk vs precompute</p>
+</div>
+<div id="non-centered-parameterization" class="section level3" number="4.3.2">
+<h3><span class="header-section-number">4.3.2</span> Non-centered parameterization</h3>
+<p>put sigma out
+choleskt factorization does not work modelling through covariance matrices does not make sense</p>
+</div>
+<div id="heavy-tailed-distributions-on-stan" class="section level3" number="4.3.3">
+<h3><span class="header-section-number">4.3.3</span> Heavy-tailed distributions on Stan</h3>
+<p>issues due to being non-Gaussian - how to cut parameter space by halve alternative</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="theoretical-background.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="footnotes-and-citations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/03-parts.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

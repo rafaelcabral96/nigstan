@@ -1,0 +1,9 @@
+"0","```r
+
+plot(x*100,y) +
+  lines(fit$summary.random$idx$mean) +
+  lines(fit$summary.random$idx$`0.975quant`, col='orange') + 
+  lines(fit$summary.random$idx$`0.025quant`, col='orange')
+```"
+"1","integer(0)
+"

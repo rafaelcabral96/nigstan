@@ -1,0 +1,241 @@
+"0","```r
+##--------------------------------
+## AR1 model
+##--------------------------------
+'inla.rgeneric.ar1' <- function(
+  cmd = c(\"graph\", \"Q\", \"mu\", \"initial\", \"log.norm.const\",
+          \"log.prior\", \"quit\"),
+  theta = NULL) {
+  
+  envir = parent.env(environment())
+
+  #Internal function
+  interpret.theta <- function() {
+    kappa = exp(theta[1L])
+    rho   = 2*exp(theta[2L])/(1 + exp(theta[2L])) - 1
+    taux  =  kappa/(1-rho^2)
+    return(list(kappa = kappa,
+                taux  = taux,
+                rho   = rho))
+  }
+
+  
+  graph <- function(){
+    return(Q())
+  }
+  
+  Q <- function() { 
+    param = interpret.theta()
+    
+    library(Matrix)
+    D <- bandSparse(N, N, #dimensions
+                    (-1):1, #band, diagonal is number 0
+                    list(rep(-param$rho, N-1), 
+                         rep(1, N), 
+                         rep(0, N-1)))
+    
+    D[1,1] = sqrt(1-param$rho^2)
+    
+    return(param$taux*t(D)%*%Diagonal(nrow(D),1/V)%*%D)
+  }
+  
+  mu <- function()
+  {
+    return(numeric(0))
+  }
+  
+  log.norm.const <- function() {
+    p = interpret.theta()
+    return (-0.5*N*log(2*pi) + 0.5*N*log(p$taux) + 0.5*log(1-p$rho^2) -0.5*sum(log(V)))  }
+  
+  
+  log.prior <- function() {
+    
+    param = interpret.theta()
+    
+    res <-  dgamma(param$kappa, shape = 1, rate = 5e-05, log = TRUE) + theta[1L] + dnorm(theta[2L], mean = 0, sd = 1/sqrt(0.15), log = TRUE)
+    
+    return(res)
+  }
+  
+  
+  initial <- function() {
+    return(c(4,2))
+  }
+  
+  
+  quit <- function() {
+    return(invisible())
+  }
+  
+  if (!length(theta)) theta = initial()
+  res <- do.call(match.arg(cmd), args = list())
+  return(res)
+}
+
+##--------------------------------
+## rgeneric0
+##--------------------------------
+'inla.rgeneric0' <- function(
+  cmd = c(\"graph\", \"Q\", \"mu\", \"initial\", \"log.norm.const\",
+          \"log.prior\", \"quit\"),
+  theta = NULL) {
+  
+  envir = parent.env(environment())
+
+  rank      <- D.config$rank
+  D         <- D.config$D
+  log.det.D <- D.config$log.det.D
+  
+  #Internal function
+  interpret.theta <- function() {
+    return(list(prec = exp(theta[1L])))
+  }
+
+  
+  graph <- function(){
+    return(Q())
+  }
+  
+  Q <- function() { 
+    param = interpret.theta()
+    
+
+    return(inla.as.sparse(param$prec*t(D)%*%Diagonal(nrow(D),1.0/V)%*%D))
+    
+  }
+  
+  mu <- function()
+  {
+    return(numeric(0))
+  }
+  
+  log.norm.const <- function() {
+    p = interpret.theta()
+    return (-0.5*rank*log(2*pi) + 0.5*rank*log(p$prec) + log.det.D -0.5*sum(log(V)))
+  }
+  
+  
+  log.prior <- function() {
+    
+    param = interpret.theta()
+    
+    res <-  dgamma(param$prec, shape = 1, rate = 5e-05, log = TRUE) + theta[1L] 
+
+    return(res)
+  }
+  
+  
+  initial <- function() {
+    return(rep(4,1))
+  }
+  
+  
+  quit <- function() {
+    return(invisible())
+  }
+  
+  if (!length(theta)) theta = initial()
+  res <- do.call(match.arg(cmd), args = list())
+  return(res)
+}
+
+##--------------------------------------
+## SPDE model
+##.-------------------------------------
+
+
+'inla.rgeneric.spde' <- function(
+  cmd = c(\"graph\", \"Q\", \"mu\", \"initial\", \"log.norm.const\",
+          \"log.prior\", \"quit\"),
+  theta = NULL) {
+  
+  envir = parent.env(environment())
+  alpha  <- D.config$alpha
+  d      <- D.config$d
+  h      <- D.config$h
+  G      <- D.config$G
+  eigenG <- D.config$eigenG
+  alpha1 <- D.config$alpha1
+  alpha2 <- D.config$alpha2
+  rho0   <- D.config$rho0
+  sigma0 <- D.config$sigma0
+  
+  
+  #Internal function
+  interpret.theta <- function() {
+    
+    #internal scale log of practical correlation range
+    #internal scale log of marginal std
+    
+    kappa <- sqrt(8*(alpha-d/2))/exp(theta[1L])
+    sigma <- exp(theta[2L])*kappa^(alpha-d/2)*sqrt((gamma(alpha)*(4*pi)^(d/2))/gamma(alpha-d/2))
+    
+    list = list(kappa = kappa,
+                sigma = sigma)
+
+    return(list)
+  }
+
+  
+  graph <- function(){
+    return(Q())
+  }
+  
+  Q <- function() { 
+    param = interpret.theta()
+    
+    require(Matrix)
+  
+    D <- (1/param$sigma)*(param$kappa^2*Diagonal(N, h) + G)
+    
+    return(inla.as.sparse(t(D)%*%Diagonal(nrow(D),1/V)%*%D))
+    
+  }
+  
+  mu <- function()
+  {
+    return(numeric(0))
+  }
+  
+  log.norm.const <- function() {
+    param = interpret.theta()
+    
+    require(Matrix)
+  
+    #D   <- (1/param$sigma)*(param$kappa^2*C + G)
+    #det <- determinant(D)
+
+    return(-0.5*N*log(2*pi) -N*log(param$sigma) + sum(log(h) + log(eigenG+param$kappa^2)) -0.5*sum(log(V)))
+  }
+  
+  log.prior <- function() {
+    
+    lambda1 <- -log(alpha1)*rho0^(d/2)
+    lambda2 <- -log(alpha2)/sigma0
+      
+    p <- exp(theta[1L]) 
+    s <- exp(theta[2L]) 
+      
+    res <-  log(d/2) +log(lambda1) +log(lambda2) -(d/2+1)*log(p) -lambda1*p^(-d/2)-lambda2*s + theta[1L] + theta[2L]
+      
+      #log(d*lambda1*lambda2/2)-(d/2+1)*log(exp(theta[1L]))-lambda1*exp(theta[1L])^(-d/2) - lambda2*exp(theta[2L])   #prior for range and msigma
+    
+    return(res)
+  }
+  
+  
+  initial <- function() {
+    return(c(-1, 2))  #ATTENTION!!! remove this later
+  }
+  
+  
+  quit <- function() {
+    return(invisible())
+  }
+  
+  if (!length(theta)) theta = initial()
+  res <- do.call(match.arg(cmd), args = list())
+  return(res)
+}
+```"

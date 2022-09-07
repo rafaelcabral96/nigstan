@@ -1,0 +1,13 @@
+"0","```r
+#setwd(\"C:/Users/Rafael Cabral/Desktop/KAUST/PhD/PhD Notes/Files/STAN\")
+fit <- readRDS(\"sloveniafit.rds\")
+fit$sigma_eps = sqrt(fit$vari_theta)
+summary(fit[,c(\"beta0\", \"beta1\", \"kappa\",\"nu\",\"sigma_eta\",\"sigma_eps\")])
+V    <- fit[,strtrim(colnames(fit),2)==\"V[\"]
+plot.tau.trace(1:N,V)
+
+quantile(fit$nu, prob = c(0.05,0.95))
+
+eta    <- fit[,strtrim(colnames(fit),4)==\"eta[\"]
+plot.tau.trace(1:N,eta)
+```"

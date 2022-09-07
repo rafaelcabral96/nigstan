@@ -1,0 +1,5 @@
+"0","#Posterior samples from w"
+"0","W_Gauss      <- as.matrix(as_draws_df(fit_Gauss$draws(""W""))[,1:N])"
+"2","Error in h(simpleError(msg, call)) : 
+  error in evaluating the argument 'x' in selecting a method for function 'as.matrix': object 'fit_Gauss' not found
+"

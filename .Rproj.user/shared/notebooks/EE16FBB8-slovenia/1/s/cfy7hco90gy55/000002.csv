@@ -1,0 +1,20 @@
+"0","```r
+#setwd(\"C:/Users/Rafael Cabral/Desktop/KAUST/PhD/PhD Notes/Files/STAN\")
+
+logE <- log(E)
+stanfit = stan(\"slovenia.stan\", 
+                    data=list(N=N,
+                              I=as.matrix(Diagonal(N)),
+                              A=A,
+                              O=O,
+                              logE=logE,
+                              SEC = SEC,
+                              theta_nu = 5),
+                    warmup=10000, 
+                    iter=40000,
+                    chains=1)
+
+fit   <- as.data.frame(stanfit)
+saveRDS(fit, \"sloveniafit.rds\")
+saveRDS(stanfit, \"sloveniastanfit.rds\")
+```"

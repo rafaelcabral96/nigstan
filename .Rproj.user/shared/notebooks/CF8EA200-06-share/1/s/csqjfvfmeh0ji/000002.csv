@@ -1,0 +1,31 @@
+"0","sp <- inla.mesh2sp(mesh)$triangles
+"
+"2","'inla.CRSargs' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.CRS(inla.CRSargs(mesh$crs))
+inla.CRSargs(mesh$crs)
+inla.not_for_PROJ6(""inla.CRSargs"")"
+"2","'inla.as.list.CRS' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.as.list.CRS(crs)
+inla.not_for_PROJ6(""inla.as.list.CRS"")"
+"2","'inla.as.list.CRSargs' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.as.list.CRS(crs)
+inla.as.list.CRSargs(inla.CRSargs(x))
+inla.not_for_PROJ6(""inla.as.list.CRSargs"")"
+"2","'inla.CRSargs' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.as.list.CRS(crs)
+inla.as.list.CRSargs(inla.CRSargs(x))
+inla.CRSargs(x)
+inla.not_for_PROJ6(""inla.CRSargs"")"
+"0","proj4string(sp) <- CRS(""+proj=longlat +datum=WGS84"")"
+"0","sp_proj <- spTransform(sp, ""+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"")"
+"0",""
+"0","paltemp  <- colorNumeric(palette = c(""blue"",""white"",""red""), domain = weatherdata$temp)"
+"0","palpress <- colorNumeric(palette = c(""blue"",""white"",""red""), domain = weatherdata$press)"

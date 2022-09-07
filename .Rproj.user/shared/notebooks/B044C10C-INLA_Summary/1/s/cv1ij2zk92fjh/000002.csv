@@ -1,0 +1,11 @@
+"0","```r
+data.inla <- list(y = y, x = x)
+  
+formula1 <- y ~ -1 + f(x, model = \"rw1\", constr = FALSE)
+
+#do inla fit conditioned on V
+result1 <- inla(formula1, 
+                  data = data.inla,
+                  control.compute = list(config = TRUE, dic = TRUE, waic = TRUE))
+
+```"

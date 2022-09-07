@@ -1,0 +1,9 @@
+"0","bayesplot_grid("
+"0","  mcmc_hist(fit_Gauss$draws(""kappa"")),"
+"0","  mcmc_hist(fit_NIG$draws(""kappa"")),"
+"0","  titles = c(""Spatial range parameter of Gaussian latent field"", ""Spatial range parameter of NIG latent field"")"
+"0",")"
+"2","`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+"
+"2","`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+"

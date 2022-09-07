@@ -1,0 +1,4 @@
+"0","```r
+#posterior marginal at change point
+plot(result1$marginals.random$x$index.20, type = 'l')
+```"

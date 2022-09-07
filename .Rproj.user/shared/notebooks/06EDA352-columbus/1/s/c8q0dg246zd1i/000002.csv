@@ -1,0 +1,26 @@
+"0","```r
+stanfit = stan(\"columbus.stan\", 
+                    data=list(N=N,
+                              N_edges=N_edges,
+                              node1=node1,
+                              node2=node2,
+                              y=y,
+                              hv=hv,
+                              inc=inc,
+                              theta_nu = 5,
+                              theta_sigma = 0.5),
+                    warmup=10000, 
+                    iter=15000,
+                    chains=1)
+
+fit   <- as.data.frame(stanfit)
+fit$sigma <- 1/sqrt(fit$taue)
+print(stanfit, pars=c(\"beta0\", \"beta1\", \"beta2\",\"taue\",\"nu\",\"sigma_eta\"), probs=c(0.025, 0.5, 0.975))
+V    <- fit[,strtrim(colnames(fit),2)==\"V[\"]
+plot.tau.trace(1:N_edges,V)
+
+eta    <- fit[,strtrim(colnames(fit),4)==\"eta[\"]
+plot.tau.trace(1:N,eta)
+
+plot.ts(1/sqrt(fit$taue))
+```"

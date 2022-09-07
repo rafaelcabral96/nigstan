@@ -1,0 +1,4 @@
+"0","```r
+plot(result1$marginals.random$x$index.21, type = 'l')
+
+```"

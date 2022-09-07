@@ -1,0 +1,39 @@
+"0","```r
+nb_q <- poly2nb(columbus)
+nb_B <- nb2listw(nb_q, style=\"B\", zero.policy=TRUE)
+B <- as(nb_B, \"CsparseMatrix\")
+library(igraph)
+```"
+"1","package ã¤¼ã¸±igraphã¤¼ã¸² was built under R version 4.0.5
+Attaching package: ã¤¼ã¸±igraphã¤¼ã¸²
+
+The following object is masked from ã¤¼ã¸±package:tidyrã¤¼ã¸²:
+
+    crossing
+
+The following objects are masked from ã¤¼ã¸±package:dplyrã¤¼ã¸²:
+
+    as_data_frame, groups, union
+
+The following objects are masked from ã¤¼ã¸±package:statsã¤¼ã¸²:
+
+    decompose, spectrum
+
+The following object is masked from ã¤¼ã¸±package:baseã¤¼ã¸²:
+
+    union
+"
+"0","```r
+g1 <- graph.adjacency(B, mode=\"undirected\")
+B1 <- get.adjacency(g1)
+A  <- unname(as.matrix(diag(unname(rowSums(B1))) - B1))
+
+
+marg.sigma <- mean(sqrt(diag(A)))
+
+#marginal standard deviation of eta = sigma_eta*2.148949
+#P(marginal.standard.deviation > 10) = 0.1 
+theta_sigma = -log(0.1)/5
+
+#P(ratio of large jumps > 2)=0.5 
+```"

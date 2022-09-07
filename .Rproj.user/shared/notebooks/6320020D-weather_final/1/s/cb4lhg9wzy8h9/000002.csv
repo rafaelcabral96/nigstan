@@ -1,0 +1,25 @@
+"0","library(R.matlab)"
+"2","package ‘R.matlab’ was built under R version 4.0.5"
+"2","R.matlab v3.6.2 (2018-09-26) successfully loaded. See ?R.matlab for help.
+"
+"2","
+Attaching package: ‘R.matlab’
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    getOption, isOpen
+
+"
+"0","matdata <- readMat(""weather_mesh.mat"")"
+"0",""
+"0","endr <- nrow(matdata$A)"
+"0","endc <- ncol(matdata$A)"
+"0",""
+"0","A <- matdata$A[1:(endr/2),1:(endc/2)]"
+"0",""
+"0","G <- matdata$G"
+"0",""
+"0","h <- diag(matdata$C)"
+"0",""
+"0","N <- nrow(G)"

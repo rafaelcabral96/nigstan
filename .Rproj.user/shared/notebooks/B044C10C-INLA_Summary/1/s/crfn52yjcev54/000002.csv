@@ -1,0 +1,6 @@
+"0","```r
+
+#precision
+plot(inla.tmarginal(exp, fit$internal.marginals.hyperpar[[2]]), type='l', main = \"x precision\")
+abline(v=precision[,1])
+```"

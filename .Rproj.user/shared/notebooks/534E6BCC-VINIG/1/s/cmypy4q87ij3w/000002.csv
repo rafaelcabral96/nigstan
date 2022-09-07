@@ -1,0 +1,7 @@
+"0","```r
+    Vs           <- sampler.inverseCDF(pdf, 1e-6, 500*h[i],10000, n.sample)
+
+```"
+"1","Warning in regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+"

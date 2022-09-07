@@ -1,0 +1,4 @@
+"0","rownames(data) <- paste(""ID"",1:N,sep="""")"
+"2","Error in `rownames<-`(`*tmp*`, value = c(""ID1"", ""ID2"", ""ID3"", ""ID4"", ""ID5"",  : 
+  attempt to set 'rownames' on an object with no dimensions
+"

@@ -1,0 +1,340 @@
+"0","```r
+##------------------------
+## TO DO 
+##-------------------------
+#  automate rgeneric defenition so that you can define it solely on Dfunc (not sure if this will work on cgeneric...)
+#  you need to automate hyperpar transformation - you have done this already
+#  only thing left is that you need to automate prior setting
+#  Avoid sampling: use t-marginal function
+#  Replace estimates of eta by their mean and not 1/E[1/V], same for V output at every iteration
+#  Important things to improve: Improve inverse CDFsampler, optimizer (make it more efficient...)
+
+##--------------------------
+## Problems
+##--------------------------
+#pi(y|V) does not increase
+#how to deal with priors?
+#SPDE: for spde objects the spde model must be called \"spde\", no prediction grid (will make things very slow), no constraints available, you need to send mesh and pcpriors in seperate, 
+#Besag: no constraints...
+#code assumes there are always hyperparameters...
+
+VINIG <- function(fit, selection, theta_eta, iter, method = \"VI2\",  d.sampling=TRUE, verbose = TRUE, cores = 1, graph = NULL, mesh = NULL, pcpriors = NULL, manual.configs = NULL){
+  
+  #list(Dfunc = Dfunc, inla.fit.V = inla.fit.V, h = h)
+ 
+  ##-------------------------------------
+  ##    fIND DFUNC, INLA.FIT.V AND H FROM FORMULA?
+  ##-------------------------------------
+  if(is.null(manual.configs)){mode = \"auto\"}
+  else{mode = \"manual\"}
+  
+  ##-------------------------------------
+  ##    IMPORTANT VARIABLES
+  ##-------------------------------------
+  models                <- c(\"iid\",\"rw1\", \"rw2\", \"ar1\", \"besag\", \"spde\")
+  n.sampling            <- 5000
+  
+  ##-------------------------------------
+  ##    SETTING UP PARALELLISM
+  ##-------------------------------------
+  if(cores>1){
+    cl <- makeSOCKcluster(cores)
+    registerDoSNOW(cl) }
+  
+  ##-------------------------------------
+  ##    Getting Dfunc, h, and, inla.fit.V 
+  ##-------------------------------------
+  if(mode == \"manual\"){
+    Dfunc        <- manual.configs$Dfunc
+    inla.fit.V   <- manual.configs$inla.fit.V
+    h            <- manual.configs$h
+    indexname    <- names(selection)[1]
+    
+    D.config   <- list(indexname = indexname, Dfunc = Dfunc, h = h, n.sampling = n.sampling)
+  }
+  if(mode == \"auto\"){
+    
+    ##-------------------------------------
+    ##    CHECK SELECTION AND FIND MODEL TYPE
+    ##-------------------------------------
+    indexname      <- names(selection)[1]
+    pos            <- which(indexname == all.vars(fit$.args$formula)) - 1 #position of indexname in attr \"term.label\"
+    term_string    <- attr(terms(fit$.args$formula), which = \"term.label\")[pos]
+    model          <- models[sapply(models, grepl, term_string)]
+    N = tail(selection[[indexname]], n=1) #dimension of latent field
+    if(length(model) == 0) stop(\"Model not implemented\")
+  
+    ##-------------------------------------
+    ##     Which hyperparameters are relevant?
+    ##-------------------------------------
+    hyperparsel       <- c(sapply(paste(\"\\b\",\"for \", indexname, \"\\b\", sep=\"\"), grepl, rownames(fit$summary.hyperpar))) 
+    #\\b is there to make sure whole word \"for x\" is found and not \"for x2\"
+    
+    ##-------------------------------------
+    ##     Construct D.config #list with all configurations needed to compute matrix D
+    ##-------------------------------------
+    D.config <- find.D.config(model, selection, indexname, hyperparsel, n.sampling, N, graph, mesh, pcpriors)
+    
+    ##-------------------------------------
+    ##    What is h?  
+    ##-------------------------------------
+    h          <- find.h(fit, D.config) 
+    D.config$h <- h
+
+    ##-------------------------------------
+    ##    FIT INLA MODEL WITH FIXED V 
+    ##-------------------------------------
+    inla.fit.V <- find.inla.fit.V(fit, n, model, D.config)
+      
+  }
+
+  ##-------------------------------------
+  ##    First iteration already done
+  ##-------------------------------------
+  fits            <- list()
+  V               <- h
+  fit             <- inla.fit.V(V)
+  eta             <- 0.1
+  fit$VINIG$V     <- V    # Initial value
+  fit$VINIG$eta   <- eta  # Initial value
+  fits[[1]]       <- fit
+  
+  cat(paste(\"\n0Oo----------- Iteration \", 1 ,\" -----------oO0\n\", sep = \"\"))
+  plot(V/h, main = \"weights\")
+  if( (method == \"VI\") || (method == \"ECM\") ) cat(paste(\"Estimate of eta (initial value): \", fit$eta), \"\n\")
+
+  if(iter>1) for(i in 2:iter){
+    
+    ##-------------------------------
+    ##     Compute relevant statistic
+    ##------------------------------- 
+    if(d.sampling){d <- suppressWarnings(compute.d.sampling(fit, D.config)) }
+    else{          d <- compute.d.configs(fit, D.config) }
+    
+    ##-------------------------------
+    ##     Update V's depending on method
+    ##-------------------------------   
+    if(method == \"EM\"){
+      
+      ##-------------------------------------
+      ##      Update values of V and eta
+      ##-------------------------------------
+
+      V <- foreach(j = 1:length(h), .combine = \"c\") %dopar% {
+        #Mstep      <- function(gamma) sum( 4*gamma + 2*sqrt(2*theta_eta)*sqrt((exp(gamma)-h[i])^2/exp(gamma)) + d[i]/exp(gamma))
+        #exp(optim(par = log(h[i]), fn = Mstep, method = \"BFGS\")$par)
+        Mstep      <- function(V) 4*log(V) + 2*sqrt(2*theta_eta)*sqrt((V-h[j])^2/V) + d[j]/V
+        optimize(f = Mstep, interval = c(0,500*h[j]), maximum = F)$minimum
+      }
+      
+      eta          <- NA 
+    }
+    
+    else if(method == \"ECM\"){
+      
+      ##-------------------------------------
+      ##      Update values of V and eta
+      ##-------------------------------------
+      N <- length(h)
+      
+      ##-------------------------------
+      ##     VI distribution for V's
+      ##-------------------------------
+      p_V <- -1
+      a_V <- 1/eta
+      b_V <- d + h^2/eta
+      V <- GIGmode(p_V,a_V,b_V)
+      
+      ##-------------------------------
+      ##     VI distribution for eta
+      ##-------------------------------
+      p_eta <- -length(h)/2+1
+      a_eta <- 2*theta_eta
+      b_eta <- sum((V-h)^2/V)
+      eta <- GIGmode(p_eta,a_eta,b_eta)
+      
+    }
+    
+    else if(method == \"VI\"){
+      
+      ##-------------------------------
+      ##     VI distribution for V's
+      ##-------------------------------
+      #Read relevant moments from previous iteration fitst
+      Eetam1 <- ifelse(i>2, fits[[i-1]]$VINIG$post.eta$Eetam1, 1/fits[[i-1]]$VINIG$eta)
+      p_V <- -1
+      a_V <- Eetam1
+      b_V <- d + h^2*Eetam1
+      
+      ##-------------------------------
+      ##     VI distribution for eta
+      ##-------------------------------
+      #Get relevant moments from current iteration
+      EV   <-  GIGM1(p_V, a_V, b_V)
+      EVm1 <-  GIGMm1(p_V, a_V, b_V)
+      p_eta <- -length(h)/2+1
+      a_eta <- 2*theta_eta
+      b_eta <- sum(EV-2*h+h^2*EVm1)
+      
+      ##-----------------------------------------
+      ##  Save parameters and relevant moments
+      ##-----------------------------------------
+      Eeta   <- GIGM1(p_eta, a_eta, b_eta)
+      Eetam1 <- GIGMm1(p_eta, a_eta, b_eta)
+      
+      ##----------------------------------------
+      ##  Estimate of V to be used in INLA fit 
+      ##-----------------------------------------
+      V      <- 1/EVm1 
+      eta    <- Eeta
+      
+    }
+    
+    else if(method == \"VI2\"){
+      
+      ##----------------------------------------
+      ##  Estimate of V to be used in INLA fit 
+      ##-----------------------------------------
+      #computes E_{q(V)}[V^(-1)] numerically
+      EVm1   <- VI2EVm1(d, h, theta_eta)
+      V      <- 1/EVm1 
+      eta    <- NA 
+      
+    }
+    else{stop(\"Method not implemented\")}
+    
+  
+    ##----------------------------------------
+    ##  INLA FIT
+    ##----------------------------------------
+    fit <- inla.fit.V(V)
+    
+    ##----------------------------------------
+    ##  Save rest of information
+    ##-----------------------------------------
+    fit$VINIG <- list(d = d, V = V, eta = eta, h = h, theta_eta = theta_eta, method = method)
+    if(method == \"VI\"){
+      fit$VINIG$post.eta <- list(p_eta = p_eta, a_eta = a_eta, b_eta = b_eta, Eeta = Eeta, Eetam1 = Eetam1)
+      fit$VINIG$post.V   <- list(p_V = p_V, a_V = a_V, b_V = b_V, EV = EV, EVm1 = EVm1) } 
+    
+    ##----------------------------------------
+    ##  Compute ELBO/Vlik
+    ##----------------------------------------
+    if(method == \"EM\"){
+        fit$VINIG$Vlik <- fit$mlik[1] +  sum( (1/2)*(-((2*sqrt(2)*sqrt(theta_eta)*abs(h - V))/sqrt(V)) + 2*log(h) + log(theta_eta/2) - 3*log(V)) ) #add correction here?
+    }
+    else if(method == \"ECM\"){
+        fit$VINIG$Vlik <- fit$mlik[1] +  1/2*sum(-((h - V)^2/(eta*V)) + 2*log(h) + log(1/(2*eta*pi)) - 3*log(V)) + dexp(eta, rate = theta_eta, log = TRUE)
+    }
+    #else if (ELBO){
+    #  if(method == \"VI\"){
+    #    fit$ELBO <- ELBOVI(fit)  #may be off by a constant check DIC wiki
+    #  }
+    #  else if(method == \"VI2\"){
+    #    fit$ELBO <- ELBOVI2(fit)  #may be off by a constant check DIC wiki
+    #  }
+    #}
+    
+    cat(\"\n\")
+    cat(paste(\"0Oo----------- Iteration \", i ,\" -----------oO0\n\", sep = \"\"))
+    if(verbose){
+      plot(V/h, main = \"weights\")
+      if( (method == \"VI\") || (method == \"ECM\") ) cat(paste(\"Estimate of eta: \", fit$VINIG$eta), \"\n\")
+      #if(  ELBO && ( (method == \"VI\") || (method == \"VI2\") ) ) cat(paste(\"ELBO:\", fit$ELBO, \"\n\")) 
+      if( (method == \"EM\") || (method == \"ECM\") ) cat(paste(\"log pi(y|V)pi(V):\", fit$VINIG$Vlik, \"\n\")) }
+        
+    fits[[i]] <- fit 
+  }
+  
+  #close cluster
+  if(cores > 1) stopCluster(cl)
+  
+  return(fits)
+}
+
+
+find.h <- function(fit, D.config){
+  model        <- D.config$model
+  N            <- D.config$N
+  indexname    <- D.config$indexname
+  Dfunc        <- D.config$Dfunc
+
+  if( model == \"rw1\" ){
+    x  <- fit$.args$data[[indexname]]
+    h  <- diff(x)
+  } else if ( model == \"rw2\"){
+    h  <- rep(1, N-2)
+  } else if( any(model == c(\"ar1\",\"ar\",\"iid\")) ){
+    h  <- rep(1, N)
+  } else if (model == \"besag\"){
+    h  <- rep(1,nrow(Dfunc(rep(0,fit$nhyper)))) #number of connections is number of rows of D matrix...
+  } else if (model == \"spde\"){
+    h  <- D.config$h}
+  
+  return(h)
+}
+
+find.D.config <- function(model, selection, indexname, hyperparsel, n.sampling, N, graph, mesh, pcpriors){
+  if(model == \"spde\"){
+    mesh     <- mesh
+    if(class(mesh) == \"inla.mesh\"){dim = 2}
+    else if(class(mesh) == \"inla.mesh.1d\"){dim=1}
+    else{ stop(\"SPDE model type not implemented\")}
+    fem      <- inla.mesh.fem(mesh, order=2) 
+    h        <- diag(fem$c0)
+    G        <- fem$g1
+    eigenG   <- eigen(Diagonal(N, 1/h)%*%G)$values
+    D.config <- list(alpha = 2, dim = dim, G = G, eigenG = eigenG, h = h,
+                     alpha1 = pcpriors$prior.range[2], alpha2 = pcpriors$prior.sigma[2], 
+                     rho0 = pcpriors$prior.range[1], sigma0 = pcpriors$prior.sigma[1])
+    Dfunc    <- Dfuncsel(\"spde\", N, D.config)
+    D.config <- append(D.config, list(hyperparsel = hyperparsel, Dfunc = Dfunc, 
+                                      selection = selection, indexname = indexname,
+                                      n.sampling = n.sampling, N = N, model = model))
+}else{
+  Dfunc             <- Dfuncsel(model, N, D.config = list(graph = graph))
+  D                 <- Dfunc(rep(0,fit$nhyper), hyperparsel)  
+  D.config          <- list(hyperparsel = hyperparsel, D = D, Dfunc = Dfunc, 
+                          selection = selection, indexname = indexname,
+                          n.sampling = n.sampling, N = N, model = model) 
+  }
+}
+
+find.inla.fit.V <- function(fit, n, model, D.config){
+  
+  ##----------------------------------------
+  ##  New INLA fit arguments
+  ##----------------------------------------
+  arglist <- fit$.args
+  if(model == \"spde\"){
+      arglist$formula <- as.formula(gsub(paste(\"spde\", sep = \"\"), \"rgeneric\", format(arglist$formula)))
+  } else{
+      arglist$formula <- as.formula(gsub(paste(\"\\"\",model,\"\\"\", sep = \"\"), \"rgeneric\", format(arglist$formula)))
+  }
+
+  ##---------------------------------------
+  ## create rgneric model
+  ##---------------------------------------
+  if(model == \"ar1\"){
+    rgeneric.model  <- inla.rgeneric.ar1
+  } else if(model == \"rw1\" || model == \"rw2\" || model == \"besag\" || model == \"iid\"){
+    D.config$log.det.D       <- det.mp(D.config$D) 
+    if(model == \"rw1\")   D.config$rank = N-1
+    if(model == \"rw2\")   D.config$rank = N-2
+    if(model == \"besag\") D.config$rank = N
+    if(model == \"iid\")   D.config$rank = N-1
+    rgeneric.model  <- inla.rgeneric0
+  } else if(model == \"spde\"){
+    rgeneric.model <- inla.rgeneric.spde
+  }
+
+  inla.fit.V <- function(V){
+    #turn this into a global variable so that INLA can read it
+    rgeneric <<- inla.rgeneric.define(rgeneric.model, V = V, N = N, D.config = D.config) 
+    fit       <- do.call(inla, arglist)
+    return(fit)
+  }
+  return(inla.fit.V)
+}
+
+```"

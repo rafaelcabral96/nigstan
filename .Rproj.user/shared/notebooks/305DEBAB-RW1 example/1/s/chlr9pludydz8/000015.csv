@@ -1,0 +1,1 @@
+"0","plot(VINIG.marginal.eta(fits, etamin=0, etamax= 0.5), type = 'l')"

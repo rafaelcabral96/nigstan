@@ -1,0 +1,8 @@
+"0","bayesplot_grid("
+"0","  mcmc_hist(fit_Gauss$draws(""W[1]"")),"
+"0","  mcmc_hist(fit_NIG$draws(""W[1]"")),"
+"0","  titles = c(""Posterior of w[1] - Gaussian model"", ""Posterior of w[1] - NIG model""),"
+"0","  xlim = c(-2.5,2)"
+"0",")"
+"2","Error in is.data.frame(x) : object 'fit_Gauss' not found
+"

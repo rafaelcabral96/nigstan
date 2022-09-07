@@ -1,0 +1,19 @@
+"0","```r
+#Ohio Crime data
+library(spdep)
+data(columbus)
+
+data <- columbus[,c(\"CRIME\",\"HOVAL\",\"INC\")]
+
+if (requireNamespace(\"rgdal\", quietly = TRUE)) {
+  library(rgdal)
+  columbus <- readOGR(system.file(\"shapes/columbus.shp\", package=\"spData\")[1])
+  plot(columbus)
+}
+```"
+"1","OGR data source with driver: ESRI Shapefile 
+Source: \"C:\R\library\spData\shapes\columbus.shp\", layer: \"columbus\"
+with 49 features
+It has 20 fields
+Integer64 fields read as strings:  COLUMBUS_ COLUMBUS_I POLYID 
+"

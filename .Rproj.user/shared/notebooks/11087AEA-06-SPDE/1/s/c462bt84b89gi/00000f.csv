@@ -1,0 +1,2 @@
+"0","mcmc_pairs(fit_NIG$draws(c(""sigmae"", ""sigma"", ""kappa"",""etas"",""mus"")),"
+"0","           diag_fun=""dens"", off_diag_fun=""hex"")"

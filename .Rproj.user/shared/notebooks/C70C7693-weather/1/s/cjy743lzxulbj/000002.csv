@@ -1,0 +1,2 @@
+"0","#inla.mesh2sp is a function in ../files/utils.R that convert an INLA mesh object to an sp mesh object that leaflet can process"
+"0","mesh_map <- inla.mesh2sp(mesh)$triangles"

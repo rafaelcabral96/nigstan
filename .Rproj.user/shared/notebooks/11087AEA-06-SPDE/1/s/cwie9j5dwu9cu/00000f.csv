@@ -1,0 +1,2 @@
+"0","fit_Gauss <- readRDS(""../files/fits/fit_temp_Gauss.rds"")"
+"0","knitr::kable(head(fit_Gauss$summary(),7), ""simple"", row.names = NA, digits=2)"

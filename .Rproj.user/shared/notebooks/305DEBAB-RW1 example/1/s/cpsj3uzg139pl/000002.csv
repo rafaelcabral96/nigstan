@@ -1,0 +1,24 @@
+"0","```r
+#Non-Gaussian
+fits <- VINIG(fit, selection = list(x=1:N), iter = 5, theta_eta = 10, cores = 4, d.sampling = TRUE)
+
+```"
+"1","Warning in inla.model.properties.generic(inla.trim.family(model), mm[names(mm) ==  :
+  Model 'rgeneric' in section 'latent' is marked as 'experimental'; changes may appear at any time.
+  Use this model with extra care!!! Further warnings are disabled.
+"
+"1","
+0Oo----------- Iteration 1 -----------oO0
+
+0Oo----------- Iteration 2 -----------oO0
+Rate of change of V's for x : 0.413617210268623
+
+0Oo----------- Iteration 3 -----------oO0
+Rate of change of V's for x : 0.345943082391789
+
+0Oo----------- Iteration 4 -----------oO0
+Rate of change of V's for x : 0.262271283305674
+
+0Oo----------- Iteration 5 -----------oO0
+Rate of change of V's for x : 0.167023041607064
+"

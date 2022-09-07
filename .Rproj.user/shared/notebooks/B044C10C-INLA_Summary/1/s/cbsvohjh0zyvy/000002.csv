@@ -1,0 +1,79 @@
+"0","```r
+'inla.rgeneric.RW1.jumps' <- function(
+  cmd = c(\"graph\", \"Q\", \"mu\", \"initial\", \"log.norm.const\",
+    \"log.prior\", \"quit\"),
+  theta = NULL) {
+
+  #Internal function
+  interpret.theta <- function() {
+    return(
+      list(prec = exp(theta[1L]),
+           r1 = exp(theta[2L]),
+           r2 = exp(theta[3L]),
+           r3 = exp(theta[4L])))
+  }
+
+  graph <- function(){
+    return(Q())
+  }
+
+  Q <- function() {
+    require(Matrix)
+
+    param <- interpret.theta()
+    n     <- nrow(D)
+    V     <- rep(1/99,n)
+    V[20] <- param$r1
+    V[40] <- param$r2
+    V[50] <- param$r3
+    
+    return(param$prec * (t(D)%*%Diagonal(nrow(D),1/V)%*%D) )
+  }
+
+  mu <- function()
+  {
+    return(numeric(0))
+  }
+
+  log.norm.const <- function() {
+    return(numeric(0))
+  }
+
+  log.prior <- function() {
+    param = interpret.theta()
+
+    res <- dgamma(param$prec, shape = 1, rate = 5e-05, log = TRUE) + theta[1L] +
+           dgamma(param$r1, shape = 0.010101/nu, rate = 1/nu, log = TRUE) + theta[2L] + 
+           dgamma(param$r2, shape = 0.010101/nu, rate = 1/nu, log = TRUE) + theta[3L] +
+           dgamma(param$r3, shape = 0.010101/nu, rate = 1/nu, log = TRUE) + theta[4L] 
+    
+    return(res)
+  }
+
+  initial <- function() {
+    return(c(0,0,0,0))
+  }
+
+  quit <- function() {
+    return(invisible())
+  }
+  
+  if (!length(theta)) theta = initial()
+  res <- do.call(match.arg(cmd), args = list())
+  return(res)
+}
+
+
+RW1.jumps.model <- inla.rgeneric.define(inla.rgeneric.RW1.jumps, D = D, nu = 0.005)
+
+data.inla <- list(y = y, x = x)
+data.inla$idx <- 1:100
+
+formula <- y ~ -1 + f(idx, model = RW1.jumps.model)
+fit <- inla(formula,
+            data = data.inla,
+            control.compute = list(config = TRUE, dic = TRUE, waic = TRUE))
+```"
+"1","Model 'rgeneric' in section 'latent' is marked as 'experimental'; changes may appear at any time.
+  Use this model with extra care!!! Further warnings are disabled.
+"

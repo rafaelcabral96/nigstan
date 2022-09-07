@@ -1,0 +1,4 @@
+"0","```r
+#posterior mean of the random effects x
+plot(result1$summary.random$x[,2])
+```"

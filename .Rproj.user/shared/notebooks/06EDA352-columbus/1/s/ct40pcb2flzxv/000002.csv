@@ -1,0 +1,20 @@
+"0","```r
+#setwd(\"C:/Users/Rafael Cabral/Desktop/KAUST/PhD/PhD Notes/Files/STAN\")
+fit <- readRDS(\"crimefit.rds\")
+fit$sigma_eta = sqrt(fit$vari_eta)
+fit$sigma_eps = sqrt(fit$vari)
+fit$kappa     = sqrt(fit$kappa_squared)
+summary(fit[,c(\"beta0\", \"beta1\", \"beta2\",\"kappa\",\"sigma_eps\",\"sigma_eta\",\"nu\")])
+```"
+"1","     beta0           beta1              beta2             kappa           sigma_eps       sigma_eta           nu       
+ Min.   :51.41   Min.   :-0.38269   Min.   :-1.7252   Min.   :0.03677   Min.   :1.789   Min.   :5.971   Min.   :1.117  
+ 1st Qu.:57.84   1st Qu.:-0.20768   1st Qu.:-1.3174   1st Qu.:0.27010   1st Qu.:2.307   1st Qu.:7.582   1st Qu.:2.473  
+ Median :59.14   Median :-0.17201   Median :-1.2006   Median :0.34417   Median :2.424   Median :7.896   Median :2.843  
+ Mean   :59.08   Mean   :-0.17490   Mean   :-1.1982   Mean   :0.34818   Mean   :2.416   Mean   :7.885   Mean   :2.873  
+ 3rd Qu.:60.32   3rd Qu.:-0.13988   3rd Qu.:-1.0900   3rd Qu.:0.42264   3rd Qu.:2.533   3rd Qu.:8.184   3rd Qu.:3.250  
+ Max.   :65.20   Max.   :-0.04261   Max.   :-0.4716   Max.   :0.79840   Max.   :2.966   Max.   :9.383   Max.   :5.481  
+"
+"0","```r
+V    <- fit[,strtrim(colnames(fit),2)==\"V[\"]
+plot.tau.trace(1:N,V)
+```"

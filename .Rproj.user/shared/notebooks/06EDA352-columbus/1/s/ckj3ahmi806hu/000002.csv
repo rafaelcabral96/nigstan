@@ -1,0 +1,25 @@
+"0","```r
+nb_q <- poly2nb(columbus)
+nb_B <- nb2listw(nb_q, style=\"B\", zero.policy=TRUE)
+B <- as(nb_B, \"CsparseMatrix\")
+library(igraph)
+g1 <- graph.adjacency(B, mode=\"undirected\")
+B1 <- get.adjacency(g1)
+A  <- unname(as.matrix(diag(unname(rowSums(B1))) - B1))
+
+# You are using different distribution for V (with mean 1) -> He is using another one so you should expect different results
+
+stanfit = stan(\"columbus2.stan\", 
+                    data=list(N=N,
+                              I=as.matrix(Diagonal(N)),
+                              A=A,
+                              y=y,
+                              hv=hv,
+                              inc=inc,
+                              theta_nu = 5),
+                    warmup=10000, 
+                    iter=40000,
+                    chains=1)
+```"
+"1","'C:/rtools40/usr/mingw_/bin/g++' not found
+"

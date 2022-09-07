@@ -1,0 +1,66 @@
+"0",""
+"0","sp <- inla.mesh2sp(mesh)$triangles"
+"2","'inla.CRSargs' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.CRS(inla.CRSargs(mesh$crs))
+inla.CRSargs(mesh$crs)
+inla.not_for_PROJ6(""inla.CRSargs"")"
+"2","'inla.as.list.CRS' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.as.list.CRS(crs)
+inla.not_for_PROJ6(""inla.as.list.CRS"")"
+"2","'inla.as.list.CRSargs' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.as.list.CRS(crs)
+inla.as.list.CRSargs(inla.CRSargs(x))
+inla.not_for_PROJ6(""inla.as.list.CRSargs"")"
+"2","'inla.CRSargs' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.as.list.CRS(crs)
+inla.as.list.CRSargs(inla.CRSargs(x))
+inla.CRSargs(x)
+inla.not_for_PROJ6(""inla.CRSargs"")"
+"0","proj4string(sp) <- CRS(""+proj=longlat +datum=WGS84"")"
+"0","sp_proj <- spTransform(sp, ""+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"")"
+"0",""
+"0","vertices <- inla.mesh2sp(mesh)$vertices@coords"
+"2","'inla.CRSargs' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.CRS(inla.CRSargs(mesh$crs))
+inla.CRSargs(mesh$crs)
+inla.not_for_PROJ6(""inla.CRSargs"")"
+"2","'inla.as.list.CRS' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.as.list.CRS(crs)
+inla.not_for_PROJ6(""inla.as.list.CRS"")"
+"2","'inla.as.list.CRSargs' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.as.list.CRS(crs)
+inla.as.list.CRSargs(inla.CRSargs(x))
+inla.not_for_PROJ6(""inla.as.list.CRSargs"")"
+"2","'inla.CRSargs' should not be used with PROJ6 and rgdal v3
+Call stack for developer debugging:
+inla.mesh2sp(mesh)
+inla.as.list.CRS(crs)
+inla.as.list.CRSargs(inla.CRSargs(x))
+inla.CRSargs(x)
+inla.not_for_PROJ6(""inla.CRSargs"")"
+"0","plot_data <- cbind(vertices, colMeans(V_post[1:200,]%*%Diagonal(N,1/h)))"
+"0","colnames(plot_data) <- c(""lon"",""lat"",""Vmean"")"
+"0",""
+"0","palV <- colorNumeric(palette = ""YlOrRd"", domain = plot_data[,3])"
+"0","leaflet(as.data.frame(plot_data)) %>%"
+"0"," addTiles() %>%"
+"0","  addCircleMarkers(lng = ~lon, lat = ~lat, color=""black"", "
+"0","                   stroke= TRUE, fill = TRUE, fillColor = ~palV(Vmean), "
+"0","                   radius = 4, fillOpacity = TRUE, weight = 1) %>%"
+"0","  addPolygons(data=sp_proj, weight = 1, fill = FALSE, color = ""#0A0708"")%>%"
+"0","  addLegend_decreasing(pal = palV, values = ~Vmean, opacity = 0.8, title = """","
+"0","                       position = ""bottomright"", decreasing = TRUE)"

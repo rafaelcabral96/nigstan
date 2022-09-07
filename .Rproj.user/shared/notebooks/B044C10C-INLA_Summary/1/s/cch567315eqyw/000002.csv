@@ -1,0 +1,15 @@
+"0","```r
+summary(result1)
+```"
+"1","
+Call:
+   c(\"inla(formula = formula1, data = data.inla, control.compute = 
+   list(config = TRUE, \", \" dic = TRUE, waic = TRUE))\") 
+Time used:
+    Pre = 0.216, Running = 0.697, Post = 0.147, Total = 1.06 
+Random effects:
+  Name	  Model
+    x RW1 model
+
+Model hyperparameters:
+"

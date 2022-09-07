@@ -1,0 +1,17 @@
+"0","```r
+n=100
+x=seq(0,1,,n)
+f.line   <- 0
+f.smooth <- (sin(2*pi*x^3))^3
+f.jump <- c(rep(0,n/5),rep(-2,n/5),rep(1,n/5),rep(1,n/5),rep(1,n/5))
+f.true <- f.line + f.smooth + f.jump  
+y <- f.true +  0.2*rnorm(n)
+
+my <- mean(y)
+y <- y - my
+f.true <- f.true - my
+plot(x,y)+
+  lines(x,f.true)
+```"
+"1","integer(0)
+"
