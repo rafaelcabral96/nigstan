@@ -1,5 +1,5 @@
 
-This repository contains the files of a Bookdown tutorial where I implement a generic class of non-Gaussian models in Stan: [https://rafaelcabral96.github.io/nigstan/sar-and-car-models.html](https://rafaelcabral96.github.io/nigstan/)
+This repository contains the files of a Bookdown tutorial where I implement a generic class of non-Gaussian models in Stan: [https://rafaelcabral96.github.io/nigstan/](https://rafaelcabral96.github.io/nigstan/)
 
 The tutorial introduces the non-Gaussian models I am studying, and how to implement them in Stan and contains 3 applications.
 
