@@ -1,13 +1,7 @@
-Welcome! 
+This repository contains the files of a Bookdown tutorial where I implement a generic class of non-Gaussian models in Stan: [https://rafaelcabral96.github.io/nigstan/sar-and-car-models.html](https://rafaelcabral96.github.io/nigstan/sar-and-car-models.html)
 
-This is a minimal example of a book based on R Markdown and **bookdown** (https://github.com/rstudio/bookdown). 
+The tutorial introduces the non-Gaussian models I am studying, how to implement them in Stan and contains 3 applications.
 
-This template provides a skeleton file structure that you can edit to create your book. 
+The Stan functions used to declare the non-Gaussian models can be found in `files/functions.stan`, and the Stan model declaration for the aplications is in `files/stan/`.
 
-The contents inside the .Rmd files provide some pointers to help you get started, but feel free to also delete the content in each file and start fresh.
-
-Additional resources:
-
-The **bookdown** book: https://bookdown.org/yihui/bookdown/
-
-The **bookdown** package reference site: https://pkgs.rstudio.com/bookdown
+![](files/images/sim3.png)
