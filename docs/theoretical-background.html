@@ -320,9 +320,9 @@ V \sim IG(1,\eta^{-1})
 \tag{2.1}
 \end{equation}\]</span></p>
 <p>The mean and variance are always <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, respectively. The parameter <span class="math inline">\(\eta\)</span> is related to the degree of non-Gaussianity since <span class="math inline">\(\Lambda\)</span> converges to a Gaussian random variable when <span class="math inline">\(\eta \to 0\)</span>, and to a Cauchy random variable when <span class="math inline">\(\eta \to \infty\)</span>. The parameter <span class="math inline">\(\zeta\)</span> is related to the asymmetry of the random variable since <span class="math inline">\(\Lambda\)</span> is a symmetric random variable when <span class="math inline">\(\zeta=0\)</span>, and when <span class="math inline">\(\zeta&gt;0\)</span> it is skewed to the right. Also, the larger <span class="math inline">\(\eta\)</span>, the larger the asymmetry induced by the same value of <span class="math inline">\(\zeta\)</span> (see following plots).</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="theoretical-background.html#cb3-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../files/images/NIGplot.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="theoretical-background.html#cb3-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;files/images/NIGplot.png&quot;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:NIGplot"></span>
-<img src="../files/images/NIGplot.png" alt="PDF of NIG distribution in log scale" width="100%" />
+<img src="files/images/NIGplot.png" alt="PDF of NIG distribution in log scale" width="100%" />
 <p class="caption">
 Figure 2.1: PDF of NIG distribution in log scale
 </p>
@@ -347,16 +347,16 @@ V_{i} \overset{ind.}{\sim} IG(h_i,\eta^{-1} h_i^2)   \\
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(E[\Lambda_i]=0\)</span> and <span class="math inline">\(Var[\Lambda_i]=h_i\)</span>. For the analytically inclined, this RW1 model is an approximation of a Lévy process <span class="math inline">\(L(t)\)</span>, where an increment of size 1 follows the NIG distribution. Speaking only of essential terms, a Lévy process is a process with independent and stationary increments, and all finite-dimensional distributions are known if we know the distribution of an increment (more about Lévy processes in <span class="citation">Ken-Iti (<a href="#ref-ken1999levy" role="doc-biblioref">1999</a>)</span> and <span class="citation">Barndorff-Nielsen, Mikosch, and Resnick (<a href="#ref-barndorff2012levy" role="doc-biblioref">2012</a>)</span>). If the increments are Gaussian, then <span class="math inline">\(L(t)\)</span> is a Gaussian process, while in general, it is non-Gaussian. <!--The parameterization ($\eta^\star$,$\zeta^\star$) also depends now on a predefined vector $\mathbf{h}$, which contains the distance between locations.--></p>
 <p>Next, we show a sample path of RW1 with <span class="math inline">\(\sigma=1\)</span> near the Gaussian case by setting <span class="math inline">\(\eta=10^{-6}\)</span> (top) and a non-Gaussian case by setting <span class="math inline">\(\eta=10\)</span> (bottom). We generated these simulated paths, by first sampling the mixing variables <span class="math inline">\(V_i\)</span>, then sampling the noise <span class="math inline">\(\Lambda_i|V_i\)</span>, and then the RW1 sample paths are just a cumulative sum of the noises. Notice that, in the first panel, the mixing variables <span class="math inline">\(V_i\)</span> are very close to 1 while on the bottom panel there is more discrepancy. When <span class="math inline">\(V_i\)</span> takes a large value, the noise <span class="math inline">\(\Lambda\)</span> can also be large and then we observe a large jump in the RW1 process driven by NIG noise.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="theoretical-background.html#cb4-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../files/images/GaussRW1.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="theoretical-background.html#cb4-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;files/images/GaussRW1.png&quot;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
-<img src="../files/images/GaussRW1.png" alt="Sample of mixing vector $\mathbf{V}$, noise vector $\mathbf{\Lambda}$ and RW1 vector $\mathbf{x}$" width="100%" />
+<img src="files/images/GaussRW1.png" alt="Sample of mixing vector $\mathbf{V}$, noise vector $\mathbf{\Lambda}$ and RW1 vector $\mathbf{x}$" width="100%" />
 <p class="caption">
 Figure 2.2: Sample of mixing vector <span class="math inline">\(\mathbf{V}\)</span>, noise vector <span class="math inline">\(\mathbf{\Lambda}\)</span> and RW1 vector <span class="math inline">\(\mathbf{x}\)</span>
 </p>
 </div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="theoretical-background.html#cb5-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../files/images/NIGRW1.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="theoretical-background.html#cb5-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;files/images/NIGRW1.png&quot;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:RW1sample"></span>
-<img src="../files/images/NIGRW1.png" alt="Sample of mixing vector $\mathbf{V}$, noise vector $\mathbf{\Lambda}$ and RW1 vector $\mathbf{x}$" width="100%" />
+<img src="files/images/NIGRW1.png" alt="Sample of mixing vector $\mathbf{V}$, noise vector $\mathbf{\Lambda}$ and RW1 vector $\mathbf{x}$" width="100%" />
 <p class="caption">
 Figure 2.3: Sample of mixing vector <span class="math inline">\(\mathbf{V}\)</span>, noise vector <span class="math inline">\(\mathbf{\Lambda}\)</span> and RW1 vector <span class="math inline">\(\mathbf{x}\)</span>
 </p>
@@ -450,17 +450,17 @@ where <span class="math inline">\(\mathcal{D}\)</span> is a linear differential 
 </tbody>
 </table>
 <p>The first column of the next plot shows a simulation of Gaussian noise and the sample paths of several models generated from it. In the second column, we repeat the same, but now with non-Gaussian NIG noise. We can see that most NIG noise events are near 0, and a few of them take large values (larger than the ones you see in the Gaussian noise process) since the NIG distribution has heavier tails and is more peaked around 0. Whenever the noise takes a large value (for instance, near location 0.25), the RW1 and OU processes will exhibit a distinct jump, and the RW2 and Matérn processes will exhibit a kink (discontinuity in the first derivative).</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="theoretical-background.html#cb6-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../files/images/sim1.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="theoretical-background.html#cb6-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;files/images/sim1.png&quot;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-2"></span>
-<img src="../files/images/sim1.png" alt="Noise and sample paths for several models" width="100%" />
+<img src="files/images/sim1.png" alt="Noise and sample paths for several models" width="100%" />
 <p class="caption">
 Figure 2.4: Noise and sample paths for several models
 </p>
 </div>
 <p>Next, we show sample paths of a Matérn model in 2D driven with NIG driving noise, as described in <span class="citation">Bolin (<a href="#ref-bolin2014spatial" role="doc-biblioref">2014</a>)</span>. Notice that in Fig. <a href="theoretical-background.html#fig:compareSPDE">2.5</a> as <span class="math inline">\(\eta\)</span> increases we observe more “hotspots” and “coldspots”, that is, regions where the field <span class="math inline">\(X\)</span> takes values that would be considered extreme in a Gaussian model. In the symmetric case (<span class="math inline">\(\zeta = 0\)</span>) the number of hotspots and coldspots is on average the same, while if <span class="math inline">\(\zeta &gt; 0\)</span> there should be on average more hotspots than coldspots.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="theoretical-background.html#cb7-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../files/images/sim3.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="theoretical-background.html#cb7-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;files/images/sim3.png&quot;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:compareSPDE"></span>
-<img src="../files/images/sim3.png" alt="Sample paths of a Matérn model in 2D with $\alpha=2$" width="100%" />
+<img src="files/images/sim3.png" alt="Sample paths of a Matérn model in 2D with $\alpha=2$" width="100%" />
 <p class="caption">
 Figure 2.5: Sample paths of a Matérn model in 2D with <span class="math inline">\(\alpha=2\)</span>
 </p>

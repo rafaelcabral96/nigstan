@@ -342,7 +342,7 @@ $$
 <span id="cb91-9"><a href="sar-and-car-models.html#cb91-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bayesplot)            <span class="co"># Pair and trace plots</span></span>
 <span id="cb91-10"><a href="sar-and-car-models.html#cb91-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)              <span class="co"># More plots</span></span>
 <span id="cb91-11"><a href="sar-and-car-models.html#cb91-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GIGrvg)               <span class="co"># Evaluate density of a GIG distribution</span></span>
-<span id="cb91-12"><a href="sar-and-car-models.html#cb91-12" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;../files/utils.R&quot;</span>)    <span class="co"># Several utility functions</span></span>
+<span id="cb91-12"><a href="sar-and-car-models.html#cb91-12" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;files/utils.R&quot;</span>)    <span class="co"># Several utility functions</span></span>
 <span id="cb91-13"><a href="sar-and-car-models.html#cb91-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb91-14"><a href="sar-and-car-models.html#cb91-14" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">mc.cores =</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>())</span></code></pre></div>
 </div>
@@ -399,16 +399,16 @@ model{
   
   ...
 }</code></pre>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="sar-and-car-models.html#cb97-1" aria-hidden="true" tabindex="-1"></a>model_stan_Gauss <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;../files/stan/GaussSAR2.stan&#39;</span>)</span>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="sar-and-car-models.html#cb97-1" aria-hidden="true" tabindex="-1"></a>model_stan_Gauss <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/GaussSAR2.stan&#39;</span>)</span>
 <span id="cb97-2"><a href="sar-and-car-models.html#cb97-2" aria-hidden="true" tabindex="-1"></a>fit_Gauss <span class="ot">&lt;-</span> model_stan_Gauss<span class="sc">$</span><span class="fu">sample</span>(<span class="at">data =</span> dat1, </span>
 <span id="cb97-3"><a href="sar-and-car-models.html#cb97-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">chains =</span> <span class="dv">4</span>, </span>
 <span id="cb97-4"><a href="sar-and-car-models.html#cb97-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">iter_warmup   =</span> <span class="dv">1000</span>, </span>
 <span id="cb97-5"><a href="sar-and-car-models.html#cb97-5" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">iter_sampling =</span> <span class="dv">1000</span>)</span>
 <span id="cb97-6"><a href="sar-and-car-models.html#cb97-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb97-7"><a href="sar-and-car-models.html#cb97-7" aria-hidden="true" tabindex="-1"></a>fit_Gauss<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&quot;../files/fits/fit_columbus_Gauss2.rds&quot;</span>)</span>
+<span id="cb97-7"><a href="sar-and-car-models.html#cb97-7" aria-hidden="true" tabindex="-1"></a>fit_Gauss<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&quot;files/fits/fit_columbus_Gauss2.rds&quot;</span>)</span>
 <span id="cb97-8"><a href="sar-and-car-models.html#cb97-8" aria-hidden="true" tabindex="-1"></a>fit_Gauss<span class="sc">$</span><span class="fu">cmdstan_diagnose</span>() <span class="co">#No warnings</span></span></code></pre></div>
 <p>Let us look at the summary:</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="sar-and-car-models.html#cb98-1" aria-hidden="true" tabindex="-1"></a>fit_Gauss <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;../files/fits/fit_columbus_Gauss2.rds&quot;</span>)</span>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="sar-and-car-models.html#cb98-1" aria-hidden="true" tabindex="-1"></a>fit_Gauss <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;files/fits/fit_columbus_Gauss2.rds&quot;</span>)</span>
 <span id="cb98-2"><a href="sar-and-car-models.html#cb98-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(fit_Gauss<span class="sc">$</span><span class="fu">summary</span>(),<span class="dv">6</span>), <span class="st">&quot;simple&quot;</span>, <span class="at">row.names =</span> <span class="cn">NA</span>, <span class="at">digits=</span><span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
@@ -511,7 +511,7 @@ model{
  
   ...
 }</code></pre>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="sar-and-car-models.html#cb100-1" aria-hidden="true" tabindex="-1"></a>model_stan_NIG <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;../files/stan/NIGSAR2.stan&#39;</span>)</span>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="sar-and-car-models.html#cb100-1" aria-hidden="true" tabindex="-1"></a>model_stan_NIG <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/NIGSAR2.stan&#39;</span>)</span>
 <span id="cb100-2"><a href="sar-and-car-models.html#cb100-2" aria-hidden="true" tabindex="-1"></a>fit_NIG <span class="ot">&lt;-</span> model_stan_NIG<span class="sc">$</span><span class="fu">sample</span>(<span class="at">data =</span> dat1, </span>
 <span id="cb100-3"><a href="sar-and-car-models.html#cb100-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">chains =</span> <span class="dv">4</span>, </span>
 <span id="cb100-4"><a href="sar-and-car-models.html#cb100-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">iter_warmup =</span> <span class="dv">1000</span>, </span>
@@ -519,10 +519,10 @@ model{
 <span id="cb100-6"><a href="sar-and-car-models.html#cb100-6" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">max_treedepth =</span> <span class="dv">20</span>,</span>
 <span id="cb100-7"><a href="sar-and-car-models.html#cb100-7" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">adapt_delta =</span> <span class="fl">0.999</span>)</span>
 <span id="cb100-8"><a href="sar-and-car-models.html#cb100-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-9"><a href="sar-and-car-models.html#cb100-9" aria-hidden="true" tabindex="-1"></a>fit_NIG<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&quot;../files/fits/fit_columbus_NIG2.rds&quot;</span>)</span>
+<span id="cb100-9"><a href="sar-and-car-models.html#cb100-9" aria-hidden="true" tabindex="-1"></a>fit_NIG<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&quot;files/fits/fit_columbus_NIG2.rds&quot;</span>)</span>
 <span id="cb100-10"><a href="sar-and-car-models.html#cb100-10" aria-hidden="true" tabindex="-1"></a>fit_NIG<span class="sc">$</span><span class="fu">cmdstan_diagnose</span>() <span class="co">#4 out of 4000 iterations diverged</span></span></code></pre></div>
 <p>The posterior distributions for the regression coefficients were similar, and the posterior distributions of <span class="math inline">\(\eta^\star\)</span> and <span class="math inline">\(\zeta^\star\)</span> suggest some heavy-tailedness although no asymmetry.</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="sar-and-car-models.html#cb101-1" aria-hidden="true" tabindex="-1"></a>fit_NIG <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;../files/fits/fit_columbus_NIG2.rds&quot;</span>)</span>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="sar-and-car-models.html#cb101-1" aria-hidden="true" tabindex="-1"></a>fit_NIG <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;files/fits/fit_columbus_NIG2.rds&quot;</span>)</span>
 <span id="cb101-2"><a href="sar-and-car-models.html#cb101-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(fit_NIG<span class="sc">$</span><span class="fu">summary</span>(),<span class="dv">8</span>), <span class="st">&quot;simple&quot;</span>, <span class="at">row.names =</span> <span class="cn">NA</span>, <span class="at">digits=</span><span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
@@ -638,7 +638,7 @@ model{
 </tr>
 </tbody>
 </table>
-<p>The posterior draws for <span class="math inline">\(\mathbf{V}\)</span> can be generated based on eq. <a href="theoretical-background.html#eq:V">(2.5)</a> and from the posterior draws of <span class="math inline">\(\mathbf{x}\)</span>, <span class="math inline">\(\eta^\star\)</span>, <span class="math inline">\(\zeta^\star\)</span> and <span class="math inline">\(\rho\)</span> as done next. We utilized the function <code>VposteriorSAR</code> located at <code>../files/utils.R</code>. High values for <span class="math inline">\(V_i\)</span> indicate that region <span class="math inline">\(i\)</span> has a spike in the spatial effects, that were not captured by the covariates, and are usually too large to be modeled by a Gaussian distribution.</p>
+<p>The posterior draws for <span class="math inline">\(\mathbf{V}\)</span> can be generated based on eq. <a href="theoretical-background.html#eq:V">(2.5)</a> and from the posterior draws of <span class="math inline">\(\mathbf{x}\)</span>, <span class="math inline">\(\eta^\star\)</span>, <span class="math inline">\(\zeta^\star\)</span> and <span class="math inline">\(\rho\)</span> as done next. We utilized the function <code>VposteriorSAR</code> located at <code>files/utils.R</code>. High values for <span class="math inline">\(V_i\)</span> indicate that region <span class="math inline">\(i\)</span> has a spike in the spatial effects, that were not captured by the covariates, and are usually too large to be modeled by a Gaussian distribution.</p>
 <div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="sar-and-car-models.html#cb102-1" aria-hidden="true" tabindex="-1"></a>X     <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">as_draws_df</span>(fit_NIG<span class="sc">$</span><span class="fu">draws</span>(<span class="st">&quot;X&quot;</span>)))[,<span class="dv">1</span><span class="sc">:</span>N]</span>
 <span id="cb102-2"><a href="sar-and-car-models.html#cb102-2" aria-hidden="true" tabindex="-1"></a>etas  <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">as_draws_df</span>(fit_NIG<span class="sc">$</span><span class="fu">draws</span>(<span class="st">&quot;etas&quot;</span>)))[,<span class="dv">1</span>]</span>
 <span id="cb102-3"><a href="sar-and-car-models.html#cb102-3" aria-hidden="true" tabindex="-1"></a>zetas <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">as_draws_df</span>(fit_NIG<span class="sc">$</span><span class="fu">draws</span>(<span class="st">&quot;zetas&quot;</span>)))[,<span class="dv">1</span>]</span>
@@ -692,7 +692,7 @@ where:</p>
 </ul>
 <p>For an explanation of the Stan implementation see <span class="citation">Morris (<a href="#ref-Mitzi" role="doc-biblioref">2019</a>)</span>. In this application, <span class="math inline">\(x\)</span> only includes one covariate that indicates the proportion of the population engaged in agriculture, fishing, or forestry (AFF).</p>
 <!--We can represent these 'independent' increments through the system $\mathbf{D}_{CAR}\mathbf{x} = \mathbf{\Lambda}$, where each row of $\mathbf{D}_{CAR}$ contains one neighboring relationship. The matrix $\mathbf{D}_{CAR}$ is generally rectangular and it is not straightforward how to define the joint density of $\mathbf{x}$ in this case. Instead, we will replace the quadratic penalty on $x_i-x_j$ induced by the log-density of a Gaussian distribution, with the equivalent penalty induced by the log-density of a NIG distribution.--->
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="sar-and-car-models.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;../files/data/scotland_data.R&quot;</span>)</span>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="sar-and-car-models.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;files/data/scotland_data.R&quot;</span>)</span>
 <span id="cb103-2"><a href="sar-and-car-models.html#cb103-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb103-3"><a href="sar-and-car-models.html#cb103-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> data<span class="sc">$</span>y;</span>
 <span id="cb103-4"><a href="sar-and-car-models.html#cb103-4" aria-hidden="true" tabindex="-1"></a>E <span class="ot">=</span> data<span class="sc">$</span>E;</span>
@@ -730,15 +730,15 @@ where:</p>
 <span id="cb104-9"><a href="sar-and-car-models.html#cb104-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">scaling_factor =</span> scaling_factor,</span>
 <span id="cb104-10"><a href="sar-and-car-models.html#cb104-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">theta_etas =</span> <span class="dv">10</span>,</span>
 <span id="cb104-11"><a href="sar-and-car-models.html#cb104-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">theta_zetas =</span> <span class="dv">5</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="sar-and-car-models.html#cb105-1" aria-hidden="true" tabindex="-1"></a>model_stan_Gauss <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;../files/stan/GaussPoissonCAR2.stan&#39;</span>)</span>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="sar-and-car-models.html#cb105-1" aria-hidden="true" tabindex="-1"></a>model_stan_Gauss <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/GaussPoissonCAR2.stan&#39;</span>)</span>
 <span id="cb105-2"><a href="sar-and-car-models.html#cb105-2" aria-hidden="true" tabindex="-1"></a>fit_Gauss <span class="ot">&lt;-</span> model_stan_Gauss<span class="sc">$</span><span class="fu">sample</span>(<span class="at">data =</span> dat1, </span>
 <span id="cb105-3"><a href="sar-and-car-models.html#cb105-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">chains =</span> <span class="dv">4</span>, </span>
 <span id="cb105-4"><a href="sar-and-car-models.html#cb105-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">iter_warmup =</span> <span class="dv">5000</span>, </span>
 <span id="cb105-5"><a href="sar-and-car-models.html#cb105-5" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">iter_sampling =</span> <span class="dv">1000</span>)</span>
 <span id="cb105-6"><a href="sar-and-car-models.html#cb105-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb105-7"><a href="sar-and-car-models.html#cb105-7" aria-hidden="true" tabindex="-1"></a>fit_Gauss<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&quot;../files/fits/fit_scotland_Gauss2.rds&quot;</span>)</span>
+<span id="cb105-7"><a href="sar-and-car-models.html#cb105-7" aria-hidden="true" tabindex="-1"></a>fit_Gauss<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&quot;files/fits/fit_scotland_Gauss2.rds&quot;</span>)</span>
 <span id="cb105-8"><a href="sar-and-car-models.html#cb105-8" aria-hidden="true" tabindex="-1"></a>fit_Gauss<span class="sc">$</span><span class="fu">cmdstan_diagnose</span>()</span></code></pre></div>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="sar-and-car-models.html#cb106-1" aria-hidden="true" tabindex="-1"></a>fit_Gauss <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;../files/fits/fit_scotland_Gauss2.rds&quot;</span>)</span>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="sar-and-car-models.html#cb106-1" aria-hidden="true" tabindex="-1"></a>fit_Gauss <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;files/fits/fit_scotland_Gauss2.rds&quot;</span>)</span>
 <span id="cb106-2"><a href="sar-and-car-models.html#cb106-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(fit_Gauss<span class="sc">$</span><span class="fu">summary</span>(),<span class="dv">5</span>), <span class="st">&quot;simple&quot;</span>, <span class="at">row.names =</span> <span class="cn">NA</span>, <span class="at">digits=</span><span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
@@ -827,16 +827,16 @@ where:</p>
 <pre><code>for(i in 1:N_edges){
   ll[i] =   nig_lpdf( phi[node1[i]] - phi[node2[i]] | 0, 1, etas, zetas, 1);}
 target += sum(ll);</code></pre>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="sar-and-car-models.html#cb109-1" aria-hidden="true" tabindex="-1"></a>model_stan_NIG <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;../files/stan/NIGPoissonCAR2.stan&#39;</span>)</span>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="sar-and-car-models.html#cb109-1" aria-hidden="true" tabindex="-1"></a>model_stan_NIG <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/NIGPoissonCAR2.stan&#39;</span>)</span>
 <span id="cb109-2"><a href="sar-and-car-models.html#cb109-2" aria-hidden="true" tabindex="-1"></a>fit_NIG <span class="ot">&lt;-</span> model_stan_NIG<span class="sc">$</span><span class="fu">sample</span>(<span class="at">data =</span> dat1, </span>
 <span id="cb109-3"><a href="sar-and-car-models.html#cb109-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">chains =</span> <span class="dv">4</span>, </span>
 <span id="cb109-4"><a href="sar-and-car-models.html#cb109-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">iter_warmup =</span> <span class="dv">5000</span>, </span>
 <span id="cb109-5"><a href="sar-and-car-models.html#cb109-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">iter_sampling =</span> <span class="dv">1000</span>)</span>
 <span id="cb109-6"><a href="sar-and-car-models.html#cb109-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-7"><a href="sar-and-car-models.html#cb109-7" aria-hidden="true" tabindex="-1"></a>fit_NIG<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&quot;../files/fits/fit_scotland_NIG2.rds&quot;</span>)</span>
+<span id="cb109-7"><a href="sar-and-car-models.html#cb109-7" aria-hidden="true" tabindex="-1"></a>fit_NIG<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&quot;files/fits/fit_scotland_NIG2.rds&quot;</span>)</span>
 <span id="cb109-8"><a href="sar-and-car-models.html#cb109-8" aria-hidden="true" tabindex="-1"></a>fit_NIG<span class="sc">$</span><span class="fu">cmdstan_diagnose</span>() <span class="co">#No warnings</span></span></code></pre></div>
 <p>We compare now the posterior summaries of the NIG model with the Gaussian model. We observe a higher posterior mean for <span class="math inline">\(\rho\)</span> which indicates that more of the variability comes from the spatially structured effects and less from the spatially unstructured effects, and suggests that the more flexible model for the spatial structure effects could better capture the neighboring relationships in the lattice. The posterior distribution of <span class="math inline">\(\beta\)</span> stills indicates a positive relationship between the covariate AFF (proportion of the population engaged in agriculture, fishing, or forestry) and lip cancer risk, but the posterior mean dropped from 0.36 to 0.26.</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="sar-and-car-models.html#cb110-1" aria-hidden="true" tabindex="-1"></a>fit_NIG <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;../files/fits/fit_scotland_NIG2.rds&quot;</span>)</span>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="sar-and-car-models.html#cb110-1" aria-hidden="true" tabindex="-1"></a>fit_NIG <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;files/fits/fit_scotland_NIG2.rds&quot;</span>)</span>
 <span id="cb110-2"><a href="sar-and-car-models.html#cb110-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(fit_NIG<span class="sc">$</span><span class="fu">summary</span>(),<span class="dv">5</span>), <span class="st">&quot;simple&quot;</span>, <span class="at">row.names =</span> <span class="cn">NA</span>, <span class="at">digits=</span><span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
@@ -918,10 +918,10 @@ target += sum(ll);</code></pre>
 </table>
 <div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="sar-and-car-models.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_pairs</span>(fit_NIG<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">&quot;sigma&quot;</span>, <span class="st">&quot;rho&quot;</span>, <span class="st">&quot;betas[1]&quot;</span>, <span class="st">&quot;etas&quot;</span>,<span class="st">&quot;zetas&quot;</span>)),</span>
 <span id="cb111-2"><a href="sar-and-car-models.html#cb111-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">diag_fun=</span><span class="st">&quot;dens&quot;</span>, <span class="at">off_diag_fun=</span><span class="st">&quot;hex&quot;</span>)</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-64-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
 <div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="sar-and-car-models.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(fit_NIG<span class="sc">$</span><span class="fu">draws</span>(<span class="fu">c</span>(<span class="st">&quot;sigma&quot;</span>, <span class="st">&quot;rho&quot;</span>, <span class="st">&quot;betas[1]&quot;</span>, <span class="st">&quot;etas&quot;</span>,<span class="st">&quot;zetas&quot;</span>)), </span>
 <span id="cb112-2"><a href="sar-and-car-models.html#cb112-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">facet_args =</span> <span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">strip.position =</span> <span class="st">&quot;left&quot;</span>))</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-64-2.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-62-2.png" width="672" /></p>
 </div>
 <div id="comparizon-2" class="section level3" number="7.3.3">
 <h3><span class="header-section-number">7.3.3</span> Comparizon</h3>
@@ -941,7 +941,7 @@ target += sum(ll);</code></pre>
 ## looic     280.07852 10.574204</code></pre>
 <p>The Pareto <span class="math inline">\(k\)</span> diagnostic values are shown next, which are used to assess the reliability of the estimates. The estimates of the tail shape <span class="math inline">\(k\)</span> are high for several locations and cross the value 1 at locations 15 (NE.fife) and 22 (Aberdeen) for the Gaussian model suggesting that the variance of the raw importance ratios is infinite. High estimates of the tail shape parameter <span class="math inline">\(k\)</span> indicate that the full posterior is not a good importance sampling approximation to the leave-one-out posterior. Thus, the observations are surprising according to the model. This is more likely to happen in a non-robust model with highly influential observations. The mode robust NIG model may reduce the sensitivity with regards to influential observation and it has smaller tail shapes.</p>
 <div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="sar-and-car-models.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(loo1, <span class="at">label_points =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="st">&quot;Gaussian&quot;</span>)</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-66-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-64-1.png" width="672" /></p>
 <div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="sar-and-car-models.html#cb118-1" aria-hidden="true" tabindex="-1"></a>loo1<span class="sc">$</span>psis_object</span></code></pre></div>
 <pre><code>## Computed from 4000 by 56 log-weights matrix
 ## Pareto k diagnostic values:
@@ -952,7 +952,7 @@ target += sum(ll);</code></pre>
 ##    (1, Inf)   (very bad)  2     3.6%   14        
 ## See help(&#39;pareto-k-diagnostic&#39;) for details.</code></pre>
 <div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="sar-and-car-models.html#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(loo2, <span class="at">label_points =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="st">&quot;NIG&quot;</span>)</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-66-2.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-64-2.png" width="672" /></p>
 <div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="sar-and-car-models.html#cb121-1" aria-hidden="true" tabindex="-1"></a>loo2<span class="sc">$</span>psis_object</span></code></pre></div>
 <pre><code>## Computed from 4000 by 56 log-weights matrix
 ## Pareto k diagnostic values:

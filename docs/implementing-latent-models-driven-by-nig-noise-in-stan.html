@@ -461,26 +461,6 @@ Deal now with SPDE application write take things from Adam Walder and Bolin pape
 &amp;= \prod_{i=1}^n C_{ii}(\kappa^2+v_i)
 \end{align*}\]</span></p>
 <p>Therefore <span class="math inline">\(\log |\kappa^2\mathbf{C}+\mathbf{G}| \propto \sum_{i=1}^n\log(\kappa^2+v_i)\)</span>, and one can compute the eigenvalues <span class="math inline">\(v_i\)</span> only once before the HMC algorithm starts, and then evaluate <span class="math inline">\(\log \mathbf{D}\)</span> efficiently using the previous result. Similar transformations can be applied when computing the determinant of <span class="math inline">\(\mathbf{D} = \mathbf{I}+\rho\mathbf{W}\)</span>, where now <span class="math inline">\(\log \mathbf{D}=\sum_{i=1}^n\log(1-\rho v_i)\)</span>, and <span class="math inline">\(v_i\)</span> are the eigenvalues of <span class="math inline">\(\mathbf{W}\)</span>.</p>
-<!--This can be dropped to less than 1\% by precomputing $\log|\mathbf{D}(\kappa)|$ for many values of $\kappa$ and then during sampling time finding the log determinant by interpolation. The determinant of matrices $\mathbf{D}$ of the type $\mathbf{D}(\kappa) = \kappa^2\text{diag}(\mathbf{h}) + \mathbf{G}$  behaves linearly for small or large $\kappa$ in Log-Log scale, for the applications we will work with. 
-
-
-
-
-```r
-knitr::include_graphics("../files/images/LogLogdetD.png")
-```
-
-<div class="figure">
-<img src="../files/images/LogLogdetD.png" alt="Determinant of $D=\kappa^2 diag(h) + G$ in Application ?? " width="75%" />
-<p class="caption">(\#fig:unnamed-chunk-4)Determinant of $D=\kappa^2 diag(h) + G$ in Application ?? </p>
-</div>
-
-So we can do linear interpolation in the middle region, and linear extrapolation outside. The function `interpolation` does this and has signature:
-
-```{}
-real interpolation(real x, vector x0, vector y0)
-```
--->
 
 </div>
 </div>
