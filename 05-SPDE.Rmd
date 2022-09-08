@@ -48,7 +48,7 @@ library(posterior)            # Process the output of cmdstanr sampling
 library(bayesplot)            # Pair and trace plots
 library(ggplot2)              # More plots
 library(GIGrvg)               # Evaluate the density of a GIG distribution
-source("../files/utils.R")    # Several utility functions
+source("files/utils.R")       # Several utility functions
 
 options(mc.cores = parallel::detectCores())
 ```
@@ -56,7 +56,7 @@ options(mc.cores = parallel::detectCores())
 The `weatherdata.csv` contains the temperature where the sample mean was subtracted from the data and the coordinates where the measurements were taken.
 
 ```{r message=FALSE, warning=FALSE}
-weatherdata <- as.data.frame(read_csv("../files/data/weatherdata.csv", col_names = TRUE))
+weatherdata <- as.data.frame(read_csv("files/data/weatherdata.csv", col_names = TRUE))
 ```
 
 ## Discretization mesh
@@ -77,10 +77,10 @@ A <- inla.spde.make.A(mesh = mesh, loc = as.matrix(weatherdata[,c("lon","lat")])
 
 ## Data plot
 
-In the next Leaflet widget, we plot the data and the discretization mesh. We hid the Leaflet code here since it is quite long, but you can find it in the original Rmarkdown file.
+In the next Leaflet widget, we show the data and the discretization mesh. We hid the Leaflet code here since it is quite long, but you can find it in the original Rmarkdown file.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-#inla.mesh2sp is a function in ../files/utils.R that convert an INLA mesh object to an sp mesh object that leaflet can process
+#inla.mesh2sp is a function in files/utils.R that convert an INLA mesh object to an sp mesh object that leaflet can process
 mesh_map <- inla.mesh2sp(mesh)$triangles
 
 #Leaflet expects data to be specified in latitude and longitude using the WGS84 coordinate projection, so we transform mesh_map to this projection as follows
@@ -236,7 +236,7 @@ dat1 <- list(N        = N,
 Then we compile and fit the model.
 
 ```{r eval=FALSE}
-model_stan_Gauss <- cmdstan_model('../files/stan/GaussMaternSPDE2.stan')
+model_stan_Gauss <- cmdstan_model('files/stan/GaussMaternSPDE2.stan')
 fit_press_temp <- model_stan_Gauss$sample(data = dat1, 
                                           chains = 4, 
                                           iter_warmup =   300, 
@@ -244,13 +244,13 @@ fit_press_temp <- model_stan_Gauss$sample(data = dat1,
                                           refresh = 10)
 
 
-fit_press_temp$save_object("../files/fits/fit_press_Gauss500.rds")
+fit_press_temp$save_object("files/fits/fit_press_Gauss500.rds")
 ```
 
 Let us examine the summary of the fit for a few parameters.
 
 ```{r}
-fit_Gauss <- readRDS("../files/fits/fit_press_Gauss500.rds")
+fit_Gauss <- readRDS("files/fits/fit_press_Gauss500.rds")
 knitr::kable(head(fit_Gauss$summary(),7), "simple", row.names = NA, digits=2)
 ```
 
@@ -290,20 +290,20 @@ model{
 We compile and fit the model next.
 
 ```{r eval=FALSE}
-model_stan_NIG <- cmdstan_model('../files/stan/NIGMaternSPDE2.stan')
+model_stan_NIG <- cmdstan_model('files/stan/NIGMaternSPDE2.stan')
 fit_NIG_press <- model_stan_NIG$sample(data = dat1, 
                                  chains = 4, 
                                  iter_warmup =   300, 
                                  iter_sampling = 700,
                                  refresh = 10)
 
-fit_NIG_press$save_object("../files/fits/fit_press_500.rds") 
+fit_NIG_press$save_object("files/fits/fit_press_500.rds") 
 ```
 
 The summary shows acceptable $\hat{R}$ values and sample sizes, although compared to the Gaussian fit the effective sample sizes of $\sigma_\epsilon$, $\sigma$, and $\kappa$ are lower. The posterior means of $\sigma_\epsilon$ and $\sigma_x$ are smaller compared with the Gaussian model which means the predictions will have a smaller variance.  The posterior mean of $\kappa$ is smaller indicating that the spatial correlation decays slower with distance. This is possibly caused by the peaks and short-term variations in the data, which are now better modeled by the latent field. The posterior distribution of $\eta^\star$ indicates a clear departure from the Gaussian distribution, having a mean of 2.04. The 95\% posterior quantiles of  $\zeta^\star$ include the 0, indicating insufficient evidence for asymmetry.
 
 ```{r}
-fit_NIG <- readRDS("../files/fits/fit_press_500.rds")
+fit_NIG <- readRDS("files/fits/fit_press_500.rds")
 knitr::kable(head(fit_NIG$summary(),7), "simple", row.names = NA, digits=2)
 ```
 

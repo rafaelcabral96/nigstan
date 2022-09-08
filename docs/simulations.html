@@ -5,26 +5,26 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Simulations | Fitting robust non-Gaussian models in Stan</title>
-  <meta name="description" content="We explicate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
+  <meta name="description" content="We illustrate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Simulations | Fitting robust non-Gaussian models in Stan" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="We explicate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
+  <meta property="og:description" content="We illustrate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 4 Simulations | Fitting robust non-Gaussian models in Stan" />
   
-  <meta name="twitter:description" content="We explicate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
+  <meta name="twitter:description" content="We illustrate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
   
 
 <meta name="author" content="Rafael Cabral" />
 
 
-<meta name="date" content="2022-09-07" />
+<meta name="date" content="2022-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -269,7 +269,7 @@ div.csl-indent {
 <li class="chapter" data-level="7.3.2" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#nig-fit-2"><i class="fa fa-check"></i><b>7.3.2</b> NIG fit</a></li>
 <li class="chapter" data-level="7.3.3" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#comparizon-2"><i class="fa fa-check"></i><b>7.3.3</b> Comparizon</a></li>
 <li class="chapter" data-level="7.3.4" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#nig-model---relative-risk"><i class="fa fa-check"></i><b>7.3.4</b> NIG model - Relative risk</a></li>
-<li class="chapter" data-level="7.3.5" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#relative-risk---gaussian-model"><i class="fa fa-check"></i><b>7.3.5</b> Relative risk - Gaussian model</a></li>
+<li class="chapter" data-level="7.3.5" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#gaussian-model---relative-risk"><i class="fa fa-check"></i><b>7.3.5</b> Gaussian model - Relative Risk</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -348,26 +348,26 @@ div.csl-indent {
 </tr>
 </tbody>
 </table>
-<p>Below we show the code</p>
+<p>Below we show the code.</p>
 <div id="libraries-and-simulated-data" class="section level2" number="4.1">
 <h2><span class="header-section-number">4.1</span> Libraries and simulated data</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="simulations.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)              <span class="co"># More plots</span></span>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="simulations.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)          </span>
 <span id="cb18-2"><a href="simulations.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
 <span id="cb18-3"><a href="simulations.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Matrix)</span>
-<span id="cb18-4"><a href="simulations.html#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cmdstanr)             <span class="co"># CmdStan R interface</span></span>
-<span id="cb18-5"><a href="simulations.html#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SuppDists)            <span class="co"># Evaluate the density of a InvGauss distribution</span></span>
+<span id="cb18-4"><a href="simulations.html#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cmdstanr)          <span class="co"># CmdStan R interface</span></span>
+<span id="cb18-5"><a href="simulations.html#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SuppDists)         <span class="co"># Evaluate the density of a InvGauss distribution</span></span>
 <span id="cb18-6"><a href="simulations.html#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;files/utils.R&quot;</span>)    <span class="co"># Several utility functions</span></span>
 <span id="cb18-7"><a href="simulations.html#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-8"><a href="simulations.html#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">mc.cores =</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>())</span></code></pre></div>
 <p>We simulate data from the following model: <span class="math inline">\(\mathbf{y}=\text{N}(\mathbf{x}, 0.7^2\mathbf{I})\)</span>, where <span class="math inline">\(\mathbf{D}_{AR1}\mathbf{x}= \mathbf{\Lambda}\)</span>.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="simulations.html#cb19-1" aria-hidden="true" tabindex="-1"></a>n      <span class="ot">&lt;-</span> <span class="dv">2000</span>  <span class="co">#number of data points</span></span>
 <span id="cb19-2"><a href="simulations.html#cb19-2" aria-hidden="true" tabindex="-1"></a>m      <span class="ot">&lt;-</span> <span class="dv">1</span>     <span class="co">#rank deficiency of D</span></span>
-<span id="cb19-3"><a href="simulations.html#cb19-3" aria-hidden="true" tabindex="-1"></a>sigmay <span class="ot">&lt;-</span> <span class="fl">0.7</span>   <span class="co">#</span></span>
-<span id="cb19-4"><a href="simulations.html#cb19-4" aria-hidden="true" tabindex="-1"></a>eta    <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb19-3"><a href="simulations.html#cb19-3" aria-hidden="true" tabindex="-1"></a>sigmay <span class="ot">&lt;-</span> <span class="fl">0.7</span>   <span class="co">#scale of the response</span></span>
+<span id="cb19-4"><a href="simulations.html#cb19-4" aria-hidden="true" tabindex="-1"></a>eta    <span class="ot">&lt;-</span> <span class="dv">1</span>     <span class="co">#leptokurtosis parameter</span></span>
 <span id="cb19-5"><a href="simulations.html#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-6"><a href="simulations.html#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb19-7"><a href="simulations.html#cb19-7" aria-hidden="true" tabindex="-1"></a>V   <span class="ot">&lt;-</span> <span class="fu">rinvGauss</span>(n,<span class="at">nu=</span><span class="dv">1</span>,<span class="at">lambda =</span> <span class="dv">1</span><span class="sc">/</span>eta)  <span class="co">#Mixing variables</span></span>
-<span id="cb19-8"><a href="simulations.html#cb19-8" aria-hidden="true" tabindex="-1"></a>L   <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n,<span class="dv">0</span>,<span class="fu">sqrt</span>(V))                      <span class="co">#driving noise</span></span>
+<span id="cb19-8"><a href="simulations.html#cb19-8" aria-hidden="true" tabindex="-1"></a>L   <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n,<span class="dv">0</span>,<span class="fu">sqrt</span>(V))                <span class="co">#driving noise</span></span>
 <span id="cb19-9"><a href="simulations.html#cb19-9" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(L) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, sigmay)  <span class="co">#RW1 sample path + iid Gaussian noise</span></span>
 <span id="cb19-10"><a href="simulations.html#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-11"><a href="simulations.html#cb19-11" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">index =</span> <span class="dv">1</span><span class="sc">:</span>n, path)</span>
@@ -391,11 +391,11 @@ div.csl-indent {
 <span id="cb20-8"><a href="simulations.html#cb20-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">sigmay =</span> sigmay,</span>
 <span id="cb20-9"><a href="simulations.html#cb20-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">thetaetas =</span> <span class="dv">10</span>,</span>
 <span id="cb20-10"><a href="simulations.html#cb20-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">thetamus =</span> <span class="dv">5</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="simulations.html#cb21-1" aria-hidden="true" tabindex="-1"></a>model_stan1 <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/benchmarking/NIGcond.stan&#39;</span>)</span>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="simulations.html#cb21-1" aria-hidden="true" tabindex="-1"></a>model_stan1 <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/simulations/NIGcond.stan&#39;</span>)</span>
 <span id="cb21-2"><a href="simulations.html#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-3"><a href="simulations.html#cb21-3" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> model_stan1<span class="sc">$</span><span class="fu">sample</span>(<span class="at">data =</span> dat1, <span class="at">chains =</span> <span class="dv">1</span>, <span class="at">iter_warmup =</span> <span class="dv">200</span>, <span class="at">iter_sampling =</span> <span class="dv">1000</span>)</span>
-<span id="cb21-4"><a href="simulations.html#cb21-4" aria-hidden="true" tabindex="-1"></a>fit1<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&#39;files/stan/benchmarking/fit1.rds&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="simulations.html#cb22-1" aria-hidden="true" tabindex="-1"></a>fit11 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;files/stan/benchmarking/fit1.rds&quot;</span>)</span>
+<span id="cb21-4"><a href="simulations.html#cb21-4" aria-hidden="true" tabindex="-1"></a>fit1<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&#39;files/stan/simulations/fit1.rds&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="simulations.html#cb22-1" aria-hidden="true" tabindex="-1"></a>fit11 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;files/stan/simulations/fit1.rds&quot;</span>)</span>
 <span id="cb22-2"><a href="simulations.html#cb22-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(fit11<span class="sc">$</span><span class="fu">summary</span>(<span class="fu">c</span>(<span class="st">&quot;etas&quot;</span>)), <span class="st">&quot;simple&quot;</span>, <span class="at">row.names =</span> <span class="cn">NA</span>, <span class="at">digits=</span><span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
@@ -431,11 +431,11 @@ div.csl-indent {
 <div id="fit-with-nig_model" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> Fit with nig_model</h2>
 <p>We now fit the same model with <code>nig_model</code>.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="simulations.html#cb23-1" aria-hidden="true" tabindex="-1"></a>model_stan2 <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/benchmarking/modelNIG.stan&#39;</span>)</span>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="simulations.html#cb23-1" aria-hidden="true" tabindex="-1"></a>model_stan2 <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/simulations/modelNIG.stan&#39;</span>)</span>
 <span id="cb23-2"><a href="simulations.html#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-3"><a href="simulations.html#cb23-3" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> model_stan2<span class="sc">$</span><span class="fu">sample</span>(<span class="at">data =</span> dat1, <span class="at">chains =</span> <span class="dv">1</span>, <span class="at">iter_warmup =</span> <span class="dv">200</span>, <span class="at">iter_sampling =</span> <span class="dv">1000</span>)</span>
-<span id="cb23-4"><a href="simulations.html#cb23-4" aria-hidden="true" tabindex="-1"></a>fit2<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&#39;files/stan/benchmarking/fit2.rds&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="simulations.html#cb24-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;files/stan/benchmarking/fit2.rds&quot;</span>)</span>
+<span id="cb23-4"><a href="simulations.html#cb23-4" aria-hidden="true" tabindex="-1"></a>fit2<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&#39;files/stan/simulations/fit2.rds&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="simulations.html#cb24-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;files/stan/simulations/fit2.rds&quot;</span>)</span>
 <span id="cb24-2"><a href="simulations.html#cb24-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(fit2<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>), <span class="st">&quot;simple&quot;</span>, <span class="at">row.names =</span> <span class="cn">NA</span>, <span class="at">digits=</span><span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
@@ -471,11 +471,11 @@ div.csl-indent {
 <div id="fit-with-nig_model_2" class="section level2" number="4.4">
 <h2><span class="header-section-number">4.4</span> Fit with nig_model_2</h2>
 <p>We now fit the same model with <code>nig_model_2</code>, where we use sparse matrix computations and within-chain parallelization.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="simulations.html#cb25-1" aria-hidden="true" tabindex="-1"></a>model_stan3 <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/benchmarking/modelNIG2.stan&#39;</span>, <span class="at">cpp_options =</span> <span class="fu">list</span>(<span class="at">stan_threads =</span> <span class="cn">TRUE</span>))</span>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="simulations.html#cb25-1" aria-hidden="true" tabindex="-1"></a>model_stan3 <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/simulations/modelNIG2.stan&#39;</span>, <span class="at">cpp_options =</span> <span class="fu">list</span>(<span class="at">stan_threads =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb25-2"><a href="simulations.html#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-3"><a href="simulations.html#cb25-3" aria-hidden="true" tabindex="-1"></a>fit3 <span class="ot">&lt;-</span> model_stan3<span class="sc">$</span><span class="fu">sample</span>(<span class="at">data =</span> dat1, <span class="at">chains =</span> <span class="dv">1</span>, <span class="at">threads_per_chain =</span> <span class="dv">4</span>, <span class="at">iter_warmup =</span> <span class="dv">200</span>, <span class="at">iter_sampling =</span> <span class="dv">1000</span>)</span>
-<span id="cb25-4"><a href="simulations.html#cb25-4" aria-hidden="true" tabindex="-1"></a>fit3<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&#39;files/stan/benchmarking/fit3.rds&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="simulations.html#cb26-1" aria-hidden="true" tabindex="-1"></a>fit3 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;files/stan/benchmarking/fit3.rds&quot;</span>)</span>
+<span id="cb25-4"><a href="simulations.html#cb25-4" aria-hidden="true" tabindex="-1"></a>fit3<span class="sc">$</span><span class="fu">save_object</span>(<span class="st">&#39;files/stan/simulations/fit3.rds&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="simulations.html#cb26-1" aria-hidden="true" tabindex="-1"></a>fit3 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;files/stan/simulations/fit3.rds&quot;</span>)</span>
 <span id="cb26-2"><a href="simulations.html#cb26-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(fit3<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>), <span class="st">&quot;simple&quot;</span>, <span class="at">row.names =</span> <span class="cn">NA</span>, <span class="at">digits=</span><span class="dv">2</span>)</span></code></pre></div>
 <table>
 <thead>
@@ -511,30 +511,17 @@ div.csl-indent {
 <div id="comparizon" class="section level2" number="4.5">
 <h2><span class="header-section-number">4.5</span> Comparizon</h2>
 <p>Here we show the effective (bulk and tail) sample size per second for the different models</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="simulations.html#cb27-1" aria-hidden="true" tabindex="-1"></a>fit11<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span></code></pre></div>
-<pre><code>## [1] 266.8902</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="simulations.html#cb29-1" aria-hidden="true" tabindex="-1"></a>fit11<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_bulk&quot;</span>]<span class="sc">/</span>fit11<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span></code></pre></div>
-<pre><code>##   ess_bulk
-## 1 0.103418</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="simulations.html#cb31-1" aria-hidden="true" tabindex="-1"></a>fit11<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_tail&quot;</span>]<span class="sc">/</span>fit11<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span></code></pre></div>
-<pre><code>##    ess_tail
-## 1 0.1040842</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="simulations.html#cb33-1" aria-hidden="true" tabindex="-1"></a>fit2<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span></code></pre></div>
-<pre><code>## [1] 278.6756</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="simulations.html#cb35-1" aria-hidden="true" tabindex="-1"></a>fit2<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_bulk&quot;</span>]<span class="sc">/</span>fit2<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span></code></pre></div>
-<pre><code>##   ess_bulk
-## 1 1.414447</code></pre>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="simulations.html#cb37-1" aria-hidden="true" tabindex="-1"></a>fit2<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_tail&quot;</span>]<span class="sc">/</span>fit2<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span></code></pre></div>
-<pre><code>##   ess_tail
-## 1 2.111111</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="simulations.html#cb39-1" aria-hidden="true" tabindex="-1"></a>fit3<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span></code></pre></div>
-<pre><code>## [1] 67.68172</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="simulations.html#cb41-1" aria-hidden="true" tabindex="-1"></a>fit3<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_bulk&quot;</span>]<span class="sc">/</span>fit3<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span></code></pre></div>
-<pre><code>##   ess_bulk
-## 1 5.304792</code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="simulations.html#cb43-1" aria-hidden="true" tabindex="-1"></a>fit3<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_tail&quot;</span>]<span class="sc">/</span>fit3<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span></code></pre></div>
-<pre><code>##   ess_tail
-## 1 9.555367</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="simulations.html#cb27-1" aria-hidden="true" tabindex="-1"></a>fit11<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span>
+<span id="cb27-2"><a href="simulations.html#cb27-2" aria-hidden="true" tabindex="-1"></a>fit11<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_bulk&quot;</span>]<span class="sc">/</span>fit11<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span>
+<span id="cb27-3"><a href="simulations.html#cb27-3" aria-hidden="true" tabindex="-1"></a>fit11<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_tail&quot;</span>]<span class="sc">/</span>fit11<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span>
+<span id="cb27-4"><a href="simulations.html#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="simulations.html#cb27-5" aria-hidden="true" tabindex="-1"></a>fit2<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span>
+<span id="cb27-6"><a href="simulations.html#cb27-6" aria-hidden="true" tabindex="-1"></a>fit2<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_bulk&quot;</span>]<span class="sc">/</span>fit2<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span>
+<span id="cb27-7"><a href="simulations.html#cb27-7" aria-hidden="true" tabindex="-1"></a>fit2<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_tail&quot;</span>]<span class="sc">/</span>fit2<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span>
+<span id="cb27-8"><a href="simulations.html#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="simulations.html#cb27-9" aria-hidden="true" tabindex="-1"></a>fit3<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span>
+<span id="cb27-10"><a href="simulations.html#cb27-10" aria-hidden="true" tabindex="-1"></a>fit3<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_bulk&quot;</span>]<span class="sc">/</span>fit3<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span>
+<span id="cb27-11"><a href="simulations.html#cb27-11" aria-hidden="true" tabindex="-1"></a>fit3<span class="sc">$</span><span class="fu">summary</span>(<span class="st">&quot;etas&quot;</span>)[<span class="st">&quot;ess_tail&quot;</span>]<span class="sc">/</span>fit3<span class="sc">$</span><span class="fu">time</span>()<span class="sc">$</span>total</span></code></pre></div>
 
 </div>
 </div>

@@ -78,4 +78,4 @@ dataset-and-model
 nig-fit-2
 comparizon-2
 nig-model---relative-risk
-relative-risk---gaussian-model
+gaussian-model---relative-risk

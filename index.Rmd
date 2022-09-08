@@ -8,7 +8,7 @@ bibliography: [book.bib, packages.bib]
 # url: your book url like https://bookdown.org/yihui/bookdown
 # cover-image: path to the social sharing image like images/cover.jpg
 description: |
-  We explicate in this Bookdown how to implement a generic class of non-Gaussian models in Stan.
+  We illustrate in this Bookdown how to implement a generic class of non-Gaussian models in Stan.
 link-citations: yes
 github-repo: rstudio/bookdown-demo
 always_allow_html: true
@@ -19,12 +19,13 @@ always_allow_html: true
 
 ## What and Why
  
-Traditionally the driving or excitation noise of spatial and temporal models is Gaussian. Take for instance an AR1 (autoregressive of order 1) process, where the increments $x_{i+1}-\rho x_i, |\rho|<1$ are assumed to follow a Gaussian distribution. However, real-world data may not be Gaussian in nature, and it is well known that outliers can adversely affect the inferences and predictions made from a Gaussian model. We explicate in this Bookdown how to implement a generic class of non-Gaussian models in Stan that have the same mean and covariance structure as Gaussian models, although having heavier-tails and skewed marginals, and more flexible sample path behaviors. This generic class contains many models used in applications as special cases, such as AR and random walk (RW) processes for time series, spatial Matérn models, and SAR and CAR models for areal data.
+Traditionally the excitation noise of spatial and temporal models is Gaussian. Take, for instance, an AR1 (autoregressive of order 1) process, where the increments $x_{i+1}-\rho x_i, |\rho|<1$ are assumed to follow a Gaussian distribution. However, real-world data may not be Gaussian in nature, and it is well known that outliers can adversely affect the inferences and predictions made from a Gaussian model. We illustrate in this Bookdown how to implement a generic class of non-Gaussian models in Stan. The models have the same mean and covariance structure as Gaussian models, but have more flexible sample path behaviors and skewed marginals with heavier tails. This generic class contains many models used in applications as special cases, such as AR and random walk (RW) processes for time series, spatial Matérn models, and SAR and CAR models for areal data.
 
 
 ## Setup
 
-If $\mathbf{x} \sim \text{N}(\mathbf{0}, (\mathbf{D}^T\text{diag}(\mathbf{h})\mathbf{D})^{-1})$, then it can be declared in Stan as: 
+If $\mathbf{x}$ follows a normal distribution with mean $\mathbf{0}$ and precision matrix $\mathbf{D}^T\text{diag}(\mathbf{h})^{-1}\mathbf{D}$, then it can be declared in Stan as: 
+
 ```
 x ~ multi_normal_prec(rep_vector(0,N), D'*diag_matrix(1/h)*D)
 ```
@@ -40,7 +41,7 @@ The `nig_model` and other Stan functions can be found in `nigstan\files\function
 
 ## This Bookdown
 
-This Bookdown is organized as follows:
+We will be using the [**CmdStanR**](https://mc-stan.org/cmdstanr/articles/cmdstanr.html) interface to fit the Stan models. This Bookdown is organized as follows:
 
 - Section 2: Contains a theoretical introduction to the non-Gaussian models we are studying and several details for the analytically inclined that you may skip.
 - Section 3: Shows how to use the different Stan functions to fit non-Gaussian models.

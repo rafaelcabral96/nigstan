@@ -34,7 +34,7 @@ V \sim IG(1,\eta^{-1})
 The mean and variance are always $0$ and $1$, respectively. The parameter $\eta$ is related to the degree of non-Gaussianity since $\Lambda$ converges to a Gaussian random variable when $\eta \to 0$, and to a Cauchy random variable when $\eta \to \infty$. The parameter $\zeta$ is related to the asymmetry of the random variable since $\Lambda$ is a symmetric random variable when $\zeta=0$, and when $\zeta>0$ it is skewed to the right. Also, the larger $\eta$, the larger the asymmetry induced by the same value of $\zeta$ (see following plots).
 
 ```{r NIGplot, fig.cap="PDF of NIG distribution in log scale", out.width = '100%'}
-knitr::include_graphics("../files/images/NIGplot.png")
+knitr::include_graphics("files/images/NIGplot.png")
 ```
 
 
@@ -62,11 +62,11 @@ where $E[\Lambda_i]=0$ and $Var[\Lambda_i]=h_i$. For the analytically inclined, 
 Next, we show a sample path of RW1 with $\sigma=1$ near the Gaussian case by setting $\eta=10^{-6}$ (top) and a non-Gaussian case by setting $\eta=10$ (bottom). We generated these simulated paths, by first sampling the mixing variables $V_i$, then sampling the noise $\Lambda_i|V_i$, and then the RW1 sample paths are just a cumulative sum of the noises. Notice that, in the first panel, the mixing variables $V_i$ are very close to 1 while on the bottom panel there is more discrepancy. When $V_i$ takes a large value, the noise $\Lambda$ can also be large and then we observe a large jump in the RW1 process driven by NIG noise.
 
 ```{r, out.width = '100%', fig.cap="Sample of mixing vector $\\mathbf{V}$, noise vector $\\mathbf{\\Lambda}$ and RW1 vector $\\mathbf{x}$"}
-knitr::include_graphics("../files/images/GaussRW1.png")
+knitr::include_graphics("files/images/GaussRW1.png")
 ```
 
 ```{r RW1sample, out.width = '100%', fig.cap="Sample of mixing vector $\\mathbf{V}$, noise vector $\\mathbf{\\Lambda}$ and RW1 vector $\\mathbf{x}$"}
-knitr::include_graphics("../files/images/NIGRW1.png")
+knitr::include_graphics("files/images/NIGRW1.png")
 ```
 
 ### Models defined via $\mathbf{D}\mathbf{x} = \mathbf{Z}$
@@ -146,13 +146,13 @@ The first column of the next plot shows a simulation of Gaussian noise and the s
 
 
 ```{r, out.width = '100%', fig.cap="Noise and sample paths for several models"}
-knitr::include_graphics("../files/images/sim1.png")
+knitr::include_graphics("files/images/sim1.png")
 ```
 
 Next, we show sample paths of a Matérn model in 2D driven with NIG driving noise, as described in @bolin2014spatial.  Notice that in Fig. \@ref(fig:compareSPDE) as $\eta$ increases we observe more "hotspots" and "coldspots", that is, regions where the field $X$ takes values that would be considered extreme in a Gaussian model. In the symmetric case ($\zeta = 0$) the number of hotspots and coldspots is on average the same, while if $\zeta > 0$ there should be on average more hotspots than coldspots.
 
 ```{r compareSPDE, out.width = '100%', fig.cap="Sample paths of a Matérn model in 2D with $\\alpha=2$"}
-knitr::include_graphics("../files/images/sim3.png")
+knitr::include_graphics("files/images/sim3.png")
 ```
 
 

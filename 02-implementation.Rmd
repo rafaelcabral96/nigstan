@@ -11,7 +11,7 @@ $$
  \mathbf{D}(\mathbf{\theta}_\mathbf{x}) \mathbf{x} =  \mathbf{Z}\\
  \mathbf{\theta}_\mathbf{x} \sim \pi(\mathbf{\theta}_\mathbf{x})
 $$
-where the observations $y_i$ are usually independent conditionally on the latent vector $\mathbf{x}$. In the applications that we will study, $\mathbf{\theta}_y$ contains the regression coefficients among other parameters, and the vector $\mathbf{\theta}_\mathbf{x}$ usually includes a scale parameter $\sigma_x$ and a range parameter $\kappa$. The vector $\mathbf{Z}$ is comprised of independent Gaussian noise where $Z_i\sim N(0,h_i)$ and the latent vector $\mathbf{x}$ follows a Gaussian distribution with mean $\mathbf{0}$ and precision matrix $\mathbf{D}^{T}\text{diag}(\mathbf{h})^{-1}\mathbf{D}$. The extension to non-Gaussianity consists in replacing the Gaussian noise $\mathbf{Z}$ with non-Gaussian noise $\mathbf{\Lambda}$, which depends on two flexibility parameters. The parameter $\eta^\star$ controls the heaviness of the tails, while $\zeta^\star$ controls the asymmetry of the noise.
+where the observations $y_i$ are usually independent conditionally on the latent vector $\mathbf{x}$. In the applications that we will study, $\mathbf{\theta}_y$ contains the regression coefficients among other parameters, and the vector $\mathbf{\theta}_\mathbf{x}$ usually includes a scale parameter $\sigma_x$ and a range parameter $\kappa$. The vector $\mathbf{Z}$ is comprised of independent Gaussian noise where $Z_i\sim N(0,h_i)$ and the latent vector $\mathbf{x}$ follows a Gaussian distribution with mean $\mathbf{0}$ and precision matrix $\mathbf{D}^{T}\text{diag}(\mathbf{h})^{-1}\mathbf{D}$. The extension to non-Gaussianity consists in replacing the Gaussian noise $\mathbf{Z}$ with non-Gaussian noise $\mathbf{\Lambda}$, which depends on two flexibility parameters. The parameter $\eta^\star$ controls the kurtosis, while $\zeta^\star$ controls the asymmetry of the noise.
 
 $$
 \mathbf{y}|\mathbf{x} \sim \pi(\mathbf{y}|\mathbf{x},\mathbf{\theta}_y) \\
@@ -47,7 +47,6 @@ y ~ normal(B*beta + sigma*x, sigmae);
   
 //latent field layer--------------------------
 x ~ nig_model(D, etas, zetas, h, 1)
-
 
 //prior layer---------------------------------
 ...
@@ -152,18 +151,18 @@ model{
 //observation layer---------------------------
 y ~ normal(B*beta + sigmax*inverse(D)*Lambda, sigmae);
 //latent field layer--------------------------
-Lambda ~ nig_multi(etas, mus, h);                     //log-pdf of Lambda
+Lambda ~ nig_multi(etas, mus, h);                     //log-pdf of independent NIG noise Lambda
 }
 ```
 
-where `nig_multi` yields the log-pdf of independent NIG noise. Both parameterizations are equal in distribution, but the latter enjoyx a nicer posterior geometry when the likelihood function is relatively diffuse, by removing explicit hierarchical correlations. This parameterization often leads to more efficient inference and it is discussed in @betancourt2015hamiltonian for latent Gaussian models in Stan, and can also be found in @stan and @bet2020. `inverse(D)*Lambda` can be more efficiently implemented using `mdivide_left_spd(D,Lambda)` or `mdivide_left_tri_low(D,Lambda)` if $\mathbf{D}$ is symmetric positive definite or lower triangular.  This model parameterization is worth keeping in mind, in case diagnostics reveal poor convergence or exploration of the HMC algorithm for hierarchical models.
+where `nig_multi` yields the log-pdf of independent NIG noise. Both parameterizations are equal in distribution, but the latter enjoys a nicer posterior geometry when the likelihood function is relatively diffuse, by removing explicit hierarchical correlations. This parameterization often leads to more efficient inference and it is discussed in @betancourt2015hamiltonian for latent Gaussian models in Stan, and can also be found in @stan and @bet2020. A more efficient alternative to `inverse(D)*Lambda` is `mdivide_left_spd(D,Lambda)` or `mdivide_left_tri_low(D,Lambda)` if $\mathbf{D}$ is symmetric positive definite or lower triangular.  This model parameterization is worth keeping in mind, in case diagnostics reveal poor convergence or exploration of the HMC algorithm for hierarchical models.
 
 <!--We remind the reader that the precision or covariance matrices do not uniquely specify $\mathbf{x}$ when the driving noise is a NIG distribution, which limits the transformations we can do for computational efficiency. -->
 
 
 ### Heavy-tailed distributions and Stan
 
-The NIG distribution converges to a Gaussian distribution when $\eta\to0$ and to a Cauchy distribution when $\eta\to\infty$. The large extent of the heavy tails of the Cauchy distribution can be problematic in statistical computation. As described in @bet2018 and @stan the step size should be relatively large in the tail compared to the trunk, in order to explore the massive extent of the tails in a reasonable amount of time. However, with a large step size, there will be too much rejection in the central region of the distribution.
+The NIG distribution converges to a Gaussian distribution when $\eta\to0$ and to a Cauchy distribution when $\eta\to\infty$. The large extent of the heavy tails of the Cauchy distribution can be problematic in statistical computation. As described in @bet2018 and @stan the step size should be relatively large in the tail compared to the trunk in order to explore the massive extent of the tails in a reasonable amount of time. However, with a large step size, there will be too much rejection in the central region of the distribution.
 
 The PC prior for $\eta$ helps mitigate this issue because it penalizes leptokurtosis and shrinks the NIG distribution towards to base Gaussian model. Also, the NIG distribution is semi-heavy-tailed, having exponentially decaying tails, which decay faster than the tails of the t-student distribution. Nonetheless, when the NIG distribution is close to the Cauchy limit it may be better to use the variance-mean mixture representation in eq. \@ref(eq:framework), which uses the conditional $\mathbf{x}|\mathbf{V}$ which is Gaussian. 
 
@@ -212,21 +211,3 @@ We will deal later with matrices $\mathbf{D}$ of the form $\kappa^2\mathbf{C}+\m
 \end{align*}
 
 Therefore $\log |\kappa^2\mathbf{C}+\mathbf{G}| \propto \sum_{i=1}^n\log(\kappa^2+v_i)$, and one can compute the eigenvalues $v_i$ only once before the HMC algorithm starts, and then evaluate $\log \mathbf{D}$ efficiently using the previous result. Similar transformations can be applied when computing the determinant of $\mathbf{D} = \mathbf{I}+\rho\mathbf{W}$, where now  $\log \mathbf{D}=\sum_{i=1}^n\log(1-\rho v_i)$, and $v_i$ are the eigenvalues of $\mathbf{W}$.
-
-<!--This can be dropped to less than 1\% by precomputing $\log|\mathbf{D}(\kappa)|$ for many values of $\kappa$ and then during sampling time finding the log determinant by interpolation. The determinant of matrices $\mathbf{D}$ of the type $\mathbf{D}(\kappa) = \kappa^2\text{diag}(\mathbf{h}) + \mathbf{G}$  behaves linearly for small or large $\kappa$ in Log-Log scale, for the applications we will work with. 
-
-```{r eval=FALSE, include=FALSE}
-library(ggplot2)
-ggplot(data=data.frame(x=kappa_log, y = det_log), aes(x=x, y=y)) + geom_line(lwd=1) + xlab('log(κ)') + ylab('log(|D|)')
-```
-
-```{r, out.width = '75%', fig.cap="Determinant of $D=\\kappa^2 diag(h) + G$ in Application ?? "}
-knitr::include_graphics("../files/images/LogLogdetD.png")
-```
-
-So we can do linear interpolation in the middle region, and linear extrapolation outside. The function `interpolation` does this and has signature:
-
-```{}
-real interpolation(real x, vector x0, vector y0)
-```
--->

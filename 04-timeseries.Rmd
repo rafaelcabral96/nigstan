@@ -37,13 +37,13 @@ library(posterior)            # Process the output of cmdstanr sampling
 library(bayesplot)            # Pair and trace plots
 library(ggplot2)              # More plots
 library(SuppDists)            # Evaluate density of a InvGauss distribution
-source("../files/utils.R")    # Several utility functions
+source("files/utils.R")    # Several utility functions
 
 options(mc.cores = parallel::detectCores())
 ```
 
 ```{r message=FALSE, warning=FALSE}
-goog <- as.data.frame(read_csv("../files/data/GOOG.csv", col_names = TRUE))
+goog <- as.data.frame(read_csv("files/data/GOOG.csv", col_names = TRUE))
 data <- goog$Close #closing prices
 N    <- length(data)
 
@@ -111,17 +111,17 @@ dat1 <- list(N = N,
 ```
 
 ```{r eval=FALSE}
-model_stan_Gauss <- cmdstan_model('../files/stan/ARGauss.stan')
+model_stan_Gauss <- cmdstan_model('files/stan/ARGauss.stan')
 fit_Gauss <- model_stan_Gauss$sample(data = dat1, 
                                      chains = 4, 
                                      iter_warmup   = 500, 
                                      iter_sampling = 3000)
 
-fit_Gauss$save_object("../files/fits/ARGauss.rds")
+fit_Gauss$save_object("files/fits/ARGauss.rds")
 ```
 
 ```{r}
-fit_Gauss <- readRDS("../files/fits/ARGauss.rds")
+fit_Gauss <- readRDS("files/fits/ARGauss.rds")
 knitr::kable(head(fit_Gauss$summary(),4), "simple", row.names = NA, digits=2)
 ```
 The fit was successful with no warning messages. The parameter $\rho$ is very close to 1, so the model is close to an RW1 model. 
@@ -135,17 +135,17 @@ for (n in 2:N)
 ```
 
 ```{r eval=FALSE}
-model_stan_NIG <- cmdstan_model('../files/stan/ARNIG.stan')
+model_stan_NIG <- cmdstan_model('files/stan/ARNIG.stan')
 fit_NIG <- model_stan_NIG$sample(data = dat1, 
                                  chains = 4, 
                                  iter_warmup   = 200, 
                                  iter_sampling = 1000)
 
-fit_NIG$save_object("../files/fits/ARNIG2.rds") #no warning
+fit_NIG$save_object("files/fits/ARNIG2.rds") #no warning
 ```
 
 ```{r}
-fit_NIG <- readRDS("../files/fits/ARNIG2.rds")
+fit_NIG <- readRDS("files/fits/ARNIG2.rds")
 knitr::kable(head(fit_NIG$summary(), 6), "simple", row.names = NA, digits=2)
 ```
 

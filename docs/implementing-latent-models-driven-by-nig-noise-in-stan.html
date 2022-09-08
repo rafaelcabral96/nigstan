@@ -5,26 +5,26 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Implementing latent models driven by NIG noise in Stan | Fitting robust non-Gaussian models in Stan</title>
-  <meta name="description" content="We explicate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
+  <meta name="description" content="We illustrate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Implementing latent models driven by NIG noise in Stan | Fitting robust non-Gaussian models in Stan" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="We explicate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
+  <meta property="og:description" content="We illustrate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 3 Implementing latent models driven by NIG noise in Stan | Fitting robust non-Gaussian models in Stan" />
   
-  <meta name="twitter:description" content="We explicate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
+  <meta name="twitter:description" content="We illustrate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
   
 
 <meta name="author" content="Rafael Cabral" />
 
 
-<meta name="date" content="2022-09-07" />
+<meta name="date" content="2022-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -269,7 +269,7 @@ div.csl-indent {
 <li class="chapter" data-level="7.3.2" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#nig-fit-2"><i class="fa fa-check"></i><b>7.3.2</b> NIG fit</a></li>
 <li class="chapter" data-level="7.3.3" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#comparizon-2"><i class="fa fa-check"></i><b>7.3.3</b> Comparizon</a></li>
 <li class="chapter" data-level="7.3.4" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#nig-model---relative-risk"><i class="fa fa-check"></i><b>7.3.4</b> NIG model - Relative risk</a></li>
-<li class="chapter" data-level="7.3.5" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#relative-risk---gaussian-model"><i class="fa fa-check"></i><b>7.3.5</b> Relative risk - Gaussian model</a></li>
+<li class="chapter" data-level="7.3.5" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#gaussian-model---relative-risk"><i class="fa fa-check"></i><b>7.3.5</b> Gaussian model - Relative Risk</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -304,7 +304,7 @@ div.csl-indent {
 \mathbf{D}(\mathbf{\theta}_\mathbf{x}) \mathbf{x} =  \mathbf{Z}\\
 \mathbf{\theta}_\mathbf{x} \sim \pi(\mathbf{\theta}_\mathbf{x})
 \]</span>
-where the observations <span class="math inline">\(y_i\)</span> are usually independent conditionally on the latent vector <span class="math inline">\(\mathbf{x}\)</span>. In the applications that we will study, <span class="math inline">\(\mathbf{\theta}_y\)</span> contains the regression coefficients among other parameters, and the vector <span class="math inline">\(\mathbf{\theta}_\mathbf{x}\)</span> usually includes a scale parameter <span class="math inline">\(\sigma_x\)</span> and a range parameter <span class="math inline">\(\kappa\)</span>. The vector <span class="math inline">\(\mathbf{Z}\)</span> is comprised of independent Gaussian noise where <span class="math inline">\(Z_i\sim N(0,h_i)\)</span> and the latent vector <span class="math inline">\(\mathbf{x}\)</span> follows a Gaussian distribution with mean <span class="math inline">\(\mathbf{0}\)</span> and precision matrix <span class="math inline">\(\mathbf{D}^{T}\text{diag}(\mathbf{h})^{-1}\mathbf{D}\)</span>. The extension to non-Gaussianity consists in replacing the Gaussian noise <span class="math inline">\(\mathbf{Z}\)</span> with non-Gaussian noise <span class="math inline">\(\mathbf{\Lambda}\)</span>, which depends on two flexibility parameters. The parameter <span class="math inline">\(\eta^\star\)</span> controls the heaviness of the tails, while <span class="math inline">\(\zeta^\star\)</span> controls the asymmetry of the noise.</p>
+where the observations <span class="math inline">\(y_i\)</span> are usually independent conditionally on the latent vector <span class="math inline">\(\mathbf{x}\)</span>. In the applications that we will study, <span class="math inline">\(\mathbf{\theta}_y\)</span> contains the regression coefficients among other parameters, and the vector <span class="math inline">\(\mathbf{\theta}_\mathbf{x}\)</span> usually includes a scale parameter <span class="math inline">\(\sigma_x\)</span> and a range parameter <span class="math inline">\(\kappa\)</span>. The vector <span class="math inline">\(\mathbf{Z}\)</span> is comprised of independent Gaussian noise where <span class="math inline">\(Z_i\sim N(0,h_i)\)</span> and the latent vector <span class="math inline">\(\mathbf{x}\)</span> follows a Gaussian distribution with mean <span class="math inline">\(\mathbf{0}\)</span> and precision matrix <span class="math inline">\(\mathbf{D}^{T}\text{diag}(\mathbf{h})^{-1}\mathbf{D}\)</span>. The extension to non-Gaussianity consists in replacing the Gaussian noise <span class="math inline">\(\mathbf{Z}\)</span> with non-Gaussian noise <span class="math inline">\(\mathbf{\Lambda}\)</span>, which depends on two flexibility parameters. The parameter <span class="math inline">\(\eta^\star\)</span> controls the kurtosis, while <span class="math inline">\(\zeta^\star\)</span> controls the asymmetry of the noise.</p>
 <p><span class="math display">\[
 \mathbf{y}|\mathbf{x} \sim \pi(\mathbf{y}|\mathbf{x},\mathbf{\theta}_y) \\
 \mathbf{D}(\mathbf{\theta}_\mathbf{x}) \mathbf{x} =  \mathbf{\Lambda}(\eta^\star,\zeta^\star)\\
@@ -333,7 +333,6 @@ y ~ normal(B*beta + sigma*x, sigmae);
   
 //latent field layer--------------------------
 x ~ nig_model(D, etas, zetas, h, 1)
-
 
 //prior layer---------------------------------
 ...
@@ -413,14 +412,14 @@ x ~ nig_model(D, etas, mus, h, 1);                    //log-pdf of Dx=Lambda, wh
 //observation layer---------------------------
 y ~ normal(B*beta + sigmax*inverse(D)*Lambda, sigmae);
 //latent field layer--------------------------
-Lambda ~ nig_multi(etas, mus, h);                     //log-pdf of Lambda
+Lambda ~ nig_multi(etas, mus, h);                     //log-pdf of independent NIG noise Lambda
 }</code></pre>
-<p>where <code>nig_multi</code> yields the log-pdf of independent NIG noise. Both parameterizations are equal in distribution, but the latter enjoyx a nicer posterior geometry when the likelihood function is relatively diffuse, by removing explicit hierarchical correlations. This parameterization often leads to more efficient inference and it is discussed in <span class="citation">Betancourt and Girolami (<a href="#ref-betancourt2015hamiltonian" role="doc-biblioref">2015</a>)</span> for latent Gaussian models in Stan, and can also be found in <span class="citation">Team (<a href="#ref-stan" role="doc-biblioref">2020</a>)</span> and <span class="citation">Betancourt (<a href="#ref-bet2020" role="doc-biblioref">2020</a>)</span>. <code>inverse(D)*Lambda</code> can be more efficiently implemented using <code>mdivide_left_spd(D,Lambda)</code> or <code>mdivide_left_tri_low(D,Lambda)</code> if <span class="math inline">\(\mathbf{D}\)</span> is symmetric positive definite or lower triangular. This model parameterization is worth keeping in mind, in case diagnostics reveal poor convergence or exploration of the HMC algorithm for hierarchical models.</p>
+<p>where <code>nig_multi</code> yields the log-pdf of independent NIG noise. Both parameterizations are equal in distribution, but the latter enjoys a nicer posterior geometry when the likelihood function is relatively diffuse, by removing explicit hierarchical correlations. This parameterization often leads to more efficient inference and it is discussed in <span class="citation">Betancourt and Girolami (<a href="#ref-betancourt2015hamiltonian" role="doc-biblioref">2015</a>)</span> for latent Gaussian models in Stan, and can also be found in <span class="citation">Team (<a href="#ref-stan" role="doc-biblioref">2020</a>)</span> and <span class="citation">Betancourt (<a href="#ref-bet2020" role="doc-biblioref">2020</a>)</span>. A more efficient alternative to <code>inverse(D)*Lambda</code> is <code>mdivide_left_spd(D,Lambda)</code> or <code>mdivide_left_tri_low(D,Lambda)</code> if <span class="math inline">\(\mathbf{D}\)</span> is symmetric positive definite or lower triangular. This model parameterization is worth keeping in mind, in case diagnostics reveal poor convergence or exploration of the HMC algorithm for hierarchical models.</p>
 <!--We remind the reader that the precision or covariance matrices do not uniquely specify $\mathbf{x}$ when the driving noise is a NIG distribution, which limits the transformations we can do for computational efficiency. -->
 </div>
 <div id="heavy-tailed-distributions-and-stan" class="section level3" number="3.4.2">
 <h3><span class="header-section-number">3.4.2</span> Heavy-tailed distributions and Stan</h3>
-<p>The NIG distribution converges to a Gaussian distribution when <span class="math inline">\(\eta\to0\)</span> and to a Cauchy distribution when <span class="math inline">\(\eta\to\infty\)</span>. The large extent of the heavy tails of the Cauchy distribution can be problematic in statistical computation. As described in <span class="citation">Betancourt (<a href="#ref-bet2018" role="doc-biblioref">2018</a>)</span> and <span class="citation">Team (<a href="#ref-stan" role="doc-biblioref">2020</a>)</span> the step size should be relatively large in the tail compared to the trunk, in order to explore the massive extent of the tails in a reasonable amount of time. However, with a large step size, there will be too much rejection in the central region of the distribution.</p>
+<p>The NIG distribution converges to a Gaussian distribution when <span class="math inline">\(\eta\to0\)</span> and to a Cauchy distribution when <span class="math inline">\(\eta\to\infty\)</span>. The large extent of the heavy tails of the Cauchy distribution can be problematic in statistical computation. As described in <span class="citation">Betancourt (<a href="#ref-bet2018" role="doc-biblioref">2018</a>)</span> and <span class="citation">Team (<a href="#ref-stan" role="doc-biblioref">2020</a>)</span> the step size should be relatively large in the tail compared to the trunk in order to explore the massive extent of the tails in a reasonable amount of time. However, with a large step size, there will be too much rejection in the central region of the distribution.</p>
 <p>The PC prior for <span class="math inline">\(\eta\)</span> helps mitigate this issue because it penalizes leptokurtosis and shrinks the NIG distribution towards to base Gaussian model. Also, the NIG distribution is semi-heavy-tailed, having exponentially decaying tails, which decay faster than the tails of the t-student distribution. Nonetheless, when the NIG distribution is close to the Cauchy limit it may be better to use the variance-mean mixture representation in eq. <a href="theoretical-background.html#eq:framework">(2.3)</a>, which uses the conditional <span class="math inline">\(\mathbf{x}|\mathbf{V}\)</span> which is Gaussian.</p>
 <!--Still, by declaring the models with the function `modelNIG` (which uses the NIG density) sampling times that used to take hours with the conditional Gaussian representation of eq. \@ref(eq:framework), now take minutes, as will be shown in the next section.
 

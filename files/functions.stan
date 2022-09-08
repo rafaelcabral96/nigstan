@@ -91,6 +91,22 @@ functions {
   }
 
 
+  /**
+   * Returns the log-likelihood of X where DX=Lambda, D is a matrix and 
+   * Lambda is a vector of independent NIG noise.
+   *
+   * @param X
+   * @param D               Matrix D
+   * @param Dv              Array of integer column indices for the non-zero values in D
+   * @param Du              Array of integer indices indicating where a given row’s values start
+   * @param sizes           Array of integers containing the number of rows, collums and number non-zero elements of D
+   * @param sigma           Standard deviation 
+   * @param etas            First  flexibility parameter (controls heaviness of tails) 
+   * @param mus             Second flexibility parameter (controls asymmetry of tails) 
+   * @param h               Vector containing the distance between locations or area of the basis functions
+   * @param compute_det     Compute the log determinant of D if D depends on parameter (compute_det=1). Otherwise set compute_det=0.
+   * @return                Log-likelihood of X
+   */
   real nig_model_lpdf(vector X, matrix D, real etas, real zetas, vector h, int compute_det){
 
     //convert tail correction parameters (etas, zetas) to original parameterization (eta, zeta) 

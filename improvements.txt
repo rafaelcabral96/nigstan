@@ -1,0 +1,25 @@
+real nig_model_lpdf in functions.stan has no comments
+
+Github page image has mu
+
+1. Mention in setup I am using CmdstanR
+ although having heavier-tails and skewed marginals, and more flexible sample path behaviors
+
+2. some images use mu
+4. becnhmark there are end of line point and code comments are bad
+add comment about the pressure example 1 day 15min
+
+3. framework: The parameter  η⋆ controls the heaviness of the tails -> leptokurtosis
+big skip in //latent field layer--------------------------
+x ~ nig_model(D, etas, zetas, h, 1)
+Lambda ~ nig_multi(etas, mus, h);                     //log-pdf of i.i.d. nig noise Lambda
+but the latter enjoyx a 
+inverse(D)*Lambda, add something before it
+ to the trunk, in order remove comma
+
+7.2.1
+Note that the Gaussian log-likelihood for  rewrite this
+We declare the spatial effects in the transformed parameters block ! remove this phrase alltogueter replace witha another explain this better
+
+7.3.1 plot ICAR spatial component
+remove loo figures 
