@@ -1,6 +1,7 @@
 # Simulations
 
-The point of this section is to show that integrating out the mixing distributions $V_i$ of the latent field $\mathbf{x}$ in the variance-mean mixture representation of \@ref(eq:framework) leads to a significant improvement in the computational efficiency of the HMC algorithm. More speed up is obtained when leveraging on sparse matrix computations and within-chain parallelization. We simulate data from a hierarchical model where the latent field follows an RW1 process with dimension $N \in \{2000,4000\}$. The only parameter to be estimated is the kurtosis parameter $\eta$. We fit the model using the implementations:
+The point of this section is to show that integrating out the mixing distributions $V_i$ of the latent field $\mathbf{x}$ in the variance-mean mixture representation of \@ref(eq:framework) leads to a significant improvement in the computational efficiency of the HMC algorithm. More speed up is obtained when leveraging on sparse matrix computations and within-chain parallelization. We simulate data from a hierarchical model where the latent field follows a RW1 process with dimension $N \in \{2000,4000\}$. The only parameter to be estimated is the kurtosis parameter $\eta$. We fit the model using the implementations:
+
 1. Variance-Mean Mixture: 1200 iterations and 1 chain 
 2. nig_model:   1200 iterations and 1 chain 
 3. nig_model_2: 1200 iterations and 1 chain with 4 threads per chain and utilizing sparse matrix computations

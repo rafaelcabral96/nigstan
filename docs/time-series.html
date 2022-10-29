@@ -13,7 +13,7 @@
   
   
   <meta property="og:description" content="We illustrate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
-  <meta name="github-repo" content="rstudio/bookdown-demo" />
+  <meta name="github-repo" content="rafaelcabral96/nigstan" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 5 Time series | Fitting robust non-Gaussian models in Stan" />
@@ -21,10 +21,9 @@
   <meta name="twitter:description" content="We illustrate in this Bookdown how to implement a generic class of non-Gaussian models in Stan." />
   
 
-<meta name="author" content="Rafael Cabral" />
 
 
-<meta name="date" content="2022-09-08" />
+<meta name="date" content="2022-10-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -105,7 +104,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -118,7 +117,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -168,111 +167,111 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">A Minimal Book Example</a></li>
+<li><a href="./">Fitting robust non-Gaussian models</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a>
+<li><a href="index.html#about" id="toc-about"><span class="toc-section-number">1</span> About</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#what-and-why"><i class="fa fa-check"></i><b>1.1</b> What and Why</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#setup"><i class="fa fa-check"></i><b>1.2</b> Setup</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#this-bookdown"><i class="fa fa-check"></i><b>1.3</b> This Bookdown</a></li>
-<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#citation"><i class="fa fa-check"></i><b>1.4</b> Citation</a></li>
+<li><a href="index.html#what-and-why" id="toc-what-and-why"><span class="toc-section-number">1.1</span> What and Why</a></li>
+<li><a href="index.html#setup" id="toc-setup"><span class="toc-section-number">1.2</span> Setup</a></li>
+<li><a href="index.html#this-bookdown" id="toc-this-bookdown"><span class="toc-section-number">1.3</span> This Bookdown</a></li>
+<li><a href="index.html#citation" id="toc-citation"><span class="toc-section-number">1.4</span> Citation</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="theoretical-background.html"><a href="theoretical-background.html"><i class="fa fa-check"></i><b>2</b> Theoretical background</a>
+<li><a href="theoretical-background.html#theoretical-background" id="toc-theoretical-background"><span class="toc-section-number">2</span> Theoretical background</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="theoretical-background.html"><a href="theoretical-background.html#nig-distribution"><i class="fa fa-check"></i><b>2.1</b> NIG distribution</a></li>
-<li class="chapter" data-level="2.2" data-path="theoretical-background.html"><a href="theoretical-background.html#new-parameterization"><i class="fa fa-check"></i><b>2.2</b> New parameterization</a>
+<li><a href="theoretical-background.html#nig-distribution" id="toc-nig-distribution"><span class="toc-section-number">2.1</span> NIG distribution</a></li>
+<li><a href="theoretical-background.html#new-parameterization" id="toc-new-parameterization"><span class="toc-section-number">2.2</span> New parameterization</a>
 <ul>
-<li class="chapter" data-level="2.2.1" data-path="theoretical-background.html"><a href="theoretical-background.html#mean-scale-invariant-parameterization"><i class="fa fa-check"></i><b>2.2.1</b> Mean-scale invariant parameterization ($, $)</a></li>
-<li class="chapter" data-level="2.2.2" data-path="theoretical-background.html"><a href="theoretical-background.html#standardized-and-orthogonal-parameterization-etastar-zetastar"><i class="fa fa-check"></i><b>2.2.2</b> Standardized and orthogonal parameterization (<span class="math inline">\(\eta^\star\)</span>, <span class="math inline">\(\zeta^\star\)</span>)</a></li>
+<li><a href="theoretical-background.html#mean-scale-invariant-parameterization-eta-zeta" id="toc-mean-scale-invariant-parameterization-eta-zeta"><span class="toc-section-number">2.2.1</span> Mean-scale invariant parameterization (<span class="math inline">\(\eta\)</span>, <span class="math inline">\(\zeta\)</span>)</a></li>
+<li><a href="theoretical-background.html#standardized-and-orthogonal-parameterization-etastar-zetastar" id="toc-standardized-and-orthogonal-parameterization-etastar-zetastar"><span class="toc-section-number">2.2.2</span> Standardized and orthogonal parameterization (<span class="math inline">\(\eta^\star\)</span>, <span class="math inline">\(\zeta^\star\)</span>)</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="theoretical-background.html"><a href="theoretical-background.html#framework-for-extending-gaussian-models"><i class="fa fa-check"></i><b>2.3</b> Framework for extending Gaussian models</a>
+<li><a href="theoretical-background.html#framework-for-extending-gaussian-models" id="toc-framework-for-extending-gaussian-models"><span class="toc-section-number">2.3</span> Framework for extending Gaussian models</a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="theoretical-background.html"><a href="theoretical-background.html#illustration-with-the-rw1-process"><i class="fa fa-check"></i><b>2.3.1</b> Illustration with the RW1 process</a></li>
-<li class="chapter" data-level="2.3.2" data-path="theoretical-background.html"><a href="theoretical-background.html#models-defined-via-mathbfdmathbfx-mathbfz"><i class="fa fa-check"></i><b>2.3.2</b> Models defined via <span class="math inline">\(\mathbf{D}\mathbf{x} = \mathbf{Z}\)</span></a></li>
-<li class="chapter" data-level="2.3.3" data-path="theoretical-background.html"><a href="theoretical-background.html#generic-framework"><i class="fa fa-check"></i><b>2.3.3</b> Generic framework</a></li>
-<li class="chapter" data-level="2.3.4" data-path="theoretical-background.html"><a href="theoretical-background.html#sample-paths"><i class="fa fa-check"></i><b>2.3.4</b> Sample paths</a></li>
+<li><a href="theoretical-background.html#illustration-with-the-rw1-process" id="toc-illustration-with-the-rw1-process"><span class="toc-section-number">2.3.1</span> Illustration with the RW1 process</a></li>
+<li><a href="theoretical-background.html#models-defined-via-mathbfdmathbfx-mathbfz" id="toc-models-defined-via-mathbfdmathbfx-mathbfz"><span class="toc-section-number">2.3.2</span> Models defined via <span class="math inline">\(\mathbf{D}\mathbf{x} = \mathbf{Z}\)</span></a></li>
+<li><a href="theoretical-background.html#generic-framework" id="toc-generic-framework"><span class="toc-section-number">2.3.3</span> Generic framework</a></li>
+<li><a href="theoretical-background.html#sample-paths" id="toc-sample-paths"><span class="toc-section-number">2.3.4</span> Sample paths</a></li>
 </ul></li>
-<li class="chapter" data-level="2.4" data-path="theoretical-background.html"><a href="theoretical-background.html#penalized-complexity-priors-for-etastar-and-zetastar"><i class="fa fa-check"></i><b>2.4</b> Penalized complexity priors for <span class="math inline">\(\eta^\star\)</span> and <span class="math inline">\(\zeta^\star\)</span></a></li>
-<li class="chapter" data-level="2.5" data-path="theoretical-background.html"><a href="theoretical-background.html#useful-properties-of-the-vector-mathbfx"><i class="fa fa-check"></i><b>2.5</b> Useful properties of the vector <span class="math inline">\(\mathbf{x}\)</span></a>
+<li><a href="theoretical-background.html#penalized-complexity-priors-for-etastar-and-zetastar" id="toc-penalized-complexity-priors-for-etastar-and-zetastar"><span class="toc-section-number">2.4</span> Penalized complexity priors for <span class="math inline">\(\eta^\star\)</span> and <span class="math inline">\(\zeta^\star\)</span></a></li>
+<li><a href="theoretical-background.html#useful-properties-of-the-vector-mathbfx" id="toc-useful-properties-of-the-vector-mathbfx"><span class="toc-section-number">2.5</span> Useful properties of the vector <span class="math inline">\(\mathbf{x}\)</span></a>
 <ul>
-<li class="chapter" data-level="2.5.1" data-path="theoretical-background.html"><a href="theoretical-background.html#joint-pdf-of-mathbfx"><i class="fa fa-check"></i><b>2.5.1</b> Joint PDF of <span class="math inline">\(\mathbf{x}\)</span></a></li>
-<li class="chapter" data-level="2.5.2" data-path="theoretical-background.html"><a href="theoretical-background.html#mixing-distribution-vector-mathbfv"><i class="fa fa-check"></i><b>2.5.2</b> Mixing distribution vector <span class="math inline">\(\mathbf{V}\)</span></a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="implementing-latent-models-driven-by-nig-noise-in-stan.html"><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html"><i class="fa fa-check"></i><b>3</b> Implementing latent models driven by NIG noise in Stan</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="implementing-latent-models-driven-by-nig-noise-in-stan.html"><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#framework"><i class="fa fa-check"></i><b>3.1</b> Framework</a></li>
-<li class="chapter" data-level="3.2" data-path="implementing-latent-models-driven-by-nig-noise-in-stan.html"><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#implementation"><i class="fa fa-check"></i><b>3.2</b> Implementation</a></li>
-<li class="chapter" data-level="3.3" data-path="implementing-latent-models-driven-by-nig-noise-in-stan.html"><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#additional-functions"><i class="fa fa-check"></i><b>3.3</b> Additional functions</a>
-<ul>
-<li class="chapter" data-level="3.3.1" data-path="implementing-latent-models-driven-by-nig-noise-in-stan.html"><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#nig-observations"><i class="fa fa-check"></i><b>3.3.1</b> NIG observations</a></li>
-<li class="chapter" data-level="3.3.2" data-path="implementing-latent-models-driven-by-nig-noise-in-stan.html"><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#sparse-matrix-computations"><i class="fa fa-check"></i><b>3.3.2</b> Sparse matrix computations</a></li>
-</ul></li>
-<li class="chapter" data-level="3.4" data-path="implementing-latent-models-driven-by-nig-noise-in-stan.html"><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#notes"><i class="fa fa-check"></i><b>3.4</b> Notes</a>
-<ul>
-<li class="chapter" data-level="3.4.1" data-path="implementing-latent-models-driven-by-nig-noise-in-stan.html"><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#non-centered-parameterization"><i class="fa fa-check"></i><b>3.4.1</b> Non-centered parameterization</a></li>
-<li class="chapter" data-level="3.4.2" data-path="implementing-latent-models-driven-by-nig-noise-in-stan.html"><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#heavy-tailed-distributions-and-stan"><i class="fa fa-check"></i><b>3.4.2</b> Heavy-tailed distributions and Stan</a></li>
-<li class="chapter" data-level="3.4.3" data-path="implementing-latent-models-driven-by-nig-noise-in-stan.html"><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#determinant"><i class="fa fa-check"></i><b>3.4.3</b> Determinant</a></li>
+<li><a href="theoretical-background.html#joint-pdf-of-mathbfx" id="toc-joint-pdf-of-mathbfx"><span class="toc-section-number">2.5.1</span> Joint PDF of <span class="math inline">\(\mathbf{x}\)</span></a></li>
+<li><a href="theoretical-background.html#mixing-distribution-vector-mathbfv" id="toc-mixing-distribution-vector-mathbfv"><span class="toc-section-number">2.5.2</span> Mixing distribution vector <span class="math inline">\(\mathbf{V}\)</span></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="simulations.html"><a href="simulations.html"><i class="fa fa-check"></i><b>4</b> Simulations</a>
+<li><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#implementing-latent-models-driven-by-nig-noise-in-stan" id="toc-implementing-latent-models-driven-by-nig-noise-in-stan"><span class="toc-section-number">3</span> Implementing latent models driven by NIG noise in Stan</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="simulations.html"><a href="simulations.html#libraries-and-simulated-data"><i class="fa fa-check"></i><b>4.1</b> Libraries and simulated data</a></li>
-<li class="chapter" data-level="4.2" data-path="simulations.html"><a href="simulations.html#fit-with-variance-mean-mixture-representation"><i class="fa fa-check"></i><b>4.2</b> Fit with Variance-mean mixture representation</a></li>
-<li class="chapter" data-level="4.3" data-path="simulations.html"><a href="simulations.html#fit-with-nig_model"><i class="fa fa-check"></i><b>4.3</b> Fit with nig_model</a></li>
-<li class="chapter" data-level="4.4" data-path="simulations.html"><a href="simulations.html#fit-with-nig_model_2"><i class="fa fa-check"></i><b>4.4</b> Fit with nig_model_2</a></li>
-<li class="chapter" data-level="4.5" data-path="simulations.html"><a href="simulations.html#comparizon"><i class="fa fa-check"></i><b>4.5</b> Comparizon</a></li>
+<li><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#framework" id="toc-framework"><span class="toc-section-number">3.1</span> Framework</a></li>
+<li><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#implementation" id="toc-implementation"><span class="toc-section-number">3.2</span> Implementation</a></li>
+<li><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#additional-functions" id="toc-additional-functions"><span class="toc-section-number">3.3</span> Additional functions</a>
+<ul>
+<li><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#nig-observations" id="toc-nig-observations"><span class="toc-section-number">3.3.1</span> NIG observations</a></li>
+<li><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#sparse-matrix-computations" id="toc-sparse-matrix-computations"><span class="toc-section-number">3.3.2</span> Sparse matrix computations</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="time-series.html"><a href="time-series.html"><i class="fa fa-check"></i><b>5</b> Time series</a>
+<li><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#notes" id="toc-notes"><span class="toc-section-number">3.4</span> Notes</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="time-series.html"><a href="time-series.html#autogressive-process-driven-by-nig-noise"><i class="fa fa-check"></i><b>5.1</b> Autogressive process driven by NIG noise</a>
-<ul>
-<li class="chapter" data-level="5.1.1" data-path="time-series.html"><a href="time-series.html#libraries-and-data"><i class="fa fa-check"></i><b>5.1.1</b> Libraries and data</a></li>
-<li class="chapter" data-level="5.1.2" data-path="time-series.html"><a href="time-series.html#priors"><i class="fa fa-check"></i><b>5.1.2</b> Priors</a></li>
-<li class="chapter" data-level="5.1.3" data-path="time-series.html"><a href="time-series.html#gaussian-fit"><i class="fa fa-check"></i><b>5.1.3</b> Gaussian fit</a></li>
-<li class="chapter" data-level="5.1.4" data-path="time-series.html"><a href="time-series.html#nig-fit"><i class="fa fa-check"></i><b>5.1.4</b> NIG fit</a></li>
-<li class="chapter" data-level="5.1.5" data-path="time-series.html"><a href="time-series.html#comparizon-1"><i class="fa fa-check"></i><b>5.1.5</b> Comparizon</a></li>
-<li class="chapter" data-level="5.1.6" data-path="time-series.html"><a href="time-series.html#predictions"><i class="fa fa-check"></i><b>5.1.6</b> Predictions</a></li>
+<li><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#non-centered-parameterization" id="toc-non-centered-parameterization"><span class="toc-section-number">3.4.1</span> Non-centered parameterization</a></li>
+<li><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#heavy-tailed-distributions-and-stan" id="toc-heavy-tailed-distributions-and-stan"><span class="toc-section-number">3.4.2</span> Heavy-tailed distributions and Stan</a></li>
+<li><a href="implementing-latent-models-driven-by-nig-noise-in-stan.html#determinant" id="toc-determinant"><span class="toc-section-number">3.4.3</span> Determinant</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html"><i class="fa fa-check"></i><b>6</b> Spatial Matérn model</a>
+<li><a href="simulations.html#simulations" id="toc-simulations"><span class="toc-section-number">4</span> Simulations</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#introduction"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
-<li class="chapter" data-level="6.2" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#implementation-1"><i class="fa fa-check"></i><b>6.2</b> Implementation</a></li>
-<li class="chapter" data-level="6.3" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#libraries-and-data-1"><i class="fa fa-check"></i><b>6.3</b> Libraries and data</a></li>
-<li class="chapter" data-level="6.4" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#discretization-mesh"><i class="fa fa-check"></i><b>6.4</b> Discretization mesh</a></li>
-<li class="chapter" data-level="6.5" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#data-plot"><i class="fa fa-check"></i><b>6.5</b> Data plot</a></li>
-<li class="chapter" data-level="6.6" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#priors-1"><i class="fa fa-check"></i><b>6.6</b> Priors</a></li>
-<li class="chapter" data-level="6.7" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#stan-fit-with-a-gaussian-model"><i class="fa fa-check"></i><b>6.7</b> Stan fit with a Gaussian model</a></li>
-<li class="chapter" data-level="6.8" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#stan-fit-with-a-nig-driving-noise"><i class="fa fa-check"></i><b>6.8</b> Stan fit with a NIG driving noise</a></li>
-<li class="chapter" data-level="6.9" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#leave-one-out-cross-validation"><i class="fa fa-check"></i><b>6.9</b> Leave-one-out cross validation</a></li>
-<li class="chapter" data-level="6.10" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#prediction"><i class="fa fa-check"></i><b>6.10</b> Prediction</a>
+<li><a href="simulations.html#libraries-and-simulated-data" id="toc-libraries-and-simulated-data"><span class="toc-section-number">4.1</span> Libraries and simulated data</a></li>
+<li><a href="simulations.html#fit-with-variance-mean-mixture-representation" id="toc-fit-with-variance-mean-mixture-representation"><span class="toc-section-number">4.2</span> Fit with Variance-mean mixture representation</a></li>
+<li><a href="simulations.html#fit-with-nig_model" id="toc-fit-with-nig_model"><span class="toc-section-number">4.3</span> Fit with nig_model</a></li>
+<li><a href="simulations.html#fit-with-nig_model_2" id="toc-fit-with-nig_model_2"><span class="toc-section-number">4.4</span> Fit with nig_model_2</a></li>
+<li><a href="simulations.html#comparizon" id="toc-comparizon"><span class="toc-section-number">4.5</span> Comparizon</a></li>
+</ul></li>
+<li><a href="time-series.html#time-series" id="toc-time-series"><span class="toc-section-number">5</span> Time series</a>
 <ul>
-<li class="chapter" data-level="6.10.1" data-path="spatial-matérn-model.html"><a href="spatial-matérn-model.html#posterior-distribution-of-mathbfvoslashmathbfh"><i class="fa fa-check"></i><b>6.10.1</b> Posterior distribution of <span class="math inline">\(\mathbf{V}\oslash\mathbf{h}\)</span></a></li>
+<li><a href="time-series.html#autogressive-process-driven-by-nig-noise" id="toc-autogressive-process-driven-by-nig-noise"><span class="toc-section-number">5.1</span> Autogressive process driven by NIG noise</a>
+<ul>
+<li><a href="time-series.html#libraries-and-data" id="toc-libraries-and-data"><span class="toc-section-number">5.1.1</span> Libraries and data</a></li>
+<li><a href="time-series.html#priors" id="toc-priors"><span class="toc-section-number">5.1.2</span> Priors</a></li>
+<li><a href="time-series.html#gaussian-fit" id="toc-gaussian-fit"><span class="toc-section-number">5.1.3</span> Gaussian fit</a></li>
+<li><a href="time-series.html#nig-fit" id="toc-nig-fit"><span class="toc-section-number">5.1.4</span> NIG fit</a></li>
+<li><a href="time-series.html#comparizon-1" id="toc-comparizon-1"><span class="toc-section-number">5.1.5</span> Comparizon</a></li>
+<li><a href="time-series.html#predictions" id="toc-predictions"><span class="toc-section-number">5.1.6</span> Predictions</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html"><i class="fa fa-check"></i><b>7</b> SAR and CAR models</a>
+<li><a href="spatial-matérn-model.html#spatial-matérn-model" id="toc-spatial-matérn-model"><span class="toc-section-number">6</span> Spatial Matérn model</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#sar-models"><i class="fa fa-check"></i><b>7.1</b> SAR models</a>
+<li><a href="spatial-matérn-model.html#introduction" id="toc-introduction"><span class="toc-section-number">6.1</span> Introduction</a></li>
+<li><a href="spatial-matérn-model.html#implementation-1" id="toc-implementation-1"><span class="toc-section-number">6.2</span> Implementation</a></li>
+<li><a href="spatial-matérn-model.html#libraries-and-data-1" id="toc-libraries-and-data-1"><span class="toc-section-number">6.3</span> Libraries and data</a></li>
+<li><a href="spatial-matérn-model.html#discretization-mesh" id="toc-discretization-mesh"><span class="toc-section-number">6.4</span> Discretization mesh</a></li>
+<li><a href="spatial-matérn-model.html#data-plot" id="toc-data-plot"><span class="toc-section-number">6.5</span> Data plot</a></li>
+<li><a href="spatial-matérn-model.html#priors-1" id="toc-priors-1"><span class="toc-section-number">6.6</span> Priors</a></li>
+<li><a href="spatial-matérn-model.html#stan-fit-with-a-gaussian-model" id="toc-stan-fit-with-a-gaussian-model"><span class="toc-section-number">6.7</span> Stan fit with a Gaussian model</a></li>
+<li><a href="spatial-matérn-model.html#stan-fit-with-a-nig-driving-noise" id="toc-stan-fit-with-a-nig-driving-noise"><span class="toc-section-number">6.8</span> Stan fit with a NIG driving noise</a></li>
+<li><a href="spatial-matérn-model.html#leave-one-out-cross-validation" id="toc-leave-one-out-cross-validation"><span class="toc-section-number">6.9</span> Leave-one-out cross validation</a></li>
+<li><a href="spatial-matérn-model.html#prediction" id="toc-prediction"><span class="toc-section-number">6.10</span> Prediction</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#libraries"><i class="fa fa-check"></i><b>7.1.1</b> Libraries</a></li>
-</ul></li>
-<li class="chapter" data-level="7.2" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#columbus-dataset-and-model"><i class="fa fa-check"></i><b>7.2</b> Columbus dataset and model</a>
-<ul>
-<li class="chapter" data-level="7.2.1" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#gaussian-fit-1"><i class="fa fa-check"></i><b>7.2.1</b> Gaussian fit</a></li>
-<li class="chapter" data-level="7.2.2" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#nig-fit-1"><i class="fa fa-check"></i><b>7.2.2</b> NIG fit</a></li>
-</ul></li>
-<li class="chapter" data-level="7.3" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#car-models"><i class="fa fa-check"></i><b>7.3</b> CAR models</a>
-<ul>
-<li class="chapter" data-level="7.3.1" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#dataset-and-model"><i class="fa fa-check"></i><b>7.3.1</b> Dataset and model</a></li>
-<li class="chapter" data-level="7.3.2" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#nig-fit-2"><i class="fa fa-check"></i><b>7.3.2</b> NIG fit</a></li>
-<li class="chapter" data-level="7.3.3" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#comparizon-2"><i class="fa fa-check"></i><b>7.3.3</b> Comparizon</a></li>
-<li class="chapter" data-level="7.3.4" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#nig-model---relative-risk"><i class="fa fa-check"></i><b>7.3.4</b> NIG model - Relative risk</a></li>
-<li class="chapter" data-level="7.3.5" data-path="sar-and-car-models.html"><a href="sar-and-car-models.html#gaussian-model---relative-risk"><i class="fa fa-check"></i><b>7.3.5</b> Gaussian model - Relative Risk</a></li>
+<li><a href="spatial-matérn-model.html#posterior-distribution-of-mathbfvoslashmathbfh" id="toc-posterior-distribution-of-mathbfvoslashmathbfh"><span class="toc-section-number">6.10.1</span> Posterior distribution of <span class="math inline">\(\mathbf{V}\oslash\mathbf{h}\)</span></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li><a href="sar-and-car-models.html#sar-and-car-models" id="toc-sar-and-car-models"><span class="toc-section-number">7</span> SAR and CAR models</a>
+<ul>
+<li><a href="sar-and-car-models.html#sar-models" id="toc-sar-models"><span class="toc-section-number">7.1</span> SAR models</a>
+<ul>
+<li><a href="sar-and-car-models.html#libraries" id="toc-libraries"><span class="toc-section-number">7.1.1</span> Libraries</a></li>
+</ul></li>
+<li><a href="sar-and-car-models.html#columbus-dataset-and-model" id="toc-columbus-dataset-and-model"><span class="toc-section-number">7.2</span> Columbus dataset and model</a>
+<ul>
+<li><a href="sar-and-car-models.html#gaussian-fit-1" id="toc-gaussian-fit-1"><span class="toc-section-number">7.2.1</span> Gaussian fit</a></li>
+<li><a href="sar-and-car-models.html#nig-fit-1" id="toc-nig-fit-1"><span class="toc-section-number">7.2.2</span> NIG fit</a></li>
+</ul></li>
+<li><a href="sar-and-car-models.html#car-models" id="toc-car-models"><span class="toc-section-number">7.3</span> CAR models</a>
+<ul>
+<li><a href="sar-and-car-models.html#dataset-and-model" id="toc-dataset-and-model"><span class="toc-section-number">7.3.1</span> Dataset and model</a></li>
+<li><a href="sar-and-car-models.html#nig-fit-2" id="toc-nig-fit-2"><span class="toc-section-number">7.3.2</span> NIG fit</a></li>
+<li><a href="sar-and-car-models.html#comparizon-2" id="toc-comparizon-2"><span class="toc-section-number">7.3.3</span> Comparizon</a></li>
+<li><a href="sar-and-car-models.html#nig-model---relative-risk" id="toc-nig-model---relative-risk"><span class="toc-section-number">7.3.4</span> NIG model - Relative risk</a></li>
+<li><a href="sar-and-car-models.html#gaussian-model---relative-risk" id="toc-gaussian-model---relative-risk"><span class="toc-section-number">7.3.5</span> Gaussian model - Relative Risk</a></li>
+</ul></li>
+</ul></li>
+<li><a href="references.html#references" id="toc-references">References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -333,7 +332,7 @@ x_t = c +\rho x_{t-1} + \sigma\Lambda_t,
 <span id="cb29-3"><a href="time-series.html#cb29-3" aria-hidden="true" tabindex="-1"></a>N    <span class="ot">&lt;-</span> <span class="fu">length</span>(data)</span>
 <span id="cb29-4"><a href="time-series.html#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-5"><a href="time-series.html#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(<span class="fu">as.data.frame</span>(<span class="at">iter=</span> <span class="dv">1</span><span class="sc">:</span>N, <span class="at">x =</span> data))</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 </div>
 <div id="priors" class="section level3" number="5.1.2">
 <h3><span class="header-section-number">5.1.2</span> Priors</h3>
@@ -368,7 +367,7 @@ target += - theta_zetas*fabs(zetas);</code></pre>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="time-series.html#cb34-1" aria-hidden="true" tabindex="-1"></a>dat1 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">N =</span> N,</span>
 <span id="cb34-2"><a href="time-series.html#cb34-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> data,</span>
 <span id="cb34-3"><a href="time-series.html#cb34-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">theta_etas   =</span> <span class="dv">15</span>,</span>
-<span id="cb34-4"><a href="time-series.html#cb34-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">theta_zetas  =</span> <span class="fl">6.5</span>)</span></code></pre></div>
+<span id="cb34-4"><a href="time-series.html#cb34-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">theta_zetas  =</span> <span class="dv">3</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="time-series.html#cb35-1" aria-hidden="true" tabindex="-1"></a>model_stan_Gauss <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="st">&#39;files/stan/ARGauss.stan&#39;</span>)</span>
 <span id="cb35-2"><a href="time-series.html#cb35-2" aria-hidden="true" tabindex="-1"></a>fit_Gauss <span class="ot">&lt;-</span> model_stan_Gauss<span class="sc">$</span><span class="fu">sample</span>(<span class="at">data =</span> dat1, </span>
 <span id="cb35-3"><a href="time-series.html#cb35-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">chains =</span> <span class="dv">4</span>, </span>
@@ -442,20 +441,9 @@ target += - theta_zetas*fabs(zetas);</code></pre>
 <td align="right">7210.87</td>
 <td align="right">6149.14</td>
 </tr>
-<tr class="odd">
-<td align="left">The fit was</td>
-<td align="right">successful</td>
-<td align="right">with no wa</td>
-<td align="right">rning m</td>
-<td align="right">essages</td>
-<td align="right">. The param</td>
-<td align="right">eter <span class="math inline">\(\rho\)</span></td>
-<td align="right">is ver</td>
-<td align="right">y close to</td>
-<td align="right">1, so the model is close to an RW1 model.</td>
-</tr>
 </tbody>
 </table>
+<p>The fit was successful with no warning messages. The parameter <span class="math inline">\(\rho\)</span> is very close to 1, so the model is close to an RW1 model.</p>
 </div>
 <div id="nig-fit" class="section level3" number="5.1.4">
 <h3><span class="header-section-number">5.1.4</span> NIG fit</h3>
@@ -622,21 +610,21 @@ target += - theta_zetas*fabs(zetas);</code></pre>
 <span id="cb46-4"><a href="time-series.html#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">titles =</span> <span class="fu">c</span>(<span class="st">&quot;1 step ahead prediction- Gaussian model&quot;</span>, <span class="st">&quot;1 step ahead prediction - NIG model&quot;</span>),</span>
 <span id="cb46-5"><a href="time-series.html#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2600</span>)</span>
 <span id="cb46-6"><a href="time-series.html#cb46-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="time-series.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayesplot_grid</span>(</span>
 <span id="cb47-2"><a href="time-series.html#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mcmc_hist</span>(<span class="fu">as.data.frame</span>(<span class="at">iter =</span> <span class="dv">1</span><span class="sc">:</span>n_draws, <span class="at">x=</span>x1595)),</span>
 <span id="cb47-3"><a href="time-series.html#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mcmc_hist</span>(<span class="fu">as.data.frame</span>(<span class="at">iter =</span> <span class="dv">1</span><span class="sc">:</span>n_draws, <span class="at">x=</span>NIG.x1595)),</span>
 <span id="cb47-4"><a href="time-series.html#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">titles =</span> <span class="fu">c</span>(<span class="st">&quot;2 step ahead prediction- Gaussian model&quot;</span>, <span class="st">&quot;2 step ahead prediction - NIG model&quot;</span>),</span>
 <span id="cb47-5"><a href="time-series.html#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2600</span>)</span>
 <span id="cb47-6"><a href="time-series.html#cb47-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-23-2.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-24-2.png" width="672" /></p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="time-series.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayesplot_grid</span>(</span>
 <span id="cb48-2"><a href="time-series.html#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mcmc_hist</span>(<span class="fu">as.data.frame</span>(<span class="at">iter =</span> <span class="dv">1</span><span class="sc">:</span>n_draws, <span class="at">x=</span>x1596)),</span>
 <span id="cb48-3"><a href="time-series.html#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mcmc_hist</span>(<span class="fu">as.data.frame</span>(<span class="at">iter =</span> <span class="dv">1</span><span class="sc">:</span>n_draws, <span class="at">x=</span>NIG.x1596)),</span>
 <span id="cb48-4"><a href="time-series.html#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">titles =</span> <span class="fu">c</span>(<span class="st">&quot;3 step ahead prediction- Gaussian model&quot;</span>, <span class="st">&quot;3 step ahead prediction - NIG model&quot;</span>),</span>
 <span id="cb48-5"><a href="time-series.html#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2600</span>)</span>
 <span id="cb48-6"><a href="time-series.html#cb48-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-23-3.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-24-3.png" width="672" /></p>
 <!--
 ### Variables V
 

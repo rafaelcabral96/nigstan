@@ -107,7 +107,7 @@ We need to pass to Stan the number of observations, the equity data and the rate
 dat1 <- list(N = N,
              x = data,
              theta_etas   = 15,
-             theta_zetas  = 6.5)
+             theta_zetas  = 3)
 ```
 
 ```{r eval=FALSE}
@@ -124,11 +124,13 @@ fit_Gauss$save_object("files/fits/ARGauss.rds")
 fit_Gauss <- readRDS("files/fits/ARGauss.rds")
 knitr::kable(head(fit_Gauss$summary(),4), "simple", row.names = NA, digits=2)
 ```
+
 The fit was successful with no warning messages. The parameter $\rho$ is very close to 1, so the model is close to an RW1 model. 
 
 ### NIG fit
 
 Now, for the model declaration, we just need to change the following line of code.
+
 ```{}
 for (n in 2:N)
   x[n] ~ nig(c + rho*x[n-1], sigma, etas, zetas, 1);
@@ -143,6 +145,7 @@ fit_NIG <- model_stan_NIG$sample(data = dat1,
 
 fit_NIG$save_object("files/fits/ARNIG2.rds") #no warning
 ```
+
 
 ```{r}
 fit_NIG <- readRDS("files/fits/ARNIG2.rds")

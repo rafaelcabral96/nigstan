@@ -103,15 +103,15 @@ SPDE.matrix <- function(loc,kappa){
 #kappa  Spatial range parameter
 #G      D = diag(kappa^2*h) + G
 #etas   First flexibility parameter
-#mus    Second flexibility parameter
+#zetas    Second flexibility parameter
 #h      vector h
-Vposterior <- function(X, kappa, G, etas, mus, h){
+Vposterior <- function(X, kappa, G, etas, zetas, h){
   
   library(GIGrvg)
   n_draws   <- nrow(X)
   
-  eta = etas*(1+mus^2-abs(mus)*sqrt(1+mus^2))^2
-  mu  = mus/sqrt(eta)
+  eta = etas*(1+zetas^2-abs(zetas)*sqrt(1+zetas^2))^2
+  zeta  = zetas/sqrt(eta)
   
   if(kappa[1]==0){
     D  <- G
@@ -126,21 +126,28 @@ Vposterior <- function(X, kappa, G, etas, mus, h){
       DX[i,]    <- as.numeric(D%*%X[i,])}
   }
 
+  #V = matrix(NA, nrow= n_draws, ncol = n)
+  #for(i in 1:n){
+  #  V[,i] <- GIGrvg::rgig(n_draws, lambda= -1, psi = 1/eta+zeta^2, chi = h[i]^2/eta + (DX[,i] + zeta*h[i])^2)}
+  
   V = matrix(NA, nrow= n_draws, ncol = n)
-  for(i in 1:n){
-    V[,i] <- GIGrvg::rgig(n_draws, lambda= -1, psi = 1/eta+mu^2, chi = h[i]^2/eta + (DX[,i] + mu*h[i])^2)}
+  for(i in 1:n_draws){
+    for(j in 1:n){
+      V[i,j] <- GIGrvg::rgig(1, lambda= -1, psi = 1/eta[i]+zeta[i]^2, chi = h[j]^2/eta[i] + (DX[i,j] + zeta[i]*h[j])^2)
+    }
+  }
   
   return(V%*%diag(1/h)) 
 }
 
-VposteriorSAR <- function(X, rho, W, etas, mus, h){
+VposteriorSAR <- function(X, rho, W, etas, zetas, h){
   
   library(GIGrvg)
   n_draws   <- nrow(X)
   
-  eta = etas*(1+mus^2-abs(mus)*sqrt(1+mus^2))^2
-  mu  = mus/sqrt(eta)
-  sigmas = 1/sqrt(1+mus^2)
+  eta = etas*(1+zetas^2-abs(zetas)*sqrt(1+zetas^2))^2
+  zeta  = zetas/sqrt(eta)
+  sigmas = 1/sqrt(1+zetas^2)
   
   n  <- ncol(X)
   DX <- matrix(NA, nrow = n_draws, ncol = n)
@@ -148,25 +155,39 @@ VposteriorSAR <- function(X, rho, W, etas, mus, h){
     D         <- diag(rep(1,n)) - rho[i]*W
     DX[i,]    <- as.numeric(D%*%X[i,])}
   
+  #V = matrix(NA, nrow= n_draws, ncol = n)
+  #for(i in 1:n){
+  #  V[,i] <- GIGrvg::rgig(n_draws, lambda= -1, psi = 1/eta+zeta^2, chi = h[i]^2/eta + (DX[,i]/sigmas + zeta*h[i])^2)}
+  
   V = matrix(NA, nrow= n_draws, ncol = n)
-  for(i in 1:n){
-    V[,i] <- GIGrvg::rgig(n_draws, lambda= -1, psi = 1/eta+mu^2, chi = h[i]^2/eta + (DX[,i]/sigmas + mu*h[i])^2)}
+  for(i in 1:n_draws){
+    for(j in 1:n){
+      V[i,j] <- GIGrvg::rgig(1, lambda= -1, psi = 1/eta[i]+zeta[i]^2, chi = h[j]^2/eta[i] + (DX[i,j] + zeta[i]*h[j])^2)
+    }
+  }
   
   return(V%*%diag(1/h)) 
 }
 
-VposteriorCAR <- function(X, node1, node2, etas, mus){
+VposteriorCAR <- function(X, node1, node2, etas, zetas){
   
   n_draws   <- nrow(X)
   n_edges   <- length(node1)
   
-  eta = etas*(1+mus^2-abs(mus)*sqrt(1+mus^2))^2
-  mu  = mus/sqrt(eta)
-  sigmas = 1/sqrt(1+mus^2)
+  eta = etas*(1+zetas^2-abs(zetas)*sqrt(1+zetas^2))^2
+  zeta  = zetas/sqrt(eta)
+  sigmas = 1/sqrt(1+zetas^2)
+  
+  #V = matrix(NA, nrow= n_draws, ncol = n_edges)
+  #for(i in 1:n_edges){
+  #  V[,i] <- GIGrvg::rgig(n_draws, lambda= -1, psi = 1/eta+zeta^2, chi = 1/eta + ((X[,node1[i]]-X[,node2[i]])/sigmas + zeta)^2)}
   
   V = matrix(NA, nrow= n_draws, ncol = n_edges)
-  for(i in 1:n_edges){
-    V[,i] <- GIGrvg::rgig(n_draws, lambda= -1, psi = 1/eta+mu^2, chi = 1/eta + ((X[,node1[i]]-X[,node2[i]])/sigmas + mu)^2)}
+  for(i in 1:n_draws){
+    for(j in 1:n_edges){
+      V[i,j] <- GIGrvg::rgig(1, lambda= -1, psi = 1/eta[i]+zeta[i]^2, chi = 1/eta[i] + ((X[i,node1[j]]-X[i,node2[j]])/sigmas + zeta[i])^2)
+    }
+  }
   
   return(V) 
 }

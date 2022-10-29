@@ -271,7 +271,7 @@ The model block for the NIG model is given next. We only changed the latent fiel
 ```{}
 transformed parameters{
   vector[N]  w   = diag_post_multiply(C1,inv(kappa^2+v))*C2*Lambda;   //stochastic weights
-  vector[Ny] my = sigmax*A*w;                                        //mean of observations y
+  vector[Ny] my = sigmax*A*w;                                         //mean of observations y
 } 
 
 model{
@@ -527,7 +527,7 @@ leaflet(plot_data) %>%
 
 ### Posterior distribution of $\mathbf{V}\oslash\mathbf{h}$
 
-In the Gaussian case the vector $\mathbf{V}\oslash\ \mathbf{h}$ is equal to $\mathbf{1}$, and so the plot of the posterior mean of $\mathbf{V}\oslash\ \mathbf{h}$  can be used as a diagnostic tool to assess where departures from Gaussianity occur and if a non-Gaussian model is needed at all. We prefer looking at this diagnostic plot, rather than the posterior distribution of $\eta^\star$. The function `Vposterior` in `..files\utils.R` can generate posterior samples of $\mathbf{V}\oslash\ \mathbf{h}$ given posterior samples of $\mathbf{w}$, $\kappa$, $\eta^\star$, and $\zeta^\star$. We highlight the nodes where the 95% credible intervals of $\mathbf{V}\oslash\ \mathbf{h}$ do not contain the value 1. Thus, the ´`tension'' points of the Gaussian model where more flexibility is needed are revealed.
+In the Gaussian case the vector $\mathbf{V}\oslash\ \mathbf{h}$ is equal to $\mathbf{1}$, and so the plot of the posterior mean of $\mathbf{V}\oslash\ \mathbf{h}$  can be used as a diagnostic tool to assess where departures from Gaussianity occur and if a non-Gaussian model is needed at all. We prefer looking at this diagnostic plot, rather than the posterior distribution of $\eta^\star$. The function `Vposterior` in `..files\utils.R` can generate posterior samples of $\mathbf{V}\oslash\ \mathbf{h}$ given posterior samples of $\mathbf{w}$, $\kappa$, $\eta^\star$, and $\zeta^\star$. We highlight the nodes where the 95% credible intervals of $\mathbf{V}\oslash\ \mathbf{h}$ do not contain the value 1. These highlited nodes reveal the ´`tension'' points of the Gaussian model where more flexibility is needed.
 
 ```{r message=FALSE, warning=FALSE}
 kappa       <- as.matrix(as_draws_df(fit_NIG$draws("kappa")))[,1]
@@ -553,7 +553,7 @@ mesh_map_proj <- spTransform(mesh_map, "+proj=longlat +ellps=WGS84 +datum=WGS84 
 
 
 #Palletes
-pal.Vmean  <- colorNumeric(palette = c("blue","white","red"), domain = plot_data$Vmean)
+pal.Vmean  <- colorNumeric(palette = c("blue","white","red"), domain = c(-3,3))
 
 m <- leaflet(plot_data, options = leafletOptions(zoomControl = FALSE,  attributionControl=FALSE)) %>%
   

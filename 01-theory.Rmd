@@ -8,7 +8,7 @@ $$
 \pi(x) = \frac{\alpha \delta K_{1}\left(\alpha \sqrt{\delta^{2}+(x-\mu)^{2}}\right)}{\pi \sqrt{\delta^{2}+(x-\mu)^{2}}} e^{\delta \gamma+\beta(x-\mu)},
 $$
 
-where $\gamma= \sqrt{\alpha^2-\beta^2}$, and $K_\nu(x)$ is the modified Besse function of the second kind. A NIG random variable $\Lambda$ can be represented as a Normal variance-mean mixture:
+where $\gamma= \sqrt{\alpha^2-\beta^2}$, and $K_\nu(x)$ is the modified Bessel function of the second kind. A NIG random variable $\Lambda$ can be represented as a Normal variance-mean mixture:
 $$
 \Lambda|V \sim N(\mu+ \beta V , V) \\ 
  V \sim IG(\delta,\gamma),
@@ -19,7 +19,7 @@ This representation is useful for sampling and is also the basis for Bayesian an
 
 ## New parameterization
 
-### Mean-scale invariant parameterization ($\eta, $\zeta)
+### Mean-scale invariant parameterization ($\eta$, $\zeta$)
 
 
 In the previous parameterization, the location ($\mu$) and scale ($\delta$) parameters do not correspond to the mean and standard deviation of the distribution, which also depends on $\alpha$ and $\beta$. In @cabral2022controlling we propose a "mean-scale" invariant parameterization where the mean and the standard deviation are fixed. This not only eases interpretation but also allows assigning the priors for the mean and scale of the Gaussian model in non-Gaussian models, which is very convenient when implementing these non-Gaussian models in practice. The mixture representation belonging to this parameterization is:
@@ -49,29 +49,29 @@ which is equal to 1 in the symmetric case ($\zeta=0$). @cabral2022controlling re
 
 ### Illustration with the RW1 process
 
-Here we show how a random walk of order 1 (RW1) process with irregularly spaced locations can be extended to non-Gaussianity. It is quite a simple model, but it serves as a good illustration since the same procedure applies to more complex models. Consider a set of $n$ locations $s_1,\dotsc, s_n$, where the distance between locations is $h_i=s_{i+1}-s_i$. When the driving noise is Gaussian, we assume $x_{i+1}-x_i \overset{d}{=} \sigma Z_i$, where $Z_i \sim N(0,h_i)$. Notice that the RW1 model can be seen as an approximation of a Wiener process.  In our non-Gaussian setting, we replace the standardized Gaussian noise $Z_i$ with standardized non-Gaussian noise $\Lambda_i$, so we assume that $x_{i+1}-x_i \overset{d}{=} \sigma\Lambda_i$, where $\Lambda_i$ follows:
+Here we show how a random walk of order 1 (RW1) process with irregularly spaced locations can be extended to non-Gaussianity. It is quite a simple model, but it serves as a good illustration since the same procedure applies to more complex models. Consider a set of $n$ locations $s_1,\dotsc, s_n$, where the distance between locations is $h_i=s_{i+1}-s_i$. When the driving noise is Gaussian, we assume $x_{i+1}-x_i \overset{d}{=} \sigma Z_i$, where $Z_i \sim N(0,h_i)$. Notice that the RW1 model can be seen as an approximation of a Wiener process.  In our non-Gaussian setting, we replace the standard Gaussian noise $Z_i$ with standardized non-Gaussian noise $\Lambda_i$, so we assume that $x_{i+1}-x_i \overset{d}{=} \sigma\Lambda_i$, where $\Lambda_i$ follows:
 
 \begin{equation}
-\Lambda_i|V_i \sim N\left(\zeta \tilde{\sigma}(V_i-h_i), \ \ \tilde{\sigma}^2V\right), \ \ \ \ \tilde{\sigma} = \frac{\sigma}{\sqrt{1+\eta \zeta^2}} \\
+\Lambda_i|V_i \sim N\left(\zeta \tilde{\sigma}(V_i-h_i), \ \ \tilde{\sigma}^2V_i\right), \ \ \ \ \tilde{\sigma} = \frac{\sigma}{\sqrt{1+\eta \zeta^2}} \\
 V_{i} \overset{ind.}{\sim} IG(h_i,\eta^{-1} h_i^2)   \\
 (\#eq:noise)
 \end{equation}
 
-where $E[\Lambda_i]=0$ and $Var[\Lambda_i]=h_i$. For the analytically inclined, this RW1 model is an approximation of a Lévy process $L(t)$, where an increment of size 1 follows the NIG distribution. Speaking only of essential terms, a Lévy process is a process with independent and stationary increments, and all finite-dimensional distributions are known if we know the distribution of an increment (more about Lévy processes in @ken1999levy and @barndorff2012levy). If the increments are Gaussian, then $L(t)$ is a Gaussian process, while in general, it is non-Gaussian. <!--The parameterization ($\eta^\star$,$\zeta^\star$) also depends now on a predefined vector $\mathbf{h}$, which contains the distance between locations.-->
+where $E[\Lambda_i]=0$ and $Var[\Lambda_i]=h_i$. For the analytically inclined, this RW1 model is an approximation of a Lévy process $L(t)$ where an increment of size 1 follows the NIG distribution. Speaking only of essential terms, a Lévy process is a process with independent and stationary increments, and all finite-dimensional distributions are known if we know the distribution of an increment (more about Lévy processes in @ken1999levy and @barndorff2012levy). If the increments are Gaussian then $L(t)$ is a Gaussian process, while in general, it is non-Gaussian. <!--The parameterization ($\eta^\star$,$\zeta^\star$) also depends now on a predefined vector $\mathbf{h}$, which contains the distance between locations.-->
 
-Next, we show a sample path of RW1 with $\sigma=1$ near the Gaussian case by setting $\eta=10^{-6}$ (top) and a non-Gaussian case by setting $\eta=10$ (bottom). We generated these simulated paths, by first sampling the mixing variables $V_i$, then sampling the noise $\Lambda_i|V_i$, and then the RW1 sample paths are just a cumulative sum of the noises. Notice that, in the first panel, the mixing variables $V_i$ are very close to 1 while on the bottom panel there is more discrepancy. When $V_i$ takes a large value, the noise $\Lambda$ can also be large and then we observe a large jump in the RW1 process driven by NIG noise.
+Next, we show a sample path of RW1 with $\sigma=1$ near the Gaussian case by setting $\eta=10^{-6}$ (top) and a non-Gaussian case by setting $\eta=10$ (bottom). We generated these simulated paths by first sampling the mixing variables $V_i$, then sampling the noise $\Lambda_i|V_i$, and then the RW1 sample paths are just a cumulative sum of the noises $\Lambda_i$. Notice that, in the first panel, the mixing variables $V_i$ are very close to 1 while on the bottom panel there is more discrepancy. When $V_i$ takes a large value, the noise $\Lambda$ can also be large and then we observe a large jump in the RW1 process driven by NIG noise.
 
-```{r, out.width = '100%', fig.cap="Sample of mixing vector $\\mathbf{V}$, noise vector $\\mathbf{\\Lambda}$ and RW1 vector $\\mathbf{x}$"}
+```{r, out.width = '100%', fig.cap="Sample of mixing vector $\\mathbf{V}$, noise vector $\\mathbf{\\Lambda}$ and RW1 vector $\\mathbf{x}$."}
 knitr::include_graphics("files/images/GaussRW1.png")
 ```
 
-```{r RW1sample, out.width = '100%', fig.cap="Sample of mixing vector $\\mathbf{V}$, noise vector $\\mathbf{\\Lambda}$ and RW1 vector $\\mathbf{x}$"}
+```{r, out.width = '100%', fig.cap="Sample of mixing vector $\\mathbf{V}$, noise vector $\\mathbf{\\Lambda}$ and RW1 vector $\\mathbf{x}$."}
 knitr::include_graphics("files/images/NIGRW1.png")
 ```
 
 ### Models defined via $\mathbf{D}\mathbf{x} = \mathbf{Z}$
 
-The system of equations seen before $x_{i+1}-x_i \overset{d}{=} Z_i$ defines the linear system $\mathbf{D}_{RW1}\mathbf{x}=\sigma\mathbf{Z}$, where $\mathbf{Z}$ is a vector of independent Gaussian noise, and:
+The system of equations seen before $x_{i+1}-x_i \overset{d}{=} \sigma Z_i$ defines the linear system $\mathbf{D}_{RW1}\mathbf{x}=\sigma\mathbf{Z}$, where $\mathbf{Z}$ is a vector of independent Gaussian noise, and:
 $$
 \mathbf{D}_{RW1} = \begin{pmatrix}
 -1 & 1  &  & & \\
@@ -100,7 +100,7 @@ $$
  &  &  &  -\rho & 1
 \end{pmatrix} 
 $$
-Likewise, higher-order AR processes can be constructed. The rows of the matrix $\mathbf{D}$ contain the "increments" that we assume to follow Gaussian noise. Other models fit in this framework, including intrinsic conditional autoregressive models and simultaneous autoregressive models which we will see later in the applications. The system $\mathbf{D}\mathbf{x} = \sigma\mathbf{Z}$ also appears when computing discrete-space approximation of stochastic processes defined via SPDEs: $\mathcal{D}X(t) = W'(t)$, where $\mathcal{D}$ is a linear differential operator and $W'(t)$ is a Gaussian noise process. For instance, stationary Mat\'ern random fields and Ornstein–Uhlenbeck processes arise as stationary solutions to SPDEs. 
+Likewise, higher-order AR processes can be constructed. The rows of the matrix $\mathbf{D}$ contain the "increments" that we assume to follow Gaussian noise. Other models fit in this framework, including intrinsic conditional autoregressive models and simultaneous autoregressive models which we will see later in the applications. The system $\mathbf{D}\mathbf{x} = \sigma\mathbf{Z}$ also appears when computing discrete-space approximation of stochastic processes defined via SPDEs: $\mathcal{D}X(t) = W'(t)$, where $\mathcal{D}$ is a linear differential operator and $W'(t)$ is a Gaussian noise process. For instance, stationary Matérn random fields and Ornstein–Uhlenbeck processes arise as stationary solutions to SPDEs. 
 
 
 ### Generic framework 

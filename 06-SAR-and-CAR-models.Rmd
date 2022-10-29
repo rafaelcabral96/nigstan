@@ -63,7 +63,7 @@ options(mc.cores = parallel::detectCores())
 
 The dataset consists of crime rates in thousands ($y_i$) in 49 counties of Columbus, Ohio, and can be found in the `spdep` R package. We will fit the following model:
 $$
-\mathbf{y}_{i}= \beta_0 + \beta_1 \text{HV}_i + \beta_2 \text{HI}_i +  \sigma_{\mathbf{x}}\mathbf{x}_i,
+\mathbf{y}_{i}= \beta_0 + \beta_1 \text{HV}_i + \beta_2 \text{HI}_i +  \sigma\mathbf{x}_i,
 $$
 where $\text{HV}_i$ and $\text{HI}_i$ are the average household value and household income for county $i$, $\mathbf{x}$ is a spatial effects SAR model.
 

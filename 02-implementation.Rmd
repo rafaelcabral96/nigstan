@@ -65,7 +65,7 @@ real modelNIG_lpdf(vector x, matrix D, real etas, real zetas, vector h, int comp
 3. `etas` - First flexibility parameter
 4. `zetas` - Second flexibility parameter
 5. `h`  - Distance between locations, or area of basis functions.
-6. `compute_det` - Compute log determinant of $\mathbf{D}$ (1) or not (0)
+6. `compute_det` - Compute log determinant of $\mathbf{D}$ (1) or not (0) - Assumes $\mathbf{Q}= \mathbf{D}^T\mathbf{D}$ is symmetric and positive definite.
 7. `Returns` - Log-likelihood of the random vector $\mathbf{x}$ where the driving noise uses the standardized and orthogonal parameterization.
 
 The function `nig_model_lpdf` computes the log of the joint density of `x`:
@@ -141,7 +141,7 @@ model{
 //observation layer---------------------------
 y ~ normal(B*beta + sigmax*x, sigmae);
 //latent field layer--------------------------
-x ~ nig_model(D, etas, mus, h, 1);                    //log-pdf of Dx=Lambda, where Lambda is independent NIG noise
+x ~ nig_model(D, etas, mus, h, 1);                    //log-pdf of x=D^(-1)*Lambda, where Lambda is independent NIG noise
 }
 ```
 
@@ -164,7 +164,7 @@ where `nig_multi` yields the log-pdf of independent NIG noise. Both parameteriza
 
 The NIG distribution converges to a Gaussian distribution when $\eta\to0$ and to a Cauchy distribution when $\eta\to\infty$. The large extent of the heavy tails of the Cauchy distribution can be problematic in statistical computation. As described in @bet2018 and @stan the step size should be relatively large in the tail compared to the trunk in order to explore the massive extent of the tails in a reasonable amount of time. However, with a large step size, there will be too much rejection in the central region of the distribution.
 
-The PC prior for $\eta$ helps mitigate this issue because it penalizes leptokurtosis and shrinks the NIG distribution towards to base Gaussian model. Also, the NIG distribution is semi-heavy-tailed, having exponentially decaying tails, which decay faster than the tails of the t-student distribution. Nonetheless, when the NIG distribution is close to the Cauchy limit it may be better to use the variance-mean mixture representation in eq. \@ref(eq:framework), which uses the conditional $\mathbf{x}|\mathbf{V}$ which is Gaussian. 
+The PC prior for $\eta$ helps mitigate this issue because it penalizes leptokurtosis and shrinks the NIG distribution towards the base Gaussian model. Also, the NIG distribution is semi-heavy-tailed, having exponentially decaying tails, which decay faster than the tails of the t-student distribution. Nonetheless, when the NIG distribution is close to the Cauchy limit it may be better to use the variance-mean mixture representation in eq. \@ref(eq:framework), which uses the conditional $\mathbf{x}|\mathbf{V}$ which is Gaussian. 
 
 
 <!--Still, by declaring the models with the function `modelNIG` (which uses the NIG density) sampling times that used to take hours with the conditional Gaussian representation of eq. \@ref(eq:framework), now take minutes, as will be shown in the next section.
@@ -210,4 +210,4 @@ We will deal later with matrices $\mathbf{D}$ of the form $\kappa^2\mathbf{C}+\m
 &= \prod_{i=1}^n C_{ii}(\kappa^2+v_i)
 \end{align*}
 
-Therefore $\log |\kappa^2\mathbf{C}+\mathbf{G}| \propto \sum_{i=1}^n\log(\kappa^2+v_i)$, and one can compute the eigenvalues $v_i$ only once before the HMC algorithm starts, and then evaluate $\log \mathbf{D}$ efficiently using the previous result. Similar transformations can be applied when computing the determinant of $\mathbf{D} = \mathbf{I}+\rho\mathbf{W}$, where now  $\log \mathbf{D}=\sum_{i=1}^n\log(1-\rho v_i)$, and $v_i$ are the eigenvalues of $\mathbf{W}$.
+Therefore $\log |\kappa^2\mathbf{C}+\mathbf{G}| \propto \sum_{i=1}^n\log(\kappa^2+v_i)$, and one can compute the eigenvalues $v_i$ only once before the HMC algorithm starts, and then evaluate $\log \mathbf{D}$ efficiently using the previous result. Similar transformations can be applied when computing the determinant of $\mathbf{D} = \mathbf{I}+\rho\mathbf{W}$, where now  $\log |\mathbf{D}|=\sum_{i=1}^n\log(1-\rho v_i)$, and $v_i$ are the eigenvalues of $\mathbf{W}$.

@@ -2,9 +2,9 @@ eq:noise0
 fig:NIGplot
 eq:noise
 fig:unnamed-chunk-1
-fig:RW1sample
-eq:framework
 fig:unnamed-chunk-2
+eq:framework
+fig:unnamed-chunk-3
 fig:compareSPDE
 eq:joint
 eq:V
@@ -18,7 +18,7 @@ citation
 theoretical-background
 nig-distribution
 new-parameterization
-mean-scale-invariant-parameterization
+mean-scale-invariant-parameterization-eta-zeta
 standardized-and-orthogonal-parameterization-etastar-zetastar
 framework-for-extending-gaussian-models
 illustration-with-the-rw1-process
@@ -79,3 +79,4 @@ nig-fit-2
 comparizon-2
 nig-model---relative-risk
 gaussian-model---relative-risk
+variables-v

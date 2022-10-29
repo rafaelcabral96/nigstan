@@ -118,7 +118,7 @@ functions {
 
     //If D depends on parameter add log determinant
     if(compute_det==1){
-      llik_total  += 2*sum(log(diagonal(cholesky_decompose(D))));    //Only works for spd matrices!!! 
+      llik_total  += sum(log(diagonal(cholesky_decompose(D'*D))));    //Only works for spd matrices!!! 
     }
      
     return(llik_total);
@@ -165,8 +165,8 @@ functions {
    * @param sizes           Array of integers containing the number of rows, collums and number non-zero elements of D
    */
   real nig_model_2_lpdf(vector X, matrix D, int[] Dv, int[] Du, int[] sizes,
-                      real etas, real zetas, vector h, 
-                      int compute_det){
+                        real etas, real zetas, vector h, 
+                        int compute_det){
 
     int N = sizes[1];
     int M = sizes[2];
@@ -184,7 +184,7 @@ functions {
 
     //If D depends on parameter add log determinant
     if(compute_det==1){
-      llik_total  += 2*sum(log(diagonal(cholesky_decompose(D))));    //Only works for spd matrices!!! 
+      llik_total  += sum(log(diagonal(cholesky_decompose(D'*D))));    //Only works for spd matrices!!! 
     }
      
     return(llik_total);
